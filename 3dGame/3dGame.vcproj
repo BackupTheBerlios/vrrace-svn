@@ -156,6 +156,12 @@
 				RelativePath=".\engine\MyTest.h">
 			</File>
 			<File
+				RelativePath=".\engine\MyUserInput.cpp">
+			</File>
+			<File
+				RelativePath=".\engine\MyUserInput.h">
+			</File>
+			<File
 				RelativePath=".\engine\MyView.cpp">
 			</File>
 			<File

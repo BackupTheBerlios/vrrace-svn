@@ -10,7 +10,7 @@ public:
 	MyD3DGame(void);
 	~MyD3DGame(void);
 
-	bool	init3D(HINSTANCE* givenHInst, HWND* givenHWnd);	//Initialisierung von D3D
+	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd);	//Initialisierung von D3D
 	int		initGame(void);									//Initialisierung des Spiels
 	void	runGame();										//mainloop fuer das spiel
 
@@ -19,8 +19,13 @@ public:
 private:
 	void	prepareScene();									//zeichnen der Objekte, Vorbereitung
 	void	presentScene();									//abschliessen der Szene
-	void	initFont();										//Initialisierung des Fontobjektes
+	bool	init3D();										//Device und so erstellen
+	bool	initFont();										//Initialisierung des Fontobjektes
+	bool	initInput();									//Benutzereingaben initialisieren
 	void	doScene();										//Aufbau der Szene
+	void	showStatus();									//Statusfenster anzeigen
+	
+//	void	printText(String givenText, int posX, int posY);	//Text ausgeben
 
 	LPDIRECT3D9			m_d3d;								//3D-Device
 	LPDIRECT3DDEVICE9	m_pD3dDevice;						//Render-Device
@@ -33,5 +38,7 @@ private:
 	DWORD				m_dwFontSize;						//Schriftgroesse
 	MyGameControl*		m_pGameControl;						//Spielzustand
 	MyTest*				m_pKoordSys;						//Koordinatensystem
+	MyUserInput*		m_pUserInput;						//Benutzereingaben
+	bool				m_bShowStatus;
 };
 #endif

@@ -56,7 +56,7 @@ INT WINAPI WinMain(HINSTANCE hInst,
 
 	g_pD3DGame	= new MyD3DGame();
 
-	if (g_pD3DGame->init3D(&hInst, &hWnd))
+	if (g_pD3DGame->init(&hInst, &hWnd))
 	{
 		g_pD3DGame->initGame();
 	}

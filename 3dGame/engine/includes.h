@@ -4,9 +4,13 @@
 
 //Systemincludes
 #include <windows.h>
+#include <io.h>
+#include <dinput.h>
 #include <d3dx9.h>
 #include <stdio.h>
 #include <string>
+
+//Namensraum
 using namespace std;
 
 //Directx-Includes
@@ -15,6 +19,7 @@ using namespace std;
 #include "../directx/d3dfont.h"
 
 //eigene Includes
+#include "MyUserInput.h"
 #include "MyTest.h"
 #include "MyView.h"
 #include "MyGameControl.h"
