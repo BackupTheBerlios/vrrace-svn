@@ -4,7 +4,7 @@ LPDIRECTINPUT8			MyUserInput::m_lpDI			= NULL;
 HRESULT					MyUserInput::m_hr			= NULL;
 LPDIRECTINPUTDEVICE8	MyUserInput::m_pJoystick	= NULL;
 BOOL					MyUserInput::EffectFound	= FALSE;
-LPDIRECTINPUTEFFECT		MyUserInput::pEff[3];
+LPDIRECTINPUTEFFECT		MyUserInput::pEff[6];
 
 
 MyUserInput::MyUserInput()
@@ -95,7 +95,7 @@ bool	MyUserInput::initJoystick()
 	m_hr	= m_pJoystick->EnumObjects(EnumObjectsCallback, (VOID*)*m_hWnd, DIDFT_AXIS);
 	if (FAILED(m_hr))	{return false;}
 
-	m_hr	= m_pJoystick->EnumEffectsInFile("resources/ffeffects/blowout.ffe", EnumEffectsInFileProc, NULL, DIFEF_MODIFYIFNEEDED);
+	m_hr	= m_pJoystick->EnumEffectsInFile("resources/ffeffects/alleffects.ffe", EnumEffectsInFileProc, NULL, DIFEF_MODIFYIFNEEDED);
 	if (FAILED(m_hr))	{return false;}
 	//m_hr	= m_pJoystick->EnumEffectsInFile("resources/ffeffects/explode.ffe", EnumEffectsInFileProc, NULL, DIFEF_MODIFYIFNEEDED);
 	//if (FAILED(m_hr))	{return false;}
@@ -123,7 +123,7 @@ BOOL CALLBACK MyUserInput::EnumEffectsInFileProc(LPCDIFILEEFFECT lpdife, LPVOID 
     {
         // Error handling
     }
-    if (++i > 2) return DIENUM_STOP;
+    if (++i > 5) return DIENUM_STOP;
     else return DIENUM_CONTINUE;
 }
 
@@ -189,6 +189,54 @@ bool	MyUserInput::initKeyboard()
 	if (FAILED(m_hr))	{return false;}
 
 	return true;
+}
+
+void	MyUserInput::doFF()
+{
+	if (m_JoystickAvailable)
+	{
+	if (_m_pGameControl->ff_g)
+	{
+		pEff[0]->Start(1,0);
+	} else {
+		pEff[0]->Stop();
+	}
+	if (_m_pGameControl->ff_f)
+	{
+		pEff[1]->Start(1,0);
+		_m_pGameControl->ff_f = false;
+	}/* else {
+		pEff[1]->Stop();
+	}*/
+	if (_m_pGameControl->ff_r)
+	{
+		pEff[2]->Start(1,0);
+		_m_pGameControl->ff_r = false;
+	}/* else {
+		pEff[2]->Stop();
+	}*/
+	if (_m_pGameControl->ff_b)
+	{
+		pEff[3]->Start(1,0);
+		_m_pGameControl->ff_b = false;
+	}/* else {
+		pEff[3]->Stop();
+	}*/
+	if (_m_pGameControl->ff_l)
+	{
+		pEff[4]->Start(1,0);
+		_m_pGameControl->ff_l = false;
+	}/* else {
+		pEff[4]->Stop();
+	}*/
+	if (_m_pGameControl->ff_e)
+	{
+		pEff[5]->Start(1,0);
+		_m_pGameControl->ff_e = false;
+	}/* else {
+		pEff[5]->Stop();
+	}*/
+	}
 }
 
 float MyUserInput::inputFactor(float givenValue)

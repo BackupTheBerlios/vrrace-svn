@@ -14,7 +14,9 @@ public:
 	bool	init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC);	//alles Initialisieren
 	void	inputKB();													//Tastatureingaben verarbeiten
 	HRESULT	inputJS();
+	void	doFF();
 	bool						m_JoystickAvailable;
+	static LPDIRECTINPUTEFFECT	pEff[6];
 
 private:
 	bool	initDinput();												//Initialisierung des Input-Objektes
@@ -38,7 +40,7 @@ private:
 	LPDIRECTINPUTEFFECT			m_lpdiEffect;
 	static LPDIRECTINPUTDEVICE8	m_pJoystick;
 	static BOOL					EffectFound;
-	static LPDIRECTINPUTEFFECT	pEff[3];
+
 
 
 	MyGameControl*				_m_pGameControl;

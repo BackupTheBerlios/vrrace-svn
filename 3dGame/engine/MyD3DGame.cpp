@@ -352,6 +352,7 @@ void	MyD3DGame::runGame()
 
 	m_pUserInput->inputKB();
 	m_pUserInput->inputJS();
+	m_pUserInput->doFF();
 
 	this->moveScene();
 

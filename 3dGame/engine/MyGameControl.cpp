@@ -10,6 +10,13 @@ MyGameControl::MyGameControl(void)
 	m_pDirectSound		= new MyDSound();
 	m_pStarsField		= new MyStarsField();
 
+	ff_g	= false;
+	ff_f	= false;
+	ff_r	= false;
+	ff_b	= false;
+	ff_l	= false;
+	ff_e	= false;
+
 	_DirectPlay		= NULL;
 	m_iDPchoice			= -1;
 }
@@ -171,26 +178,27 @@ void	MyGameControl::moveObjects()
 	EnterCriticalSection(&_DirectPlay->m_csDP);
 	m_pStarsField->move();
 	for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
-	{
+	{//für alle meshe
 		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend || (m_iDPchoice == 0))
 		if (_DirectPlay->m_pAllMeshes[count] != NULL)
-		{
+		{//wenn mesh nicht null
 			_DirectPlay->m_pAllMeshes[count]->move();
+			//dann bewege
 			//es folgt Kollision
 			
 			if ((_DirectPlay->m_pAllMeshes[count]->m_bDestroyable) && (_DirectPlay->m_pAllMeshes[count]->m_iStatus != 0))
-			{
+			{//wenn es ein schiff ist und sichtbar
 				for (DWORD cCount = 0; cCount < _DirectPlay->m_pAllMeshes.size(); cCount++)
-				{
+				{//für alle meshe
 					if (count != cCount)
-					{
+					{//wenn aktuelles nicht der index ist
 						if (collision(_DirectPlay->m_pAllMeshes[count], _DirectPlay->m_pAllMeshes[cCount]))
-						{
+						{//wenn es eine kollision gibt
 							if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
-							{
+							{//wenn das gegenstueck ein item ist
 								_DirectPlay->m_pLocalPlayer->m_points += _DirectPlay->m_pAllMeshes[cCount]->m_itemPoints;
 								_DirectPlay->m_pAllMeshes[cCount]->m_itemPoints = 0;
-							} else {
+							} else {//wenn das gegenstück kein item ist
 								_DirectPlay->m_pAllMeshes[count]->collided();
 								if (_DirectPlay->m_pMeshSounds[count])
 									_DirectPlay->m_pMeshSounds[count]->stop();
@@ -201,11 +209,15 @@ void	MyGameControl::moveObjects()
 								{
 									//m_pCollisionSound->play(false, 0);
 								}
+								if (_DirectPlay->m_pAllMeshes[count]->m_bIsCam)
+								{//anzunehmen, dass es der spieler ist
+									ff_e = true;
+								}
 							}
 							if (_DirectPlay->m_pAllMeshes[cCount]->m_bDestroyable)
-							{
+							{//wenn das gegenstueck zerstörbar ist (schiff)
 								if (_DirectPlay->m_pAllMeshes[count]->m_isItem)
-								{
+								{//wenn das aktuelle ein item ist
 									_DirectPlay->m_pLocalPlayer->m_points += _DirectPlay->m_pAllMeshes[count]->m_itemPoints;
 									_DirectPlay->m_pAllMeshes[count]->m_itemPoints = 0;
 								} else {
@@ -219,6 +231,10 @@ void	MyGameControl::moveObjects()
 									else
 									{
 										m_pCollisionSound->play(false, 0);
+									}
+									if (_DirectPlay->m_pAllMeshes[count]->m_bIsCam)
+									{//anzunehmen, dass es der spieler ist
+										ff_e = true;
 									}
 								}
 							}
