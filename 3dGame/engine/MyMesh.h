@@ -27,8 +27,8 @@ public:
 								float rotDirX,
 								float rotDirY,
 								float rotDirZ,
-								bool givenAlphaBlending,
-								int givenLayers);
+								bool givenAlphaBlending
+								);
 	void				initMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
 											float rAmbient, float gAmbient, float bAmbient,
 											float rEmissive, float gEmissive, float bEmissive);
@@ -47,11 +47,7 @@ private:
 	D3DXMATRIX*			_matWorld;
 	MyMesh*				m_pMasterObject;
 	bool*				m_pbAlphaBlending;
-	bool*				m_pbIsDrawn;	//Status, ob Mesh bereits einmal gezeichnet
-	int*				m_piLayers;
-	float*				m_afDiffuse;
-	float*				m_afAmbient;
-	float*				m_afEmissive;
+	
 	CUSTOMVERTEX		m_InitialScaleValues;
 };
 #endif

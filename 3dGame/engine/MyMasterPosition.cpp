@@ -3,17 +3,16 @@
 MyMasterPosition::MyMasterPosition(void)
 {
 	m_pPosition				= new MyVertex();
+	m_pAbsolutePosition		= new MyVertex();
 	m_pDirection			= new MyVertex();
 	m_pRotation				= new MyVertex();
 	m_pRotDir				= new MyVertex();
 	m_pScaleFactor			= new MyVertex();
 	m_bScale				= false;
 
-	m_pScaleMatrix			= new D3DXMATRIX;
-	m_pRotationMatrix		= new D3DXMATRIX;
-	m_pTranslationMatrix	= new D3DXMATRIX;
 	m_pMatrix				= new D3DXMATRIX;
-	m_pFinalMatrix			= new D3DXMATRIX;
+	m_pFinalTransRotMatrix	= new D3DXMATRIX;
+	m_pFinalMatrix			= NULL;
 
 	m_pMaster				= NULL;
 }
@@ -21,67 +20,46 @@ MyMasterPosition::MyMasterPosition(void)
 MyMasterPosition::~MyMasterPosition(void)
 {
 	delete m_pPosition;
+	delete m_pAbsolutePosition;
 	delete m_pDirection;
 	delete m_pRotation;
 	delete m_pRotDir;
 	delete m_pScaleFactor;
 
-	delete m_pScaleMatrix;
-	delete m_pRotationMatrix;
-	delete m_pTranslationMatrix;
 	delete m_pMatrix;
+	delete m_pFinalTransRotMatrix;
 	delete m_pFinalMatrix;
 }
 
 void	MyMasterPosition::calcOwnMatrix()
 {
+	D3DXMATRIX	tempRot;
+	D3DXMATRIX	tempTrans;
+
 	//rotiere lokal
 	D3DXMatrixRotationYawPitchRoll(
-			m_pRotationMatrix,
+			&tempRot,
 			m_pRotation->getY(),
 			m_pRotation->getX(),
 			m_pRotation->getZ());
 
 	//transliere lokal
 	D3DXMatrixTranslation(
-			m_pTranslationMatrix,
+			&tempTrans,
 			m_pPosition->getX(),
 			m_pPosition->getY(),
 			m_pPosition->getZ()
 			);
 
-	if (m_bScale)
-	{
-		D3DXMATRIX	tempRotTransMatrix;
-
-		//Skaliere
-		D3DXMatrixScaling(
-			m_pScaleMatrix,
-			m_pScaleFactor->getX(),
-			m_pScaleFactor->getY(),
-			m_pScaleFactor->getZ());
-
-		D3DXMatrixMultiply(
-			&tempRotTransMatrix,
-			m_pRotationMatrix,
-			m_pTranslationMatrix);
-
-		D3DXMatrixMultiply(
-			m_pMatrix,
-			m_pScaleMatrix,
-			&tempRotTransMatrix);
-
-	} else {
-		//fasse lokale Matrizen zusammen
-		D3DXMatrixMultiply(
-			m_pMatrix,
-			m_pRotationMatrix,
-			m_pTranslationMatrix);
-	}
+	D3DXMatrixMultiply(
+			m_pFinalTransRotMatrix,
+			&tempRot,
+			&tempTrans);
 
 	if (m_pMaster == NULL)
 	{
-		m_pFinalMatrix = m_pMatrix;
+		//delete m_pFinalMatrix;
+		m_pFinalMatrix = m_pFinalTransRotMatrix;
 	}
 }
 
@@ -102,10 +80,13 @@ void	MyMasterPosition::calcMatrix(D3DXMATRIX* givenMatrix)
 {
 	D3DXMatrixMultiply(
 			m_pFinalMatrix,
-			m_pMatrix,
+			m_pFinalTransRotMatrix,
 			givenMatrix);
 
-	this->calcClients();
+	if (m_pClients.size() > 0)
+	{
+		this->calcClients();
+	}
 }
 
 void	MyMasterPosition::activateScaling()
@@ -120,8 +101,27 @@ void	MyMasterPosition::deactivateScaling()
 
 void	MyMasterPosition::transform()
 {
-	//fuehre Transformationen durch
-	_D3DDevice->SetTransform(D3DTS_WORLD, m_pFinalMatrix);
+	D3DXMATRIX	tempMatrix;
+	D3DXMATRIX	tempScale;
+	if (m_bScale)
+	{
+		//Skaliere
+		D3DXMatrixScaling(
+			&tempScale,
+			m_pScaleFactor->getX(),
+			m_pScaleFactor->getY(),
+			m_pScaleFactor->getZ());
+
+		
+		D3DXMatrixMultiply(
+			&tempMatrix,
+			&tempScale,
+			m_pFinalMatrix);
+
+		_D3DDevice->SetTransform(D3DTS_WORLD, &tempMatrix);
+	} else {
+		_D3DDevice->SetTransform(D3DTS_WORLD, m_pFinalMatrix);
+	}
 }
 
 void	MyMasterPosition::calcClients()
@@ -140,6 +140,8 @@ void	MyMasterPosition::addClient(MyMasterPosition* givenClient)
 void	MyMasterPosition::setMaster(MyMasterPosition* givenMaster)
 {
 	m_pMaster	= givenMaster;
+	m_pMaster->addClient(this);
+	m_pFinalMatrix	= new D3DXMATRIX;
 }
 
 MyVertex*	MyMasterPosition::getScale()
@@ -148,14 +150,19 @@ MyVertex*	MyMasterPosition::getScale()
 }
 
 MyVertex*	MyMasterPosition::getAbsolutePosition()
+//erst nach moove aufrufen
 {
-	MyVertex*	tempVertex	= new MyVertex();
+	D3DXVECTOR3*	pVector	= new D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR4*	pOut	= new D3DXVECTOR4();
 
 	if (m_pMaster != NULL)
 	{
-		tempVertex->addX(m_pMaster->getAbsolutePosition()->getX());
-		//nur ein ansatz hier!
+		D3DXVec3Transform(pOut, pVector, m_pFinalMatrix);
+		m_pAbsolutePosition->setValues(pOut->x, pOut->y, pOut->z);
 	}
 
-	return tempVertex;
+	delete pVector;
+	delete pOut;
+
+	return m_pAbsolutePosition;
 }

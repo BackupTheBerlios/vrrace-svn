@@ -39,14 +39,17 @@ bool	MyGameControl::drawObjects()
 	{
 		m_pMasterMeshes[count]->calcClients();
 	}
-
 	
 	for (count = 0; count < m_pAllMeshes.size(); count++)
 	{
 		m_pAllMeshes[count]->draw();
 	}
 	//m_pAllMeshes[4]->draw();
-
+/*
+	m_pView->getVP()->setPValues(
+				m_pAllMeshes[2]->getAbsolutePosition()->getPX(),
+				m_pAllMeshes[2]->getAbsolutePosition()->getPY(),
+				m_pAllMeshes[2]->getAbsolutePosition()->getPZ());*/
 	return true;
 }
 
@@ -66,6 +69,7 @@ bool	MyGameControl::moveObjects()
 		m_pAllMeshes[count]->move();
 	}
 	
+			
 	return true;
 }
 
@@ -100,6 +104,34 @@ bool	MyGameControl::initObjects()
 
 bool	MyGameControl::addObject()
 {
+	MyMesh*	tempObjd	= new MyMesh();
+	if (tempObjd == NULL)
+	{
+		return false;
+	} else {
+		if (tempObjd->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sun.x",
+							"resources/x_files/Planet0.dds",
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.01f, 0.0f,
+							true))
+		{
+			tempObjd->load();
+			tempObjd->activateScaling();
+			tempObjd->getScale()->setValues(100.0f, 100.0f, 100.0f);
+			tempObjd->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+											0.0f, 0.0f, 0.0f,
+											1.0f, 1.0f, 1.0f);
+			m_pAllMeshes.push_back(tempObjd);
+			m_pMasterMeshes.push_back(tempObjd);
+		} else {
+			return false;
+		}
+	}
+
 	MyMesh*	tempObjb	= new MyMesh();
 	if (tempObjb == NULL)
 	{
@@ -109,25 +141,27 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/sphere.x",
 							NULL,
-							-1000.0f, -50.0f, -1000.0f,
+							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, -0.005f, 0.0f,
-							true, 1))
+							0.0f, -0.05f, 0.0f,
+							true))
 		{
 			tempObjb->load();
 			tempObjb->activateScaling();
-			tempObjb->getScale()->setValues(300.0f, 300.0f, 300.0f);
+			tempObjb->getScale()->setValues(10.0f, 10.0f, 10.0f);
 			tempObjb->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
+			tempObjb->setMaster(m_pMasterMeshes[0]);
 			m_pAllMeshes.push_back(tempObjb);
-			m_pMasterMeshes.push_back(tempObjb);
+			//m_pMasterMeshes[0]->addClient(tempObjb);
 		} else {
 			return false;
 		}
 	}
 
+	
 	MyMesh*	tempObj	= new MyMesh();
 	if (tempObj == NULL)
 	{
@@ -137,18 +171,18 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/sphere0.x",
 							NULL,
-							500.0f, 0.0f, 0.0f,
+							50.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							false, 1))
+							false))
 		{
-			tempObj->setMaster((MyMasterPosition*)tempObjb);
+			tempObj->setMaster(m_pAllMeshes[1]);
 			tempObj->load();
 			tempObj->activateScaling();
-			tempObj->getScale()->setValues(20.0f, 20.0f, 20.0f);
+			tempObj->getScale()->setValues(2.0f, 2.0f, 2.0f);
 			m_pAllMeshes.push_back(tempObj);
-			m_pMasterMeshes[0]->addClient(tempObj);
+			//m_pAllMeshes[0]->addClient(tempObj);
 		} else {
 			return false;
 		}
@@ -167,10 +201,12 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
 							0.0f, 0.0f, 0.01f,
-							false, 1))
+							false))
 		{
 			tempObjc->load();
-			/*m_pView->getVP()->setValues(100.0f, 100.0f, 100.0f);/*
+			//m_pView->getVP()->setValues(0.0f, 0.0f, 0.0f);
+			m_pView->getPos()->setValues(500.0f, 500.0f, 500.0f);
+			/*
 				tempObjc->getPosition()->m_pPosition->getPX(),
 				tempObjc->getPosition()->m_pPosition->getPY(),
 				tempObjc->getPosition()->m_pPosition->getPZ());*/
@@ -182,33 +218,7 @@ bool	MyGameControl::addObject()
 		}
 	}
 
-	MyMesh*	tempObjd	= new MyMesh();
-	if (tempObjd == NULL)
-	{
-		return false;
-	} else {
-		if (tempObjd->init(_D3DDevice,
-							_matWorld,
-							"resources/x_files/sun.x",
-							"resources/x_files/Planet0.dds",
-							30.0f, -20.0f, -500.0f,
-							0.0f, 0.0f, 0.3f,
-							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							true, 8))
-		{
-			tempObjd->load();
-			tempObjd->activateScaling();
-			tempObjd->getScale()->setValues(20.0f, 20.0f, 20.0f);
-			tempObjd->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-											0.0f, 0.0f, 0.0f,
-											1.0f, 1.0f, 1.0f);
-			m_pAllMeshes.push_back(tempObjd);
-			m_pMasterMeshes[1]->addClient(tempObjd);
-		} else {
-			return false;
-		}
-	}
+	
 
 	MyMesh*	tempObje	= new MyMesh();
 	if (tempObje == NULL)
@@ -219,19 +229,51 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							NULL,
-							90.0f, -30.0f, -510.0f,
-							0.0f, 0.0f, 0.3f,
-							0.0f, 3.142f, 0.0f,
+							90.0f, -30.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							false, 1))
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							false))
 		{
 			tempObje->load();
+			tempObje->setMaster(m_pMasterMeshes[1]);
+			//addclient kann der client machen
 			m_pAllMeshes.push_back(tempObje);
-			m_pMasterMeshes[1]->addClient(tempObje);
+			//m_pMasterMeshes[1]->addClient(tempObje);
 		} else {
 			return false;
 		}
 	}
+
+	MyMesh*	sunLayer1	= new MyMesh();
+	if (sunLayer1 == NULL)
+	{
+		return false;
+	} else {
+		if (sunLayer1->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sun.x",
+							"resources/x_files/Planet0.dds",
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.05f,
+							true))
+		{
+			sunLayer1->load();
+			sunLayer1->activateScaling();
+			sunLayer1->getScale()->setValues(99.9f, 99.9f, 99.9f);
+			sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+											0.0f, 0.0f, 0.0f,
+											1.0f, 1.0f, 1.0f);
+			m_pAllMeshes.push_back(sunLayer1);
+			sunLayer1->setMaster(m_pMasterMeshes[0]);
+			//m_pMasterMeshes.push_back(sunLayer1);
+		} else {
+			return false;
+		}
+	}
+
 	return true;
 }
 

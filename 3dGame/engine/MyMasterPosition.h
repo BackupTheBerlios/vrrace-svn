@@ -22,6 +22,7 @@ public:
 	MyVertex*					getScale();
 
 	MyVertex*					m_pPosition;								//aktuelle Position
+	MyVertex*					m_pAbsolutePosition;						//absolute Position
 	MyVertex*					m_pDirection;								//Bewegungsrichtung
 	MyVertex*					m_pRotation;								//aktuelle Rotation/StellWinkel
 	MyVertex*					m_pRotDir;									//Rotationsrichtung
@@ -33,11 +34,12 @@ public:
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen
 
-	D3DXMATRIX*					m_pScaleMatrix;								//Skalierung
+	//D3DXMATRIX*					m_pScaleMatrix;								//Skalierung
 	D3DXMATRIX*					m_pTranslationMatrix;						//Translierung
 	D3DXMATRIX*					m_pRotationMatrix;							//Rotation
 	D3DXMATRIX*					m_pMatrix;									//lokale Transformation
 	D3DXMATRIX*					m_pFinalMatrix;								//finale Transformation
+	D3DXMATRIX*					m_pFinalTransRotMatrix;
 
 	vector<MyMasterPosition*>	m_pClients;
 	MyMasterPosition*			m_pMaster;

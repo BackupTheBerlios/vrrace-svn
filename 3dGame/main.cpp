@@ -8,12 +8,12 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 			DestroyWindow(hWnd);
 			PostQuitMessage(0);
-			return 0;
+			exit(0);
 		break;
 	case WM_CLOSE:
 			DestroyWindow(hWnd);
 			PostQuitMessage(0);
-			return 0;
+			exit(0);
 		break;
 	}
 	return DefWindowProc(hWnd, msg,	wParam,	lParam);
@@ -41,7 +41,7 @@ bool GenerateGameWindow()
 	HWND	hWnd	= CreateWindow(
 						MM_WINDOW_CLASS_NAME,
 						MM_WINDOW_DESCRIPTION,
-						WS_OVERLAPPEDWINDOW,
+						WS_VISIBLE | WS_OVERLAPPEDWINDOW,
 						1,
 						1,
 						800,
