@@ -11,8 +11,11 @@ public:
 	MySound(void);
 	~MySound(void);
 	bool init(LPDIRECTSOUND8 givenPDirectSound,char* filename,DWORD soundFlags);
-	// Methode zum Zugriff auf SoundBuffer
-	LPDIRECTSOUNDBUFFER8* getSecondarySoundBuffer(void);
+	bool play(bool givenLoop,DWORD givenPosition);
+	bool stop();
+	bool set3DSoundDistance(float givenMinDistance,float givenMaxDistance);
+	bool set3DSoundPosition();
+	bool set3DSoundVelocity();
 private:	
 	//Pointer auf sekundaeren SoundBuffer
 	LPDIRECTSOUNDBUFFER8	m_pSecondarySoundBuffer;

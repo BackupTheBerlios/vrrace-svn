@@ -13,6 +13,12 @@ public:
 	bool init(HWND* givenHWND);
 	// Funktion zum Zugriff auf IDirect8-Schnittstelle
 	LPDIRECTSOUND8 getDSound(void);
+	// Funktion zum Setzen der Position des Hoerers
+	bool setListenerPosition();
+	// Funktion zum Setzen der Geschwindigkeit des Hoerers
+	bool setListenerVelocity();
+	// Funktion zum Setzen der Orientierung des Hoerers
+	bool setListenerOrientation();
 private:
 	// Pointer auf IDirect8-Schnittstelle
 	LPDIRECTSOUND8				m_pDirectSound;

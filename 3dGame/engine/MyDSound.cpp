@@ -16,6 +16,7 @@ MyDSound::~MyDSound(void)
 	ZeroMemory(this,sizeof(MyDSound));
 }
 
+/*Methode zur Initialisierung von DirectSound*/
 bool MyDSound::init(HWND* givenHWND)
 {
 	DSBUFFERDESC bufferDesc;
@@ -49,7 +50,41 @@ bool MyDSound::init(HWND* givenHWND)
 	return true;
 }
 
+/*Methode zum Zugriff auf DirectSound-Interface*/
 LPDIRECTSOUND8 MyDSound::getDSound(void)
 {
 	return m_pDirectSound;
+}
+
+/*Methode zum Setzen der Position des Hoerers*/
+bool MyDSound::setListenerPosition()
+{
+	//if(FAILED(m_p3DListener->SetPosition(x,y,z,DS3D_IMMEDIATE)))
+	//{
+	//	MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+	//	return false;
+	//}
+	return true;
+}
+
+/*Methode zum Setzen der Geschwindigkeit des Hoerers*/
+bool MyDSound::setListenerVelocity()
+{
+	//if(FAILED(m_p3DListener->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
+	//{
+	//	MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+	//	return false;
+	//}
+	return true;
+}
+
+/*Methode zum Setzen der Orientierung des Hoerers*/
+bool MyDSound::setListenerOrientation()
+{
+	//if(FAILED(m_p3DListener->SetOrientation(x,y,z,x,y,z,DS3D_IMMEDIATE)))
+	//{
+	//	MessageBox(NULL,"Fehler beim Setzen der Orientierung des 3D-Listener","ERROR",MB_OK | MB_ICONSTOP);
+	//	return false;
+	//}
+	return true;
 }

@@ -152,8 +152,67 @@ bool MySound::initSecondarySoundBuffer(LPDIRECTSOUND8 givenPDirectSound,DWORD so
 	return true;
 }
 
-/*Methode zum Zugriff auf SoundBuffer*/
-LPDIRECTSOUNDBUFFER8* MySound::getSecondarySoundBuffer(void)
+/*Methode zum Starten des Sounds*/
+bool MySound::play(bool givenLoop,DWORD givenPosition)
 {
-	return &m_pSecondarySoundBuffer;
+    if(FAILED(m_pSecondarySoundBuffer->SetCurrentPosition(givenPosition)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Position des Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+    if(FAILED(m_pSecondarySoundBuffer->Play(0,0,(givenLoop ? DSBPLAY_LOOPING : 0))))
+	{
+		MessageBox(NULL,"Fehler beim Abspielen des Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	return true;
+}
+
+/*Methode zum Stoppen des Sounds*/
+bool MySound::stop()
+{
+	if(FAILED(m_pSecondarySoundBuffer->Stop()))
+	{
+		MessageBox(NULL,"Fehler beim Stoppen des Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	return true;
+}
+
+/*Methode zum Setzen der Distanzwerte des 3D-Sounds*/
+bool MySound::set3DSoundDistance(float givenMinDistance,float givenMaxDistance)
+{
+	if(FAILED(m_p3DSoundBuffer->SetMinDistance(givenMinDistance,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der minDistance des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	if(FAILED(m_p3DSoundBuffer->SetMaxDistance(givenMaxDistance,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der maxDistance des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	return true;
+}
+
+/*Methode zum Setzen der aktuellen 3D-Soundposition*/
+bool MySound::set3DSoundPosition()
+{
+	//if(FAILED(m_p3DSoundBuffer->SetPosition(x,y,z,DS3D_IMMEDIATE)))
+	//{
+	//	MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+	//	return false;
+	//}
+	return true;
+}
+
+/*Methode zum Setzen der aktuellen Geschwindigkeit des 3D-Sounds*/
+bool MySound::set3DSoundVelocity()
+{
+	//if(FAILED(m_p3DSoundBuffer->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
+	//{
+	//	MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+	//	return false;
+	//}
+	return true;
 }

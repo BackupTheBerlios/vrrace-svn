@@ -154,7 +154,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.01f, 0.0f,
+							0.01f, 0.01f, 0.01f,
 							true, false))
 		{
 			sonne->load();
@@ -274,32 +274,38 @@ bool	MyGameControl::buildGame()
 			return false;
 		}
 	}
-
-	MyMesh*	sunLayer1	= new MyMesh();
-	if (sunLayer1 == NULL)
+	
+	MyMesh*	sunLayer1	= NULL;
+	for(int count = 0; count < 8; count++)
 	{
-		return false;
-	} else {
-		if (sunLayer1->init(_D3DDevice,
-							_matWorld,
-							"resources/x_files/sun.x",
-							"resources/x_files/Planet0.dds",
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.05f,
-							true, false))
+		sunLayer1 = new MyMesh();
+		if (sunLayer1 == NULL)
 		{
-			sunLayer1->load();
-			sunLayer1->activateScaling();
-			sunLayer1->getScale()->setValues(99.9f, 99.9f, 99.9f);
-			sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-											0.0f, 0.0f, 0.0f,
-											1.0f, 1.0f, 1.0f);
-			m_pAllMeshes.push_back(sunLayer1);
-			sunLayer1->setMaster(sonne);
-		} else {
 			return false;
+		} else {
+			if (sunLayer1->init(_D3DDevice,
+								_matWorld,
+								"resources/x_files/sun.x",
+								"resources/x_files/Planet0.dds",
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								/*0.0f, 0.0f, 0.05f,*/
+								(float)pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)-pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)pow((double)-1.0f,(double)count)*(float)count/1000.0f,
+								true, false))
+			{
+				sunLayer1->load();
+				sunLayer1->activateScaling();
+				sunLayer1->getScale()->setValues(99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f));
+				sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				m_pAllMeshes.push_back(sunLayer1);
+				sunLayer1->setMaster(sonne);
+				sunLayer1 = NULL;
+			} else {
+				return false;
+			}
 		}
 	}
 	return true;
