@@ -286,7 +286,6 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 bool	MyD3DGame::initGame(void)
 {
 	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_hWnd, m_pDirectPlay, m_iDPchoice);
-	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
 	m_pGameControl->initMusic();
 	m_pGameControl->initDirectSound();
 	m_pGameControl->buildGame();
@@ -294,6 +293,7 @@ bool	MyD3DGame::initGame(void)
 	m_pGameControl->addLight();
 	m_pGameControl->loadObjects();
 	m_pGameControl->initStarsField();
+	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
 	return true;
 }
 

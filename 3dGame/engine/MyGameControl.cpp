@@ -152,7 +152,7 @@ bool	MyGameControl::initMusic()
 	{
 		if(m_pMusic->setVolume(-1800))
 		{
-			m_pMusic->play();
+			//m_pMusic->play();
 		}
 		return true;
 	} else {
@@ -162,22 +162,31 @@ bool	MyGameControl::initMusic()
 
 bool	MyGameControl::initDirectSound()
 {
-	return m_pDirectSound->init(m_hWnd);
+	bool result = m_pDirectSound->init(m_hWnd);
+	_DirectPlay->setSoundInstance(m_pDirectSound->getDSound());
+	return result;
 }
 
 bool	MyGameControl::startSound()
 {
+	EnterCriticalSection(&_DirectPlay->m_csDP);
+
 	for (DWORD count = 0; count < _DirectPlay->m_pMeshSounds.size(); count++)
 	{
 		if(_DirectPlay->m_pMeshSounds[count])
+		{
 			_DirectPlay->m_pMeshSounds[count]->play(true, 0);
+		}
 	}
+
+	LeaveCriticalSection(&_DirectPlay->m_csDP);
+
 	return true;
 }
 
 bool	MyGameControl::presentMusic()
 {
-	return m_pMusic->presentMusic();
+	return true;// m_pMusic->presentMusic();
 }
 
 bool	MyGameControl::addPlayer(string* givenName)
@@ -269,7 +278,7 @@ bool	MyGameControl::buildGame()
 												1.0f, 1.0f, 1.0f);
 				if(sonneSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					sonneSound->set3DSoundDistance(1.0f, 1000.0f);
+					sonneSound->set3DSoundDistance(10.0f, 1000.0f);
 					if(m_iDPchoice != 0)
 					{
 						if(*_DirectPlay->m_pbHostingApp)
@@ -328,7 +337,7 @@ bool	MyGameControl::buildGame()
 				erde->setMaster(sonne);
 				if(erdeSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					erdeSound->set3DSoundDistance(10.0f, 1000.0f);
+					erdeSound->set3DSoundDistance(100.0f, 1000.0f);
 					//erdeSound->play(true, 0);
 					if(m_iDPchoice != 0)
 					{
@@ -612,7 +621,7 @@ bool	MyGameControl::buildGame()
 													1.0f, 1.0f, 1.0f);
 					if(sunLayer1Sound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 					{
-						sunLayer1Sound->set3DSoundDistance(1.0f, 1000.0f);
+						sunLayer1Sound->set3DSoundDistance(10.0f, 1000.0f);
 						if(m_iDPchoice != 0)
 						{
 							if(*_DirectPlay->m_pbHostingApp)

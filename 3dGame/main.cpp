@@ -197,21 +197,34 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 							WPARAM WParam,
 							LPARAM LParam)
 {
+	static HBITMAP hBitmap;
+	BITMAP bitmap;
+	HDC hdc, hdcMem;
+	PAINTSTRUCT ps;
+	
 	// Nachricht verarbeiten
 	switch(uiMsg)
 	{
 	case WM_INITDIALOG:
-		
-		// Timer installieren
-		//SetTimer(hWnd, 0, 25, NULL);
-		CheckDlgButton(hWnd, IDC_PLAYERMODE, BST_CHECKED);
-		//CheckDlgButton(hWnd, IDC_RADIO3, BST_CHECKED);
-		EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
-		EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
-		EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
-		EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
-		EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
-		break;
+		{
+			hBitmap = (HBITMAP) LoadImage(g_hInst,"resources\\ships\\bigship1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmap,sizeof(BITMAP),(LPVOID) &bitmap);
+			if(hBitmap == NULL)
+			{
+				MessageBox(NULL, "Fehler beim Laden des Bildes", "ERROR", MB_OK | MB_ICONSTOP);
+			}
+			// Timer installieren
+			//SetTimer(hWnd, 0, 25, NULL);
+			CheckDlgButton(hWnd, IDC_PLAYERMODE, BST_CHECKED);
+			//CheckDlgButton(hWnd, IDC_RADIO3, BST_CHECKED);
+			EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
+			EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
+			EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
+			EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
+			EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
+			
+			break;
+		}
 
 	case WM_CLOSE:
 		// Code 0 zurückliefern; das bedeutet: Dialog abgebrochen

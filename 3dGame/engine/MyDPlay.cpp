@@ -15,6 +15,7 @@ vector<MyMesh*>		MyDPlay::m_pMasterMeshes;
 vector<MySound*>	MyDPlay::m_pMeshSounds;
 LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
 D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
+LPDIRECTSOUND8		MyDPlay::_DSoundDevice	= NULL;
 int					MyDPlay::m_iFrameRate	= 100;
 	
 
@@ -177,7 +178,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					//MessageBox(NULL,"noch nicht","Message",MB_OK);
 					MyPlayer* newPlayer	= new MyPlayer();
 
-					if (newPlayer && _D3DDevice)
+					if (newPlayer && _D3DDevice && _DSoundDevice)
 					{
 			
 						EnterCriticalSection(&m_csDP);
@@ -196,10 +197,16 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 							newPlayer->m_pPlayerID = recToken->dpnid;
 							if(SUCCEEDED(newPlayer->getMesh()->load()))
 							{
-								m_pAllMeshes.push_back(newPlayer->getMesh());
-								m_pMasterMeshes.push_back(newPlayer->getMesh());
-								m_pNetworkPlayers.push_back(newPlayer);
-								newPlayer->getMesh()->move();
+								if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+								{
+									newPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
+									m_pAllMeshes.push_back(newPlayer->getMesh());
+									m_pMasterMeshes.push_back(newPlayer->getMesh());
+									m_pNetworkPlayers.push_back(newPlayer);
+									m_pMeshSounds.push_back(newPlayer->getSound());
+									newPlayer->getSound()->play(true, 0);
+									newPlayer->getMesh()->move();
+								}
 							}
 						}
 
@@ -421,10 +428,17 @@ bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress
 	return true;
 }
 
+/*Methode zum Setzen 3D-Instanzen*/
 void MyDPlay::set3DInstance(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenWorld)
 {
 	_D3DDevice	= givenDevice;
 	_matWorld	= givenWorld;
+}
+
+/*Methode zum Setzen Sound-Instanz*/
+void MyDPlay::setSoundInstance(LPDIRECTSOUND8 givenDevice)
+{
+	_DSoundDevice = givenDevice;
 }
 
 /*Methode zum Pruefen des ServiceProvider*/

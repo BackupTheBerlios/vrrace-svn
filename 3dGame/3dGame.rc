@@ -88,12 +88,10 @@ BEGIN
                     WS_TABSTOP,168,108,78,18
     CONTROL         "",IDC_IPADDRESS,"SysIPAddress32",WS_TABSTOP,240,138,102,
                     12
-    GROUPBOX        "Raumschiffe",IDC_STATIC,24,12,120,204
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,54,54,20,20
+    GROUPBOX        "RAUMSCHIFFE",IDC_STATIC,24,12,120,204
     CONTROL         "&3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
                     33,38,20,10
     CONTROL         "&4",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,35,83,20,10
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,54,103,20,20
     LTEXT           "Username",IDC_STATIC,168,18,48,12,SS_CENTERIMAGE
     LTEXT           "IP-Adresse",IDC_STATIC,186,138,48,12,SS_CENTERIMAGE
     EDITTEXT        IDC_PORT,240,156,102,12,ES_AUTOHSCROLL
@@ -101,8 +99,17 @@ BEGIN
     CONTROL         "SinglePlayer",IDC_PLAYERMODE,"Button",BS_AUTOCHECKBOX,
                     168,60,71,12
     PUSHBUTTON      "C&heck",IDC_CHECKCON,234,186,50,14
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,57,116,56,41
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,59,50,20,20
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BIGSHIP1            BITMAP                  "resources\\ships\\bigship1.bmp"
 #endif    // Deutsch (Deutschland) resources
 /////////////////////////////////////////////////////////////////////////////
 

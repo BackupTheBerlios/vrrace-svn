@@ -14,8 +14,6 @@
 #include "MyDSound.h"
 
 static const LPCTSTR	MUSICFILENAME	= "resources\\wav_files\\Music.mp3";
-static char*			PLANETSOUND	= "resources\\wav_files\\Sound1.wav";
-static char*			SHIPSOUND		= "resources\\wav_files\\Sound2.wav";
 
 class MyGameControl
 {
