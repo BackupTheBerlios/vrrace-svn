@@ -22,6 +22,29 @@ MyMesh::MyMesh(void)
 	m_pScaleFactor->setValues(1.0f, 2.0f, 1.0f);
 }
 
+MyMesh::~MyMesh()
+{
+	delete m_pPosition;
+	delete m_pScaleFactor;
+	m_pReferencePoint	= NULL;
+
+	if (m_pMaterials != NULL)
+		delete[] m_pMaterials;
+	
+	if (m_pTextures)
+	{
+		for (DWORD count = 0; count < m_dwNumMaterials; count++)
+		{
+			if (m_pTextures[count])
+				m_pTextures[count]->Release();
+		}
+		delete[] m_pTextures;
+	}
+	
+	if (m_pMesh != NULL)
+		m_pMesh->Release();
+}
+
 bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 D3DXMATRIX* givenMatWorld,
 					 LPCTSTR givenFileName,
