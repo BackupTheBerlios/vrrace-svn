@@ -65,10 +65,16 @@ MyGameControl::~MyGameControl(void)
 		}
 	}
 
+	m_pCollisionSound->stop();
+	SAFE_DELETE(m_pCollisionSound);
+	m_pCollectSound->stop();
+	SAFE_DELETE(m_pCollectSound);
+
 	//SAFE_DELETE(m_pShip);
 
-	delete m_pMusic;
-	delete	m_pDirectSound;
+	m_pMusic->stop();
+	SAFE_DELETE(m_pMusic);
+	SAFE_DELETE(m_pDirectSound);
 
 	LeaveCriticalSection(&MyDPlay::m_csDP);
 }
@@ -188,6 +194,13 @@ void	MyGameControl::moveObjects()
 								_DirectPlay->m_pAllMeshes[count]->collided();
 								if (_DirectPlay->m_pMeshSounds[count])
 									_DirectPlay->m_pMeshSounds[count]->stop();
+								if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
+								{
+								}
+								else
+								{
+									//m_pCollisionSound->play(false, 0);
+								}
 							}
 							if (_DirectPlay->m_pAllMeshes[cCount]->m_bDestroyable)
 							{
@@ -199,6 +212,14 @@ void	MyGameControl::moveObjects()
 									_DirectPlay->m_pAllMeshes[cCount]->collided();
 									if (_DirectPlay->m_pMeshSounds[cCount])
 										_DirectPlay->m_pMeshSounds[cCount]->stop();
+									if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
+									{
+										m_pCollectSound->play(false, 0);
+									}
+									else
+									{
+										m_pCollisionSound->play(false, 0);
+									}
 								}
 							}
 							//this->sendData();
@@ -271,9 +292,9 @@ bool	MyGameControl::initMusic()
 {
 	if(m_pMusic->init(MUSICFILENAME, true))
 	{
-		if(m_pMusic->setVolume(-1800))
+		if(m_pMusic->setVolume(-3500))
 		{
-			//m_pMusic->play();
+			m_pMusic->play();
 		}
 		return true;
 	} else {
@@ -285,6 +306,10 @@ bool	MyGameControl::initDirectSound()
 {
 	bool result = m_pDirectSound->init(m_hWnd);
 	_DirectPlay->setSoundInstance(m_pDirectSound->getDSound());
+	m_pCollisionSound = new MySound();
+	m_pCollisionSound->init(m_pDirectSound->getDSound(), "resources/wav_files/Sound3.wav", /*DSBCAPS_CTRL3D | */DSBCAPS_LOCDEFER);
+	m_pCollectSound = new MySound();
+	m_pCollectSound->init(m_pDirectSound->getDSound(), "resources/wav_files/Sound4.wav", /*DSBCAPS_CTRL3D | */DSBCAPS_LOCDEFER);
 	return result;
 }
 
@@ -307,7 +332,7 @@ bool	MyGameControl::startSound()
 
 bool	MyGameControl::presentMusic()
 {
-	return true;// m_pMusic->presentMusic();
+	return m_pMusic->presentMusic();
 }
 
 bool	MyGameControl::addPlayer(string* givenName)

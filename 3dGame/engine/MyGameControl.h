@@ -51,13 +51,15 @@ public:
 	MyDPlay*			_DirectPlay;	//DirectPlay
 
 private:
-	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
-	MyDSound*			m_pDirectSound;	//PrimaryBuffer DirectSound
-	MyMusic*			m_pMusic;		//Music
+	LPDIRECT3DDEVICE9	_D3DDevice;			//Handle auf das D3D-Device, global soll ja nich
+	MyDSound*			m_pDirectSound;		//PrimaryBuffer DirectSound
+	MySound*			m_pCollectSound;	//Sammelsound
+	MySound*			m_pCollisionSound;	//Kollisionssound
+	MyMusic*			m_pMusic;			//Music
 	HWND*				m_hWnd;
-	int					m_iDPchoice;	//Verbindungsart
-	int					m_iShipChoice;	//Schiffwahl
-	int					m_initCount;	//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
+	int					m_iDPchoice;		//Verbindungsart
+	int					m_iShipChoice;		//Schiffwahl
+	int					m_initCount;		//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
 	MyMesh*				m_pShip;
 	MyStarsField*		m_pStarsField;
 //	vector<MyMesh*>		m_pMeshes;
