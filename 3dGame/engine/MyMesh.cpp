@@ -181,7 +181,7 @@ HRESULT	MyMesh::load()
 		//m_pMaterials[count].Diffuse.a	= 1.0f;
 		
 		m_pTextures[count]				= NULL;
-
+		
 		if (d3dxMaterials[count].pTextureFilename != NULL
 			&& lstrlen(d3dxMaterials[count].pTextureFilename) > 0)
 		{
