@@ -34,6 +34,7 @@ public:
 
 	MyVertex*					getAbsolutePosition();
 	void						rotate(float givenX, float givenY, float givenZ);
+	D3DXMATRIX*					getRotationMatrix();
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

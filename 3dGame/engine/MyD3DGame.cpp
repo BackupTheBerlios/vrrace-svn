@@ -129,19 +129,19 @@ void	MyD3DGame::prepareScene()
 	D3DXMatrixLookAtLH(
 		&m_matView,
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->getPos()->getX(),
-			m_pGameControl->m_pView->getPos()->getY(),
-			m_pGameControl->m_pView->getPos()->getZ()
+			m_pGameControl->m_pMainCam->getPos()->getX(),
+			m_pGameControl->m_pMainCam->getPos()->getY(),
+			m_pGameControl->m_pMainCam->getPos()->getZ()
 			),
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->getVP()->getX(),
-			m_pGameControl->m_pView->getVP()->getY(),
-			m_pGameControl->m_pView->getVP()->getZ()
+			m_pGameControl->m_pMainCam->getVP()->getX(),
+			m_pGameControl->m_pMainCam->getVP()->getY(),
+			m_pGameControl->m_pMainCam->getVP()->getZ()
 			),
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->getUV()->getX(),
-			m_pGameControl->m_pView->getUV()->getY(),
-			m_pGameControl->m_pView->getUV()->getZ()
+			m_pGameControl->m_pMainCam->getUV()->getX(),
+			m_pGameControl->m_pMainCam->getUV()->getY(),
+			m_pGameControl->m_pMainCam->getUV()->getZ()
 			)
 		);
 		
@@ -173,9 +173,9 @@ void	MyD3DGame::showStatus()
 	sprintf(
 		temp,
 		"Position: %2.2f %2.2f %2.2f",
-		m_pGameControl->m_pView->getPos()->getX(),
-		m_pGameControl->m_pView->getPos()->getY(),
-		m_pGameControl->m_pView->getPos()->getZ());
+		m_pGameControl->m_pMainCam->getPos()->getX(),
+		m_pGameControl->m_pMainCam->getPos()->getY(),
+		m_pGameControl->m_pMainCam->getPos()->getZ());
 
 	m_pFont->DrawText(
 		5,
@@ -192,9 +192,9 @@ void	MyD3DGame::showStatus()
 	sprintf(
 		temp,
 		"Fluchtpunkt: %2.2f %2.2f %2.2f",
-		m_pGameControl->m_pView->getVP()->getX(),
-		m_pGameControl->m_pView->getVP()->getY(),
-		m_pGameControl->m_pView->getVP()->getZ());
+		m_pGameControl->m_pMainCam->getVP()->getX(),
+		m_pGameControl->m_pMainCam->getVP()->getY(),
+		m_pGameControl->m_pMainCam->getVP()->getZ());
 
 	m_pFont->DrawText(
 		5,

@@ -3,7 +3,7 @@
 MyGameControl::MyGameControl(void)
 {
 	m_initCount			= 0;
-	m_pView				= new MyView();
+	m_pMainCam			= new MyView();
 	m_bShowStatus		= true;
 	m_pLocalPlayer		= new MyPlayer();
 
@@ -12,7 +12,7 @@ MyGameControl::MyGameControl(void)
 
 MyGameControl::~MyGameControl(void)
 {
-	delete m_pView;
+//	delete m_pView;
 //	delete m_pStarsField;
 }
 
@@ -64,7 +64,7 @@ bool	MyGameControl::moveObjects()
 	{
 		m_pAllMeshes[count]->move();
 	}
-	
+	m_pMainCam->move();
 			
 	return true;
 }
@@ -82,9 +82,9 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 	_D3DDevice				= givenDevice;
 	_matWorld				= givenMatWorld;
 
-	m_pView->getPos()->setValues(200.0f, 50.0f, 200.0f);
-	m_pView->getVP()->setValues(0.0f, 0.0f, 0.0f);
-	m_pView->getUV()->setValues(0.0f, 1.0f, 0.0f);
+	m_pMainCam->getPos()->setValues(200.0f, 50.0f, 200.0f);
+	m_pMainCam->getVP()->setValues(0.0f, 0.0f, 0.0f);
+	m_pMainCam->getUV()->setValues(0.0f, 1.0f, 0.0f);
 
 	this->initObjects();
 
@@ -106,23 +106,27 @@ bool	MyGameControl::addPlayer(string* givenName)
 	} else {
 		if (m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
-											"resources/x_files/space station 7.x",
+											"resources/x_files/star sail.x",
 											NULL,
-											1000.0f, 0.0f, 1000.0f,
+											100.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,
 											0.0f, 0.0f, 0.0f,
-											0.0f, 0.01f, 0.01f,
+											0.0f, 0.0f, 0.01f,
 											false, true))
 		{
 			m_pLocalPlayer->getMesh()->load();
 
 			m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
 			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
-			m_pView->getPos()->setValues(1510.0f, 0.0f, 1510.0f);
-			m_pView->getVP()->setPValues(
+			m_pMainCam->setMaster(m_pLocalPlayer->getMesh());
+			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
+//			m_pMainCam->calcPosition();
+			m_pMainCam->move();
+			/*m_pView->getVP()->setPValues(
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPX(),				
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPY(),
-				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPZ());
+				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPZ());*/
+//			m_pMainCam = m_pLocalPlayer->getCamera();
 		} else {
 			return false;
 		}

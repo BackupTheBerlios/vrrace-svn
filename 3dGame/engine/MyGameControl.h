@@ -32,7 +32,7 @@ public:
 	int					getNumMeshes();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
 
-	MyView*				m_pView;
+	MyView*				m_pMainCam;
 	bool				m_bShowStatus;
 
 private:

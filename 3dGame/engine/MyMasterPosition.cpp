@@ -86,8 +86,6 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 
 	m_pRotationMatrix = new D3DXMATRIX;
 
-
-
 	D3DXMatrixRotationYawPitchRoll(
 			&tempMatrixNeu,
 			givenY,
@@ -100,62 +98,6 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 		tempMatrixAlt);
 	
 	delete tempMatrixAlt;
-
-/*	D3DXMATRIX tempMatrix;
-	float tempX, tempY, tempZ;
-	//D3DXVECTOR3*	pVector	= new D3DXVECTOR3(tempX,tempY,tempZ);
-	D3DXVECTOR3*	pOut	= new D3DXVECTOR3();
-	D3DXVECTOR4*	pOut2	= new D3DXVECTOR4();
-	D3DXMATRIX*		pOut3	= new D3DXMATRIX();
-
-	D3DXVec3Normalize(pOut,
-		&D3DXVECTOR3(m_pRotation->getX(), m_pRotation->getY(), m_pRotation->getZ()));
-	switch (givenAxe)
-	{
-	case 0:
-		//x
-		D3DXMatrixRotationAxis(pOut3,
-			&D3DXVECTOR3(1.0f, pOut->y, pOut->z),
-			givenX);
-		break;
-	case 1:
-		//y
-		D3DXMatrixRotationAxis(pOut3,
-			&D3DXVECTOR3(pOut->x, 1.0f, pOut->z),
-			givenY);
-		break;
-	case 2:
-		//z
-		D3DXMatrixRotationAxis(pOut3,
-			&D3DXVECTOR3(pOut->x, pOut->y, 1.0f),
-			givenZ);
-		break;
-	}
-/*
-	D3DXMatrixRotationX(&tempMatrix,m_pRotation->getX());
-	D3DXMatrixRotationY(&tempMatrix,m_pRotation->getY());
-	D3DXMatrixRotationZ(&tempMatrix,m_pRotation->getZ());
-*/
-/*	
-D3DXVECTOR3*	pVector	= new D3DXVECTOR3();
-	D3DXVec3Transform(pOut2, &D3DXVECTOR3(m_pRotation->getX(), m_pRotation->getY(), m_pRotation->getZ()), pOut3);
-	m_pRotation->setValues(pOut2->x, pOut2->y, pOut2->z);
-	
-	TCHAR* temp = new TCHAR[100];
-
-	//Zeige aktuelle Betrachterposition
-	sprintf(
-		temp,
-		"Position: %2.2f %2.2f %2.2f",
-		m_pRotation->getX(),
-		m_pRotation->getY(),
-		m_pRotation->getZ());
-
-		//MessageBox(NULL, temp, "jjj", MB_OK);
-delete pVector;
-	delete pOut;
-	delete pOut2;
-	delete pOut3;*/
 }
 
 void	MyMasterPosition::move()
@@ -264,4 +206,9 @@ MyVertex*	MyMasterPosition::getAbsolutePosition()
 	} else {
 		return m_pAbsolutePosition;
 	}
+}
+
+D3DXMATRIX*	MyMasterPosition::getRotationMatrix()
+{
+	return m_pRotationMatrix;
 }
