@@ -99,6 +99,8 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 		m_pRotationMatrix,
 		&tempMatrixNeu,
 		tempMatrixAlt);
+
+	//direction und upvector mitrotieren lassen!
 	
 	delete tempMatrixAlt;
 }

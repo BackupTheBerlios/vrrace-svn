@@ -214,6 +214,24 @@ void	MyD3DGame::showStatus()
 			MM_TEXTCOLOR_BLUE),
 		temp);
 
+	//Zeige den Fluchtpunkt
+	sprintf(
+		temp,
+		"UpVector: %2.2f %2.2f %2.2f",
+		m_pGameControl->m_pMainCam->getUV()->getX(),
+		m_pGameControl->m_pMainCam->getUV()->getY(),
+		m_pGameControl->m_pMainCam->getUV()->getZ());
+
+	m_pFont->DrawText(
+		5,
+		35,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
+
 	//Zeige Menge der Lichter und Meshes
 	sprintf(
 		temp,
@@ -226,7 +244,7 @@ void	MyD3DGame::showStatus()
 
 	m_pFont->DrawText(
 		5,
-		35,
+		50,
 		D3DCOLOR_ARGB(
 			MM_TEXTCOLOR_ALPHA,
 			MM_TEXTCOLOR_RED,

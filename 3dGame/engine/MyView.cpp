@@ -68,21 +68,24 @@ void	MyView::move()
 	if (m_pMaster != NULL)
 	{
 
-	D3DXMatrixTranslation(
+	//wenn sich das schiff in eine richtung bewegt, muss die camera hinterherfliegen
+
+		//eigendlich sollte der localplayer die position anpassen
+		D3DXMatrixTranslation(
 			&tempTransLP,
 			m_pLocalPos->getX(),
 			m_pLocalPos->getY(),
 			m_pLocalPos->getZ()
 			);
 
-	D3DXMatrixTranslation(
+		D3DXMatrixTranslation(
 			&tempTransUV,
 			m_pUpVector->getX(),
 			m_pUpVector->getY(),
 			m_pUpVector->getZ()
 			);
 
-	D3DXMatrixMultiply(
+		D3DXMatrixMultiply(
 			&tempTransb,
 			&tempTransLP,
 			m_pMaster->getRotationMatrix());
@@ -97,8 +100,8 @@ void	MyView::move()
 			m_pMaster->getAbsolutePosition()->getY() + tempMesh.getY(), 
 			m_pMaster->getAbsolutePosition()->getZ() + tempMesh.getZ());
 //UPVECTORBERECHNUNG
-		/*
-		D3DXMatrixMultiply(
+//wird hier jedesmal ausgeführt, was dazu führt, dass der upvector nicht fest bleibt		
+/*		D3DXMatrixMultiply(
 			&tempTransb,
 			&tempTransUV,
 			m_pMaster->getRotationMatrix());
@@ -108,10 +111,7 @@ void	MyView::move()
 		tempMesh.setY(pOut->y);
 		tempMesh.setZ(pOut->z);
 
-		m_pUpVector->setValues(
-			m_pMaster->getAbsolutePosition()->getX() + tempMesh.getX(), 
-			m_pMaster->getAbsolutePosition()->getY() + tempMesh.getY(), 
-			m_pMaster->getAbsolutePosition()->getZ() + tempMesh.getZ());*/
+		m_pUpVector->setValues(tempMesh.getX(), tempMesh.getY(), tempMesh.getZ());*/
 	} 
 
 
