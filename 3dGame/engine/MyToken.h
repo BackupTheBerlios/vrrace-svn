@@ -17,5 +17,6 @@ typedef struct PLAYEROBJECTS
 	DPNID		dpnid;
 	int			status;
 	GAMEOBJECTS	position;
+	D3DXMATRIX	matrix;
 }PLAYEROBJECTS;
 #endif

@@ -79,6 +79,7 @@ typedef struct MYPOS
 	CUSTOMVERTEX direction;
 	CUSTOMVERTEX rotation;
 	CUSTOMVERTEX rotdir;
+	CUSTOMVERTEX rotate;
 	CUSTOMVERTEX scalefactor;
 }MYPOS;
 

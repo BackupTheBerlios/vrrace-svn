@@ -34,16 +34,20 @@ public:
 	bool enumAvailServer(void);
 	bool sendMessage(void* givenToken, int choice);
 	bool closeConnection(void);
+	void set3DInstance(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenWorld);	
 	static HRESULT WINAPI DPMessageProc(PVOID pvUserContext, DWORD dwMessageId, PVOID pvMsgBuffer);
 	static bool*					m_pbHostingApp;
 	static bool*					m_pbConnected;
 	static DPNID					m_pid;
 	static vector<MyMesh*>			m_pAllMeshes;		//Alle Meshes
+	static vector<MyMesh*>			m_pMasterMeshes;	//Alle ohne Master
 	static MyPlayer*				m_pLocalPlayer;		//eigener Spieler
 	static vector<MyPlayer*>		m_pNetworkPlayers;	//andere Teilnehmer
 	static vector<MyMesh*>			m_pNetworkMeshes;   //Meshes vom Server aktualisiert
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
 private:
+	static LPDIRECT3DDEVICE9	_D3DDevice;
+	static D3DXMATRIX*			_matWorld;
 	bool checkServiceProvider(const GUID* givenSPGUID);
 	bool createOwnAddress(void);
 	bool createServerAddress(void);

@@ -11,6 +11,11 @@ MyPlayer*			MyDPlay::m_pLocalPlayer;
 vector<MyPlayer*>	MyDPlay::m_pNetworkPlayers;
 vector<MyMesh*>		MyDPlay::m_pNetworkMeshes;
 vector<MyMesh*>		MyDPlay::m_pLocalMeshes;
+vector<MyMesh*>		MyDPlay::m_pMasterMeshes;
+LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
+D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
+	
+
 /*Callback-Funktion fuer DirectPlay*/
 HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 									DWORD dwMessageId,
@@ -138,6 +143,61 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
 						recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
 				}
+			} else if(pMsg->dwReceiveDataSize == sizeof(PLAYEROBJECTS))
+			{
+				PLAYEROBJECTS* recToken	= (PLAYEROBJECTS*)pMsg->pReceiveData;
+				bool isContent = false;
+				DWORD tmpCount;
+				for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
+				{
+					if(m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid)
+					{
+						//MessageBox(NULL,"schon da","Message",MB_OK);
+						tmpCount = count;
+						isContent = true;
+						break;
+					}
+				}
+				if(!isContent)
+				{
+					//MessageBox(NULL,"noch nicht","Message",MB_OK);
+					MyPlayer* newPlayer	= new MyPlayer();
+
+					if (newPlayer && _D3DDevice)
+					{
+						if (newPlayer->getMesh()->init(_D3DDevice,
+															_matWorld,
+															"resources/x_files/shusui.x",
+															NULL,
+															105.0f, 0.0f, 1000.0f,
+															0.0f, 0.0f, 0.0f,
+															0.0f, 0.0f, 0.0f,
+															0.0f, 0.0f, 0.0f,
+															false, true))
+						{
+							newPlayer->m_pPlayerID = recToken->dpnid;
+							newPlayer->getMesh()->load();
+							m_pAllMeshes.push_back(newPlayer->getMesh());
+							m_pMasterMeshes.push_back(newPlayer->getMesh());
+							m_pNetworkPlayers.push_back(newPlayer);
+							newPlayer->getMesh()->move();
+						}
+					}
+					tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
+				}
+				m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
+					recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
+				m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
+					recToken->position.posinfo.direction.x, recToken->position.posinfo.direction.y, recToken->position.posinfo.direction.z);
+				m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotation->setValues(
+					recToken->position.posinfo.rotation.x, recToken->position.posinfo.rotation.y, recToken->position.posinfo.rotation.z);
+				m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotDir->setValues(
+					recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
+				m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
+					recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
+				//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
+				//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
+				//m_pNetworkPlayers[tmpCount]->getMesh()->move();
 			}
 			//MyToken* recToken = (MyToken*)pMsg->pReceiveData;
 			//if(recToken->vectorId < m_pAllMeshes.size())
@@ -315,6 +375,12 @@ bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress
 	}*/
 
 	return true;
+}
+
+void MyDPlay::set3DInstance(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenWorld)
+{
+	_D3DDevice	= givenDevice;
+	_matWorld	= givenWorld;
 }
 
 /*Methode zum Pruefen des ServiceProvider*/

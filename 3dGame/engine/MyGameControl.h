@@ -36,6 +36,7 @@ public:
 
 	MyView*				m_pMainCam;
 	bool				m_bShowStatus;
+	void				sendPlayer(float givenX, float givenY, float givenZ);
 
 private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
@@ -48,7 +49,6 @@ private:
 //	vector<MyLight*>	m_pLights;
 	D3DXMATRIX*			_matWorld;
 //	vector<MyMesh*>		m_pAllMeshes;		//Alle Meshes
-	vector<MyMesh*>		m_pMasterMeshes;	//Alle ohne Master
 	vector<MyLight*>	m_pAllLights;		//Alle Lichter
 	vector<MyMasterPosition*>	m_pMasterObjects;	//Alle Objekte die kein Master haben
 	vector<MyMasterPosition*>	m_pDrawObjects;		//Alle zu zeichnenden Objekte

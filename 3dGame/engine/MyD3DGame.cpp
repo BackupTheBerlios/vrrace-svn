@@ -222,7 +222,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumMeshes());
 
 	//Zeige Anzahl der Frames per Second
-	sprintf(temp,"FPS: %2.2f",*m_pfFramesPerSecond);
+	sprintf(temp,"FPS: %f",*m_pfFramesPerSecond);
 
 	m_pFont->DrawText(
 		5,
@@ -260,6 +260,7 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 bool	MyD3DGame::initGame(void)
 {
 	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_pDirectPlay, m_iDPchoice);
+	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
 	m_pGameControl->buildGame();
 	m_pGameControl->addPlayer(NULL);
 	m_pGameControl->addLight();
@@ -287,6 +288,7 @@ void	MyD3DGame::runGame()
 	if ((((float)(dwTime0 - m_dwTmpTime)/1000.0f) > 0.15f) && (m_iDPchoice != 0))
 	{
 		m_pGameControl->sendData();
+		//m_pGameControl->sendPlayer();
 		m_dwTmpTime = dwTime0;
 	}
 
@@ -297,5 +299,12 @@ void	MyD3DGame::runGame()
 
 	DWORD dwTime1 = timeGetTime();
 
-	*m_pfFramesPerSecond = 1.0f / ((float)(dwTime1-dwTime0)/1000.0f);
+	*m_pfFramesPerSecond = ((float)(dwTime1-dwTime0)/1000.0f);
+
+	float time = 0.0f;
+	if((time = 1000.0f / 20.0f - (float)(dwTime1-dwTime0)) > 0.0f) 
+		Sleep((int)time);
+	/*char temp[100];
+	sprintf(temp,"%f",(1000.0f / 60.0f - (float)(dwTime1-dwTime0)));
+	MessageBox(NULL,temp,"Time",MB_OK);*/
 }

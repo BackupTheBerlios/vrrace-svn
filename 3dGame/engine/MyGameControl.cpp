@@ -39,10 +39,10 @@ bool	MyGameControl::loadObjects()
 bool	MyGameControl::drawObjects()
 {
 
-	for (DWORD count = 0; count < m_pMasterMeshes.size(); count++)
+	for (DWORD count = 0; count < _DirectPlay->m_pMasterMeshes.size(); count++)
 	{
 		//if(m_pMasterMeshes[count]->m_bToSend || (m_iDPchoice == 0))
-			m_pMasterMeshes[count]->calcClients();
+			_DirectPlay->m_pMasterMeshes[count]->calcClients();
 	}
 	
 	for (count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
@@ -123,14 +123,15 @@ bool	MyGameControl::addPlayer(string* givenName)
 											100.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,
 											0.0f, 0.0f, 0.0f,
-											0.0f, 0.0f, 0.01f,
+											0.0f, 0.0f, 0.0f,
 											false, true))
 		{
+			_DirectPlay->m_pLocalPlayer->m_pPlayerID = _DirectPlay->m_pid;
 			_DirectPlay->m_pLocalPlayer->getMesh()->load();
 			//if(m_iDPchoice != 0)
 				//m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
 			_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
-			m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+			_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
 			m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
 			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
 //			m_pMainCam->calcPosition();
@@ -186,7 +187,7 @@ bool	MyGameControl::buildGame()
 				}
 			}
 			_DirectPlay->m_pAllMeshes.push_back(sonne);
-			m_pMasterMeshes.push_back(sonne);
+			_DirectPlay->m_pMasterMeshes.push_back(sonne);
 		} else {
 			return false;
 		}
@@ -292,7 +293,7 @@ bool	MyGameControl::buildGame()
 				}
 			}
 			_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
-			m_pMasterMeshes.push_back(kreuzer1);
+			_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 		} else {
 			return false;
 		}
@@ -413,6 +414,40 @@ bool	MyGameControl::sendData()
 		//}
 	}
 	return true;
+}
+
+void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
+{
+	if(m_iDPchoice != 0)
+	{
+		_DirectPlay->m_pLocalPlayer->getMesh()->move();
+		PLAYEROBJECTS	sendingToken;
+		sendingToken.dpnid	= _DirectPlay->m_pLocalPlayer->m_pPlayerID;
+		sendingToken.position.posinfo.position.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getX();
+		sendingToken.position.posinfo.position.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getY();
+		sendingToken.position.posinfo.position.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getZ();
+		
+		sendingToken.position.posinfo.direction.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pDirection->getX();
+		sendingToken.position.posinfo.direction.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pDirection->getY();
+		sendingToken.position.posinfo.direction.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pDirection->getZ();
+		
+		sendingToken.position.posinfo.rotation.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotation->getX();
+		sendingToken.position.posinfo.rotation.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotation->getY();
+		sendingToken.position.posinfo.rotation.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotation->getZ();
+		
+		sendingToken.position.posinfo.rotdir.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getX();
+		sendingToken.position.posinfo.rotdir.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getY();
+		sendingToken.position.posinfo.rotdir.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getZ();
+
+		sendingToken.position.posinfo.rotate.x	= givenX;
+		sendingToken.position.posinfo.rotate.y	= givenY;
+		sendingToken.position.posinfo.rotate.z	= givenZ;
+
+		sendingToken.matrix							= *_DirectPlay->m_pLocalPlayer->getMesh()->getPositionMatrix();
+
+		_DirectPlay->sendMessage(&sendingToken, 1);
+	}
+
 }
 
 bool	MyGameControl::addLight()
