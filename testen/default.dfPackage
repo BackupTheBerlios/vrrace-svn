@@ -1,0 +1,95 @@
+package id3ycvve3cyv4bne3cyv5bj;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#iddayve3d2jbfoe3d2jfye.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#directx:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id327jwe3d2jbfoe3dkxtp0.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#game:oiref> 
+*/
+class reference60 {
+}/**
+@__ref <oiref:cpp#Class#CUSTOMVERTEX:oiref><oihard>
+@__modelType reference 
+*/
+class reference64 {
+}/**
+@__ref <oiref:design#Class#id476dke3tzfp2le3tzfz66.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#engine:oiref> 
+*/
+class reference1 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pWindowed_DeviceInfo:oiref>=1890,696,1890,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DScreensaver#m_Adapters:oiref>=1070,2000,1070,934:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CArrayList#m_ArrayListType:oiref>=1546,2270,1546,3654:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSessionInfo#m_AppMessages:oiref>=2335,860,2455,860:oigroup>
+<oigroup:<oiref:design#Class#id476dke3tzfp2le3tzfz66.diagram:oiref>=535,155,90,177,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pVertexProcessingTypeList:oiref>=2639,2076,1697,2076:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CDIDIObject#m_aCallout:oiref>=2702,103,2808,103:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettingsDialog#m_d3dSettings:oiref>=1440,257,1796,257:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pFullscreen_DeviceCombo:oiref>=1976,696,2711,769,2711,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pFullscreen_AdapterInfo:oiref>=1807,696,1086,738,1086,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pMultiSampleTypeList:oiref>=2639,2192,1697,2192:oigroup>
+<oigroup:<oiref:cpp#Extends#SI_MSG_PLAYERINFO#SI_MSG:oiref>=1091,177,1091,117:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DAdapterInfo#pDeviceInfoList:oiref>=1120,934,1120,1589,1534,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DApplication#m_d3dSettings:oiref>=1620,776,1831,696:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DScreensaver#m_RenderUnits:oiref>=1169,3534,1169,3654:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSessionInfo#m_pGroups:oiref>=2201,1910,1661,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pWindowed_DeviceCombo:oiref>=1986,696,2767,761,2767,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pWindowed_AdapterInfo:oiref>=1819,696,1153,746,1153,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CNetConnectWizard#m_eSigningType:oiref>=3702,79,3782,79:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DEnumeration#m_pAdapterInfoList:oiref>=1373,1238,1373,1774,1610,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettingsDialog#m_pEnumeration:oiref>=1340,504,1340,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DFrame#m_pMesh:oiref>=316,169,210,169:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceInfo#pDeviceComboList:oiref>=1833,934,1833,1801,1635,2000:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#Fullscreen_VertexProcessingType:oiref>=1956,696,1956,776:oigroup>
+<oigroup:<oiref:design#Class#id4xr6he3eibq4ve3eibxll.diagram:oiref>=113,10,83,136,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DEnumeration#m_pAllowedAdapterFormatList:oiref>=1306,1238,1306,1730,1585,2000:oigroup>
+<oigroup:<oiref:cpp#Class#CUSTOMVERTEX:oiref>=636,227,107,155,1:oigroup>
+<oigroup:<oiref:design#Class#iddayve3d2jbfoe3d2jfye.diagram:oiref>=10,170,177,984,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DAdapterInfo#pDisplayModeList:oiref>=1170,934,1170,1617,1560,2000:oigroup>
+<oigroup:<oiref:cpp#Extends#CStreamingSound#CSound:oiref>=3382,516,3382,344:oigroup>
+<oigroup:<oiref:design#Class#id4phxpe3cyv4bne3d2fgh7.diagram:oiref>=1556,279,83,95,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSIGroup#pMembers:oiref>=1650,3654,1650,2270:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CDIDIObject#m_aOverlay:oiref>=2613,504,2613,584:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pDSMSConflictList:oiref>=2639,2114,1697,2114:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pDepthStencilFormatList:oiref>=2639,2231,1697,2231:oigroup>
+<oigroup:<oiref:cpp#Extends#CD3DFile#CD3DFrame:oiref>=416,488,416,328:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pMultiSampleQualityList:oiref>=2639,2153,1697,2153:oigroup>
+<oigroup:<oiref:cpp#Extends#SI_MSG_GROUPINFO#SI_MSG:oiref>=1024,177,1024,117:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#D3DDeviceCombo#pPresentIntervalList:oiref>=2639,2038,1697,2038:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DScreensaver#m_Monitors:oiref>=1220,2141,1300,2141:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSessionInfo#m_pPlayers:oiref>=2268,1910,1687,2000:oigroup>
+<oigroup:<oiref:design#Class#id327jwe3d2jbfoe3dkxtp0.diagram:oiref>=10,10,83,104,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#Windowed_VertexProcessingType:oiref>=1966,696,1966,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DApplication#m_d3dEnumeration:oiref>=1520,1007,1440,1007:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DSettings#pFullscreen_DeviceInfo:oiref>=1843,696,1843,776:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DFrame#m_pChild:oiref>=476,328,476,378,566,378,566,288,516,288:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DScreensaver#m_SaverMode:oiref>=1059,3534,1059,3654:oigroup>
+<oigroup:<oiref:cpp#Extends#C3DMusicSegment#CMusicSegment:oiref>=776,372,776,312:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSessionInfo#m_DPlayMessages:oiref>=2335,945,2455,945:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CSound#m_pWaveFile:oiref>=3282,177,3176,177:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#CD3DFrame#m_pNext:oiref>=436,328,436,418,606,418,606,248,516,248:oigroup>
+*/
+class __positions {
+}
