@@ -10,7 +10,7 @@ MyGameControl::MyGameControl(void)
 	m_pDirectSound		= new MyDSound();
 	m_pStarsField		= new MyStarsField();
 
-	ff_g	= false;
+	ff_g	= 0;
 	ff_f	= false;
 	ff_r	= false;
 	ff_b	= false;
@@ -164,7 +164,17 @@ bool	MyGameControl::collision(MyMesh* givenObject1, MyMesh* givenObject2)
 			givenObject2->getAbsolutePosition()->getY(),
 			givenObject2->getAbsolutePosition()->getZ()));
 
-	if (D3DXVec3Length(&pOut) <= givenObject1->m_colRadius+givenObject2->m_colRadius)
+	float temp = D3DXVec3Length(&pOut);
+
+	if (((givenObject1->m_bIsCam) && (givenObject2->m_isPlanet))
+		&& ((givenObject2->m_graviRadius - temp) > 0))
+		ff_g = givenObject2->m_graviRadius - temp;
+
+	if (((givenObject2->m_bIsCam) && (givenObject1->m_isPlanet))
+		&& ((givenObject1->m_graviRadius - temp) > 0))
+		ff_g = givenObject1->m_graviRadius - temp;
+
+	if (temp <= givenObject1->m_colRadius+givenObject2->m_colRadius)
 	{//wenn Abstand kleiner als Summe der Radien
 		return true;
 	}
@@ -176,6 +186,7 @@ void	MyGameControl::moveObjects()
 {
 	EnterCriticalSection(&_DirectPlay->m_csDP);
 	m_pStarsField->move();
+	ff_g = 0;
 	for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{//für alle meshe
 		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend || (m_iDPchoice == 0))
@@ -436,7 +447,7 @@ bool	MyGameControl::buildGame()
 			if(SUCCEEDED(sonne->load()))
 			{
 				sonne->m_isPlanet = true;
-				sonne->m_graviRadius = 10000.0f;
+				sonne->m_graviRadius = 3000.0f;
 				sonne->m_colRadius = 1000.0f;
 				sonne->activateScaling();
 				sonne->getScale()->setValues(1000.0f, 1000.0f, 1000.0f);
@@ -555,7 +566,7 @@ bool	MyGameControl::buildGame()
 			if(SUCCEEDED(erde->load()))
 			{
 				erde->m_isPlanet = true;
-				erde->m_graviRadius = 1000.0f;
+				erde->m_graviRadius = 300.0f;
 				erde->m_colRadius = 100.0f;
 				erde->activateScaling();
 				erde->getScale()->setValues(100.0f, 100.0f, 100.0f);
@@ -738,7 +749,7 @@ bool	MyGameControl::buildGame()
 							true, false))
 		{
 			mond->m_isPlanet = true;
-			mond->m_graviRadius = 100.0f;
+			mond->m_graviRadius = 60.0f;
 			mond->m_colRadius = 20.0f;
 			mond->setMaster(erdkern);
 			if(SUCCEEDED(mond->load()))

@@ -47,7 +47,7 @@ public:
 	bool				m_bShowStatus;
 	void				sendPlayer(float givenX, float givenY, float givenZ, int status);
 	bool				collision(MyMesh* givenObject1, MyMesh* givenObject2);
-	bool				ff_g;//gravi
+	int					ff_g;//gravi
 	bool				ff_f;//vorn
 	bool				ff_r;//rechts
 	bool				ff_b;//hinten

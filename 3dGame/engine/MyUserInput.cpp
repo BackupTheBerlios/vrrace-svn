@@ -195,8 +195,16 @@ void	MyUserInput::doFF()
 {
 	if (m_JoystickAvailable)
 	{
-	if (_m_pGameControl->ff_g)
-	{
+	if (_m_pGameControl->ff_g > 0)
+	{/*
+		DIPERIODIC diPeriodic;
+		LPDIEFFECT temp;
+		pEff[0]->GetParameters(&temp, 0);
+		//diPeriodic = temp->lpvTypeSpecificParams;
+		diPeriodic.dwMagnitude = _m_pGameControl->ff_g;
+		temp->cbTypeSpecificParams = sizeof(diPeriodic);
+		temp->lpvTypeSpecificParams = &diPeriodic;
+		pEff[0]->SetParameters(&temp, 0);*/
 		pEff[0]->Start(1,0);
 	} else {
 		pEff[0]->Stop();
