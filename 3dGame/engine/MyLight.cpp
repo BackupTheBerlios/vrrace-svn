@@ -57,9 +57,9 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice,
 	m_d3dLight.Position.y	= 0.0f;
 	m_d3dLight.Position.z	= 0.0f;
 
-	m_d3dLight.Direction.x	= -1.0f;
-	m_d3dLight.Direction.y	= -1.0f;
-	m_d3dLight.Direction.z	= -1.0f;
+	m_d3dLight.Direction.x	= 1.0f;
+	m_d3dLight.Direction.y	= 1.0f;
+	m_d3dLight.Direction.z	= 1.0f;
 
 	m_d3dLight.Attenuation0	= 1.0f;
 	m_d3dLight.Attenuation1	= 0.0f;
