@@ -5,13 +5,24 @@
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT Paint;
+
 	switch(msg)
 	{
-	case WM_DESTROY:
+	case WM_CREATE:
+		break;
+
+	case WM_PAINT:
+		// Das Fenster mit Schwarz füllen
+		BeginPaint(hWnd, &Paint);
+		FillRect(Paint.hdc, &Paint.rcPaint, (HBRUSH)(GetStockObject(BLACK_BRUSH)));
+		EndPaint(hWnd, &Paint);
+		break;
+	/*case WM_DESTROY:
 			DestroyWindow(hWnd);
 			PostQuitMessage(0);
 			exit(0);
-		break;
+		break;*/
 	case WM_CLOSE:
 			DestroyWindow(hWnd);
 			PostQuitMessage(0);
@@ -23,12 +34,15 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 bool GenerateGameWindow()
 {
+	int iWidth;
+	int iHeight;
+
 	WNDCLASSEX	wc	= {
 		sizeof(WNDCLASSEX),
 		CS_CLASSDC,
 		MsgProc,
-		0L,
-		0L,
+		0,
+		0,
 		GetModuleHandle(NULL),
 		NULL,
 		NULL,
@@ -38,24 +52,33 @@ bool GenerateGameWindow()
 		NULL
 	};
 
-	RegisterClassEx(&wc);
+	if(!RegisterClassEx(&wc))
+	{
+		MessageBox(NULL, "Fehler bei der Registrierung des Fensters", "ERROR", MB_OK | MB_ICONSTOP);
+	}
+
+	RECT Rect;
+	SetRect(&Rect, 0, 0, 800, 800);
+	AdjustWindowRect(&Rect, WS_VISIBLE | WS_OVERLAPPEDWINDOW, FALSE);
+	iWidth = Rect.right - Rect.left;
+	iHeight = Rect.bottom - Rect.top;
 
 	HWND	hWnd	= CreateWindow(
 						MM_WINDOW_CLASS_NAME,
 						MM_WINDOW_DESCRIPTION,
 						WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-						1,
-						1,
-						800,
-						800,
-						GetDesktopWindow(),
+						GetSystemMetrics(SM_CXSCREEN) / 2 - iWidth / 2,//1,
+						GetSystemMetrics(SM_CYSCREEN) / 2 - iHeight / 2,//1,
+						iWidth,//800,
+						iHeight,//800,
+						NULL,//GetDesktopWindow(),
 						NULL,
-						wc.hInstance,
+						GetModuleHandle(NULL),//wc.hInstance,
 						NULL
 					);
 
-	ShowWindow(hWnd, SW_NORMAL);
-	UpdateWindow(hWnd);
+	//ShowWindow(hWnd, SW_NORMAL);
+	//UpdateWindow(hWnd);
 
 	MSG	msg;
 	ZeroMemory(&msg, sizeof(msg));
@@ -168,14 +191,6 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 							WPARAM WParam,
 							LPARAM LParam)
 {
-	/*HDC			hDC;
-	LOGBRUSH	LogBrush;
-	HBRUSH		hBrush;
-	RECT		Rect;
-	CHOOSECOLOR	ChooseColorStruct;
-	char		acText[256];
-	*/
-	
 	// Nachricht verarbeiten
 	switch(uiMsg)
 	{
@@ -217,6 +232,7 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
 					//SinglePlayer
 				{
+					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
 					GenerateGameWindow();
 				}
