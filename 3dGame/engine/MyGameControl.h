@@ -47,8 +47,6 @@ private:
 //	vector<MyMesh*>		m_pMeshes;
 //	vector<MyLight*>	m_pLights;
 	D3DXMATRIX*			_matWorld;
-	MyPlayer*			m_pLocalPlayer;		//eigener Spieler
-	vector<MyPlayer*>	m_pNetworkPlayers;	//andere Teilnehmer
 //	vector<MyMesh*>		m_pAllMeshes;		//Alle Meshes
 	vector<MyMesh*>		m_pMasterMeshes;	//Alle ohne Master
 	vector<MyLight*>	m_pAllLights;		//Alle Lichter

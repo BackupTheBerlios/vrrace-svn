@@ -44,5 +44,6 @@ private:
 	MyDPlay*			m_pDirectPlay;						//DirectPlay
 	int					m_iDPchoice;						//Verbindungsart
 	float*				m_pfFramesPerSecond;				//Anzahl Frames
+	DWORD				m_dwTmpTime;						//TempZeit für Senden
 };
 #endif

@@ -5,8 +5,7 @@ MyGameControl::MyGameControl(void)
 	m_initCount			= 0;
 	m_pMainCam			= new MyView();
 	m_bShowStatus		= true;
-	m_pLocalPlayer		= new MyPlayer();
-
+	
 	m_pStarsField		= new MyStarsField();
 
 	_DirectPlay		= NULL;
@@ -93,6 +92,8 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 	_DirectPlay				= givenDPlay;
 	m_iDPchoice				= choice;
 
+	_DirectPlay->m_pLocalPlayer		= new MyPlayer();
+
 	m_pMainCam->getPos()->setValues(200.0f, 50.0f, 200.0f);
 	m_pMainCam->getVP()->setValues(0.0f, 0.0f, 0.0f);
 	m_pMainCam->getUV()->setValues(0.0f, 1.0f, 0.0f);
@@ -111,11 +112,11 @@ bool	MyGameControl::initObjects()
 
 bool	MyGameControl::addPlayer(string* givenName)
 {
-	if (m_pLocalPlayer == NULL)
+	if (_DirectPlay->m_pLocalPlayer == NULL)
 	{
 		return false;
 	} else {
-		if (m_pLocalPlayer->getMesh()->init(_D3DDevice,
+		if (_DirectPlay->m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
 											"resources/x_files/star sail.x",
 											NULL,
@@ -125,12 +126,12 @@ bool	MyGameControl::addPlayer(string* givenName)
 											0.0f, 0.0f, 0.01f,
 											false, true))
 		{
-			m_pLocalPlayer->getMesh()->load();
-			if(m_iDPchoice != 0)
-				m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
-			_DirectPlay->m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
-			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
-			m_pMainCam->setMaster(m_pLocalPlayer->getMesh());
+			_DirectPlay->m_pLocalPlayer->getMesh()->load();
+			//if(m_iDPchoice != 0)
+				//m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+			m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+			m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
 			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
 //			m_pMainCam->calcPosition();
 			m_pMainCam->move();
@@ -149,7 +150,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 
 MyPlayer*	MyGameControl::getPlayer()
 {
-	return m_pLocalPlayer;
+	return _DirectPlay->m_pLocalPlayer;
 }
 
 bool	MyGameControl::buildGame()
@@ -176,7 +177,14 @@ bool	MyGameControl::buildGame()
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
 			if(m_iDPchoice != 0)
-				sonne->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(sonne);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(sonne);
+				}
+			}
 			_DirectPlay->m_pAllMeshes.push_back(sonne);
 			m_pMasterMeshes.push_back(sonne);
 		} else {
@@ -207,7 +215,14 @@ bool	MyGameControl::buildGame()
 											1.0f, 1.0f, 1.0f);
 			erde->setMaster(sonne);
 			if(m_iDPchoice != 0)
-				erde->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(erde);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(erde);
+				}
+			}
 			_DirectPlay->m_pAllMeshes.push_back(erde);
 		} else {
 			return false;
@@ -235,7 +250,14 @@ bool	MyGameControl::buildGame()
 			mond->activateScaling();
 			mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
 			if(m_iDPchoice != 0)
-				mond->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(mond);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(mond);
+				}
+			}
 			_DirectPlay->m_pAllMeshes.push_back(mond);
 			
 			
@@ -261,7 +283,14 @@ bool	MyGameControl::buildGame()
 		{
 			kreuzer1->load();
 			if(m_iDPchoice != 0)
-				kreuzer1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(kreuzer1);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
+				}
+			}
 			_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
 			m_pMasterMeshes.push_back(kreuzer1);
 		} else {
@@ -289,7 +318,14 @@ bool	MyGameControl::buildGame()
 			jaeger1->load();
 			jaeger1->setMaster(kreuzer1);
 			if(m_iDPchoice != 0)
-				jaeger1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(jaeger1);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
+				}
+			}
 			_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 		} else {
 			return false;
@@ -322,7 +358,14 @@ bool	MyGameControl::buildGame()
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
 				if(m_iDPchoice != 0)
-					sunLayer1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+				{
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(sunLayer1);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(sunLayer1);
+					}
+				}
 				_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
 				sunLayer1->setMaster(sonne);
 				sunLayer1 = NULL;
@@ -336,18 +379,38 @@ bool	MyGameControl::buildGame()
 
 bool	MyGameControl::sendData()
 {
-	for(DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
+	for(DWORD count = 0; count < _DirectPlay->m_pLocalMeshes.size(); count++)
 	{
-		if(_DirectPlay->m_pAllMeshes[count]->m_bToSend)
-		{
-			MyToken sendingToken;
+		GAMEOBJECTS sendingToken;
+		sendingToken.vectorId			= count;
+		sendingToken.posinfo.position.x	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getX();
+		sendingToken.posinfo.position.y	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getY();
+		sendingToken.posinfo.position.z	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getZ();
+		
+		sendingToken.posinfo.direction.x	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getX();
+		sendingToken.posinfo.direction.y	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getY();
+		sendingToken.posinfo.direction.z	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getZ();
+		
+		sendingToken.posinfo.rotation.x	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getX();
+		sendingToken.posinfo.rotation.y	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getY();
+		sendingToken.posinfo.rotation.z	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getZ();
+		
+		sendingToken.posinfo.rotdir.x	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getX();
+		sendingToken.posinfo.rotdir.y	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getY();
+		sendingToken.posinfo.rotdir.z	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getZ();
+
+		_DirectPlay->sendMessage(&sendingToken, 0);
+
+		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend)
+		//{
+/*			MyToken sendingToken;
 			sendingToken.vectorId = count;
-			sendingToken.positionMatrix = *_DirectPlay->m_pAllMeshes[count]->getPositionMatrix();
+			sendingToken.positionMatrix = *_DirectPlay->m_pLocalMeshes[count]->getPositionMatrix();
 			sendingToken.scaleFactor.x = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getX());
 			sendingToken.scaleFactor.y = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getY());
 			sendingToken.scaleFactor.z = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getZ());
-			_DirectPlay->sendMessage(&sendingToken);
-		}
+			_DirectPlay->sendMessage(&sendingToken);*/
+		//}
 	}
 	return true;
 }

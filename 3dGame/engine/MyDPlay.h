@@ -5,6 +5,7 @@
 #include "includes.h"
 #include "MyMesh.h"
 #include "MyToken.h"
+#include "MyPlayer.h"
 
 // {BF551F1B-956D-4b81-B639-D1105A254F32}
 //DEFINE_GUID(MyDPlayGUID, 0xbf551f1b, 0x956d, 0x4b81, 0xb6, 0x39, 0xd1, 0x10, 0x5a, 0x25, 0x4f, 0x32);
@@ -31,13 +32,17 @@ public:
 	bool connectSession(void);
 	bool openConnection(void);
 	bool enumAvailServer(void);
-	bool sendMessage(MyToken* givenToken);
+	bool sendMessage(void* givenToken, int choice);
 	bool closeConnection(void);
 	static HRESULT WINAPI DPMessageProc(PVOID pvUserContext, DWORD dwMessageId, PVOID pvMsgBuffer);
 	static bool*					m_pbHostingApp;
 	static bool*					m_pbConnected;
 	static DPNID					m_pid;
 	static vector<MyMesh*>			m_pAllMeshes;		//Alle Meshes
+	static MyPlayer*				m_pLocalPlayer;		//eigener Spieler
+	static vector<MyPlayer*>		m_pNetworkPlayers;	//andere Teilnehmer
+	static vector<MyMesh*>			m_pNetworkMeshes;   //Meshes vom Server aktualisiert
+	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
 private:
 	bool checkServiceProvider(const GUID* givenSPGUID);
 	bool createOwnAddress(void);

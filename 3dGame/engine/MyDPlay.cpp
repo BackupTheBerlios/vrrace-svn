@@ -7,6 +7,10 @@ bool*				MyDPlay::m_pbHostingApp	= NULL;
 bool*				MyDPlay::m_pbConnected	= NULL;
 DPNID				MyDPlay::m_pid			= 0;
 vector<MyMesh*>		MyDPlay::m_pAllMeshes;
+MyPlayer*			MyDPlay::m_pLocalPlayer;
+vector<MyPlayer*>	MyDPlay::m_pNetworkPlayers;
+vector<MyMesh*>		MyDPlay::m_pNetworkMeshes;
+vector<MyMesh*>		MyDPlay::m_pLocalMeshes;
 /*Callback-Funktion fuer DirectPlay*/
 HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 									DWORD dwMessageId,
@@ -118,15 +122,32 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			PDPNMSG_RECEIVE	pMsg;
 
 			pMsg = (PDPNMSG_RECEIVE) pvMsgBuffer;
-			MyToken* recToken = (MyToken*)pMsg->pReceiveData;
-			if(recToken->vectorId < m_pAllMeshes.size())
+			//MessageBox(NULL, "rec", "Message", MB_OK);
+			if(pMsg->dwReceiveDataSize == sizeof(GAMEOBJECTS))
 			{
+				GAMEOBJECTS* recToken	= (GAMEOBJECTS*)pMsg->pReceiveData;
+				if(recToken->vectorId < m_pNetworkMeshes.size())
+				{
+			
+					m_pNetworkMeshes[recToken->vectorId]->m_pPosition->setValues(
+						recToken->posinfo.position.x, recToken->posinfo.position.y, recToken->posinfo.position.z);
+					m_pNetworkMeshes[recToken->vectorId]->m_pDirection->setValues(
+						recToken->posinfo.direction.x, recToken->posinfo.direction.y, recToken->posinfo.direction.z);
+					m_pNetworkMeshes[recToken->vectorId]->m_pRotation->setValues(
+						recToken->posinfo.rotation.x, recToken->posinfo.rotation.y, recToken->posinfo.rotation.z);
+					m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
+						recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
+				}
+			}
+			//MyToken* recToken = (MyToken*)pMsg->pReceiveData;
+			//if(recToken->vectorId < m_pAllMeshes.size())
+			//{
 				//char temp[100];
 				//sprintf(temp,"%f %f %f",recToken->scaleFactor.x,recToken->scaleFactor.y,recToken->scaleFactor.z);
 				//MessageBox(NULL,temp,"Message",MB_OK);
 				//m_pAllMeshes[recToken->vectorId]->setScale(recToken->scaleFactor);
-				m_pAllMeshes[recToken->vectorId]->setPositionMatrix(&recToken->positionMatrix);
-			}
+				//m_pAllMeshes[recToken->vectorId]->setPositionMatrix(&recToken->positionMatrix);
+			//}
 			break;
 		}
 
@@ -514,16 +535,32 @@ bool MyDPlay::connectSession(void)
 }
 
 /*Methode zum Senden der Message*/
-bool MyDPlay::sendMessage(MyToken* givenToken)
+bool MyDPlay::sendMessage(void* givenToken, int choice)
 {
 	DPN_BUFFER_DESC dpnBuffer;
 
-	dpnBuffer.pBufferData	= (BYTE*) givenToken;
-	dpnBuffer.dwBufferSize	= sizeof(MyToken);
+	/*char temp[100];
+	sprintf(temp,"%d %d", sizeof(givenToken), sizeof(GAMEOBJECTS));
+	MessageBox(NULL, temp, "M", MB_OK);*/
+
+	if(choice == 0)
+	{
+		dpnBuffer.pBufferData	= (BYTE*) (GAMEOBJECTS*) givenToken;
+		dpnBuffer.dwBufferSize	= sizeof(GAMEOBJECTS);
+	}
+	else if(choice == 1)
+	{
+		dpnBuffer.pBufferData	= (BYTE*) (PLAYEROBJECTS*) givenToken;
+		dpnBuffer.dwBufferSize	= sizeof(PLAYEROBJECTS);
+	}
 
 	if(FAILED(m_pDP->SendTo(DPNID_ALL_PLAYERS_GROUP, &dpnBuffer, 1, 0, NULL, NULL, DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
 	{
 		//Fehler beim Senden
+		//char temp[100];
+	//sprintf(temp, "%d", );
+	//MessageBox(NULL, "S", "M", MB_OK);
+	
 		return false;
 	}
 	return true;

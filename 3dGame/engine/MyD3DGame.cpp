@@ -18,6 +18,7 @@ MyD3DGame::MyD3DGame(void)
 	m_iDPchoice		= -1;
 
 	m_pfFramesPerSecond	= new float(0.0);
+	m_dwTmpTime	= timeGetTime();
 }
 
 MyD3DGame::~MyD3DGame(void)
@@ -283,9 +284,12 @@ void	MyD3DGame::runGame()
 
 	this->moveScene();
 
-	if(m_iDPchoice != 0)
+	if ((((float)(dwTime0 - m_dwTmpTime)/1000.0f) > 0.15f) && (m_iDPchoice != 0))
+	{
 		m_pGameControl->sendData();
-	
+		m_dwTmpTime = dwTime0;
+	}
+
 	this->prepareScene();
 	this->doScene();
 	this->presentScene();

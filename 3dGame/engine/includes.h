@@ -73,4 +73,13 @@ typedef struct CUSTOMVERTEX
 	DWORD	dwColor;
 }CUSTOMVERTEX;
 
+typedef struct MYPOS
+{
+	CUSTOMVERTEX position;
+	CUSTOMVERTEX direction;
+	CUSTOMVERTEX rotation;
+	CUSTOMVERTEX rotdir;
+	CUSTOMVERTEX scalefactor;
+}MYPOS;
+
 #endif

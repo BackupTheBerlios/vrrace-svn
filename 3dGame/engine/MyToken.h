@@ -5,16 +5,17 @@
 #include "includes.h"
 #include "MyVertex.h"
 
-class MyToken
+typedef struct GAMEOBJECTS
 {
-public:
-	char*		name;
-	DPNID		dpnid;
-	int			oid;
-	int			status;
 	DWORD		vectorId;
-	D3DXMATRIX positionMatrix;
-	//MyVertex	scaleFactor;
-	CUSTOMVERTEX scaleFactor;
-};
+	MYPOS		posinfo;
+	bool		scale;
+}MYGAMEOBJECTS;
+
+typedef struct PLAYEROBJECTS
+{
+	DPNID		dpnid;
+	int			status;
+	GAMEOBJECTS	position;
+}PLAYEROBJECTS;
 #endif
