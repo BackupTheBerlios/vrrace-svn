@@ -154,6 +154,18 @@ void	MyMesh::draw()
 	this->transform();
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
+		m_pMaterials[count].Diffuse.r = 0.0f;
+		m_pMaterials[count].Diffuse.g = 0.0f;
+		m_pMaterials[count].Diffuse.b = 0.0f;
+
+		m_pMaterials[count].Ambient.r = 0.0f;
+		m_pMaterials[count].Ambient.g = 0.0f;
+		m_pMaterials[count].Ambient.b = 0.0f;
+
+		m_pMaterials[count].Emissive.r = 1.0f;
+		m_pMaterials[count].Emissive.g = 1.0f;
+		m_pMaterials[count].Emissive.b = 0.75f;
+
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
 		_D3DDevice->SetTexture(0, m_pTextures[count]);
 		m_pMesh->DrawSubset(count);

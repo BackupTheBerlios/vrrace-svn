@@ -181,7 +181,7 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObjd->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/bigship1.x",
+							"resources/x_files/sun.x",
 							"resources/x_files/Planet0.bmp",
 							30.0f, -20.0f, -500.0f,
 							0.0f, 0.0f, 0.3f,
@@ -189,6 +189,8 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.0f))
 		{
 			tempObjd->load();
+			tempObjd->activateScaling();
+			tempObjd->getScale()->setValues(20.0f, 20.0f, 20.0f);
 			m_pAllMeshes.push_back(tempObjd);
 			m_pMasterMeshes[1]->addClient(tempObjd);
 		} else {
