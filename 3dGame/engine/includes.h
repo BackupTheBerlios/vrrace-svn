@@ -10,6 +10,7 @@
 #include <dshow.h>
 #include <d3dx9.h>
 #include <d3dx9math.h>
+#include <dplay8.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -45,6 +46,7 @@ using namespace std;
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "dxerr9.lib")
 #pragma comment(lib, "d3dx9dt.lib")
+#pragma comment(lib, "dplayx.lib")
 #pragma comment(lib, "strmiids.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "comctl32.lib")
