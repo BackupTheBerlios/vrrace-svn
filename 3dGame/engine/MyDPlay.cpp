@@ -193,11 +193,13 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 															false, true))
 						{
 							newPlayer->m_pPlayerID = recToken->dpnid;
-							newPlayer->getMesh()->load();
-							m_pAllMeshes.push_back(newPlayer->getMesh());
-							m_pMasterMeshes.push_back(newPlayer->getMesh());
-							m_pNetworkPlayers.push_back(newPlayer);
-							newPlayer->getMesh()->move();
+							if(SUCCEEDED(newPlayer->getMesh()->load()))
+							{
+								m_pAllMeshes.push_back(newPlayer->getMesh());
+								m_pMasterMeshes.push_back(newPlayer->getMesh());
+								m_pNetworkPlayers.push_back(newPlayer);
+								newPlayer->getMesh()->move();
+							}
 						}
 
 						LeaveCriticalSection(&m_csDP);

@@ -166,7 +166,7 @@ void	MyUserInput::inputKB()
 
 	char	buffer[256];
 
-	if (m_lpDIDevice)
+	if (m_lpDIDevice && _m_pGameControl->getPlayer())
 	{
 		m_hr	= m_lpDIDevice->GetDeviceState(sizeof(buffer), (LPVOID)&buffer);
 

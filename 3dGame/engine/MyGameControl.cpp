@@ -148,15 +148,22 @@ bool	MyGameControl::addPlayer(string* givenName)
 			EnterCriticalSection(&_DirectPlay->m_csDP);
 
 			_DirectPlay->m_pLocalPlayer->m_pPlayerID = _DirectPlay->m_pid;
-			_DirectPlay->m_pLocalPlayer->getMesh()->load();
-			_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
-			_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+			if(SUCCEEDED(_DirectPlay->m_pLocalPlayer->getMesh()->load()))
+			{
+				_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+				_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
 
-			LeaveCriticalSection(&_DirectPlay->m_csDP);
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
 
-			m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
-			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
-			m_pMainCam->move();
+				m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
+				m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
+				m_pMainCam->move();
+			} else {
+				SAFE_DELETE(_DirectPlay->m_pLocalPlayer);
+				_DirectPlay->m_pLocalPlayer = NULL;
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
 		} else {
 			return false;
 		}
@@ -191,23 +198,28 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.01f, 0.0f,
 							true, false))
 		{
-			sonne->load();
-			sonne->activateScaling();
-			sonne->getScale()->setValues(100.0f, 100.0f, 100.0f);
-			sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-											0.0f, 0.0f, 0.0f,
-											1.0f, 1.0f, 1.0f);
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(sonne->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				sonne->activateScaling();
+				sonne->getScale()->setValues(100.0f, 100.0f, 100.0f);
+				sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(sonne);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(sonne);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(sonne);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(sonne);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(sonne);
+				_DirectPlay->m_pMasterMeshes.push_back(sonne);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(sonne);
-			_DirectPlay->m_pMasterMeshes.push_back(sonne);
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -227,7 +239,7 @@ bool	MyGameControl::buildGame()
 		if (erde->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere.x",
-							NULL,
+							"resources/x_files/earth.bmp",
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
@@ -235,23 +247,28 @@ bool	MyGameControl::buildGame()
 							0.0f, -0.3f, 0.0f,
 							true, false))
 		{
-			erde->load();
-			erde->activateScaling();
-			erde->getScale()->setValues(10.0f, 10.0f, 10.0f);
-			erde->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-											0.0f, 0.0f, 0.0f,
-											1.0f, 1.0f, 1.0f);
-			erde->setMaster(sonne);
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(erde->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				erde->activateScaling();
+				erde->getScale()->setValues(10.0f, 10.0f, 10.0f);
+				erde->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				erde->setMaster(sonne);
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(erde);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(erde);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(erde);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(erde);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(erde);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(erde);
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -279,23 +296,28 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.02f, 0.0f,
 							true, false))
 		{
-			erdkern->load();
-			erdkern->deactivateScaling();
-			//erdkern->getScale()->setValues(1.0f, 1.0f, 1.0f);
-			erdkern->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-											0.0f, 0.0f, 0.0f,
-											1.0f, 1.0f, 1.0f);
-			erdkern->setMaster(sonne);
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(erdkern->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				erdkern->deactivateScaling();
+				//erdkern->getScale()->setValues(1.0f, 1.0f, 1.0f);
+				erdkern->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				erdkern->setMaster(sonne);
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(erdkern);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(erdkern);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(erdkern);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(erdkern);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(erdkern);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(erdkern);
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -324,21 +346,24 @@ bool	MyGameControl::buildGame()
 							false, false))
 		{
 			mond->setMaster(erdkern);
-			mond->load();
-			mond->activateScaling();
-			mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(mond->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				mond->activateScaling();
+				mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(mond);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(mond);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(mond);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(mond);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(mond);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(mond);
-			
-			
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -366,18 +391,23 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			kreuzer1->load();
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(kreuzer1->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(kreuzer1);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(kreuzer1);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
+				_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
-			_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -407,18 +437,23 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			jaeger1->load();
-			jaeger1->setMaster(kreuzer1);
-			if(m_iDPchoice != 0)
+			if(SUCCEEDED(jaeger1->load()))
 			{
-				if(*_DirectPlay->m_pbHostingApp)
+				jaeger1->setMaster(kreuzer1);
+				if(m_iDPchoice != 0)
 				{
-					_DirectPlay->m_pLocalMeshes.push_back(jaeger1);
-				} else {
-					_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
+					if(*_DirectPlay->m_pbHostingApp)
+					{
+						_DirectPlay->m_pLocalMeshes.push_back(jaeger1);
+					} else {
+						_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
+					}
 				}
+				_DirectPlay->m_pAllMeshes.push_back(jaeger1);
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
 			}
-			_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 		} else {
 			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
@@ -450,24 +485,29 @@ bool	MyGameControl::buildGame()
 								(float)pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)-pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)pow((double)-1.0f,(double)count)*(float)count/1000.0f,
 								true, false))
 			{
-				sunLayer1->load();
-				sunLayer1->activateScaling();
-				sunLayer1->getScale()->setValues(99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f));
-				sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
-												0.0f, 0.0f, 0.0f,
-												1.0f, 1.0f, 1.0f);
-				if(m_iDPchoice != 0)
+				if(SUCCEEDED(sunLayer1->load()))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					sunLayer1->activateScaling();
+					sunLayer1->getScale()->setValues(99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f));
+					sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+													0.0f, 0.0f, 0.0f,
+													1.0f, 1.0f, 1.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(sunLayer1);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(sunLayer1);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(sunLayer1);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(sunLayer1);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
+					sunLayer1->setMaster(sonne);
+					sunLayer1 = NULL;
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
-				sunLayer1->setMaster(sonne);
-				sunLayer1 = NULL;
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;

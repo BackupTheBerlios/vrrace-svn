@@ -10,7 +10,8 @@ MyPlayer::MyPlayer()
 MyPlayer::~MyPlayer()
 {
 	delete m_Name;
-	delete m_pPlayerMesh;
+	if(m_pPlayerMesh)
+		delete m_pPlayerMesh;
 
 	m_Name			= NULL;
 	m_pPlayerMesh	= NULL;
