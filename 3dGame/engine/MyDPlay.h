@@ -16,7 +16,7 @@ typedef struct HOST_NODE
     IDirectPlay8Address*    pHostAddress;
     TCHAR*                  strSessionName;
 
-    HOST_NODE*             pNext;
+    //HOST_NODE*             pNext;
 } HOST_NODE;
 
 class MyDPlay
@@ -25,28 +25,30 @@ public:
 	MyDPlay(void);
 	~MyDPlay(void);
 	bool init(HWND* givenHWnd, char* givenPlayerName, char* givenSessionName, char* givenTCPAddress, bool givenServer);
-	bool closeConnection(void);
-private:
-	bool checkServiceProvider(const GUID* givenSPGUID);
-	bool createOwnAddress(void);
-	bool createServerAddress(void);
 	bool createSession(void);
 	bool connectSession(void);
 	bool openConnection(void);
 	bool enumAvailServer(void);
-	IDirectPlay8Peer*		m_pDP;
-	IDirectPlay8Address*	m_pOwnAddress;
-	IDirectPlay8Address*	m_pServerAddress;
-	HOST_NODE*				m_pServerNode;
-	DWORD*					m_pdwPort;
+	bool closeConnection(void);
+	static HRESULT WINAPI DPMessageProc(PVOID pvUserContext, DWORD dwMessageId, PVOID pvMsgBuffer);
+private:
+	bool checkServiceProvider(const GUID* givenSPGUID);
+	bool createOwnAddress(void);
+	bool createServerAddress(void);
+	static IDirectPlay8Peer*		m_pDP;
+	IDirectPlay8Address*			m_pOwnAddress;
+	IDirectPlay8Address*			m_pServerAddress;
+	static CRITICAL_SECTION			m_csDP;
+	static HOST_NODE*				m_pServerNode;
+	DWORD*							m_pdwPort;
 	//LPDIRECTPLAYLOBBY2A	m_pDPLobby;
-	HWND*				m_hWnd;
-	bool*				m_pbServer;
-	bool*				m_pbHostingApp;
-	bool*				m_pbConnected;
-	char*				m_pcPlayerName;
-	char*				m_pcSessionName;
-	char*				m_pcTCPAddress;
+	HWND*							m_hWnd;
+	bool*							m_pbServer;
+	static bool*					m_pbHostingApp;
+	static bool*					m_pbConnected;
+	char*							m_pcPlayerName;
+	char*							m_pcSessionName;
+	char*							m_pcTCPAddress;
 };
 
 #endif

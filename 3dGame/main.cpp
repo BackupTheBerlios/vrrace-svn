@@ -1,6 +1,8 @@
 #include "main.h"
 #include "resource.h"
 
+#include "engine\MyDPlay.h"
+
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
@@ -59,9 +61,7 @@ bool GenerateGameWindow()
 	ZeroMemory(&msg, sizeof(msg));
 
 	g_pD3DGame	= new MyD3DGame();
-
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-
+	
 	if (g_pD3DGame->init(&g_hInst, &hWnd))
 	{
 	}
@@ -77,8 +77,6 @@ bool GenerateGameWindow()
 			g_pD3DGame->runGame();
 		//}
 	}
-
-	CoUninitialize();
 
 	delete g_pD3DGame;
 	
@@ -99,8 +97,7 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 	CHOOSECOLOR	ChooseColorStruct;
 	char		acText[256];
 	*/
-
-
+	
 	// Nachricht verarbeiten
 	switch(uiMsg)
 	{
@@ -128,13 +125,44 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 		switch(LOWORD(WParam))
 		{
 		case IDC_OK:
+			{
 			//falls OK-Button gedrueckt
 				//MessageBox(NULL,"OK-Button pressed","Message",MB_OK | MB_ICONINFORMATION);
 				EndDialog(hWnd, 0);
 
+				/*MyDPlay* mydplay = new MyDPlay();
+				if(mydplay->init(&hWnd,"test","vrrace","127.0.0.1",true))
+				{
+					if(mydplay->enumAvailServer())
+					{
+						if(mydplay->connectSession())
+						{
+						}
+						else {
+							MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
+						}
+					}
+					else {
+						MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
+					}
+					if(mydplay->createSession())
+					{
+					}
+					else {
+						MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
+					}
+				}
+				else {
+					MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+				}*/
 				//Spielfenster erzeugen
 				GenerateGameWindow();
+				
+				/*mydplay->closeConnection();
+				delete mydplay;*/
+				
 			break;
+			}
 
 		case IDC_CANCEL:
 			//falls Cancel-Button gedrueckt
@@ -156,7 +184,7 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 		return FALSE;
 		break;
 	}
-
+	
 	// Nachricht wurde verarbeitet.
 	return TRUE;
 }
@@ -170,12 +198,16 @@ INT WINAPI WinMain(HINSTANCE hInst,
 
 	InitCommonControls();
 
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
 	if(DialogBox(hInst,MAKEINTRESOURCE(IDD_VRRACE),NULL,DialogProc))
 	{
 		//Fehler aufgetreten
 		MessageBox(NULL,"Fehler bei der Initialisierung der Applikation","ERROR",MB_OK | MB_ICONSTOP);
 		return 1;
 	}
+
+	CoUninitialize();
 
 	return 0;
 }
