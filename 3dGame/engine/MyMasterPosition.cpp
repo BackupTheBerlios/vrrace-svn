@@ -83,10 +83,7 @@ void	MyMasterPosition::calcMatrix(D3DXMATRIX* givenMatrix)
 			m_pFinalTransRotMatrix,
 			givenMatrix);
 
-	if (m_pClients.size() > 0)
-	{
-		this->calcClients();
-	}
+	this->calcClients();
 }
 
 void	MyMasterPosition::activateScaling()
@@ -126,9 +123,24 @@ void	MyMasterPosition::transform()
 
 void	MyMasterPosition::calcClients()
 {
-	for (DWORD count = 0; count < m_pClients.size(); count++)
+	D3DXVECTOR3*	pVector	= new D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR4*	pOut	= new D3DXVECTOR4();
+
+	if (m_pMaster != NULL)
 	{
-		m_pClients[count]->calcMatrix(m_pFinalMatrix);
+		D3DXVec3Transform(pOut, pVector, m_pFinalMatrix);
+		m_pAbsolutePosition->setValues(pOut->x, pOut->y, pOut->z);
+	}
+
+	delete pVector;
+	delete pOut;
+
+	if (m_pClients.size() > 0)
+	{
+		for (DWORD count = 0; count < m_pClients.size(); count++)
+		{
+			m_pClients[count]->calcMatrix(m_pFinalMatrix);
+		}
 	}
 }
 
@@ -152,30 +164,5 @@ MyVertex*	MyMasterPosition::getScale()
 MyVertex*	MyMasterPosition::getAbsolutePosition()
 //erst nach moove aufrufen
 {
-	D3DXVECTOR3*	pVector	= new D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR4*	pOut	= new D3DXVECTOR4();
-
-	if (m_pMaster != NULL)
-	{
-		D3DXVec3Transform(pOut, pVector, m_pFinalMatrix);
-		m_pAbsolutePosition->setValues(pOut->x, pOut->y, pOut->z);
-	}
-
-
-	delete pVector;
-	delete pOut;
-
-	TCHAR* temp = new TCHAR[100];
-
-	//Zeige aktuelle Betrachterposition
-	sprintf(
-		temp,
-		"Position: %2.2f %2.2f %2.2f",
-		m_pAbsolutePosition->getX(),
-		m_pAbsolutePosition->getY(),
-		m_pAbsolutePosition->getZ());
-
-	//MessageBox(NULL, temp, "test", MB_OK);
-
 	return m_pAbsolutePosition;
 }

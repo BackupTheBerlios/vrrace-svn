@@ -38,11 +38,6 @@ bool	MyGameControl::drawObjects()
 	{
 		m_pMasterMeshes[count]->calcClients();
 	}
-
-	m_pView->getVP()->setValues(
-				m_pAllMeshes[2]->getAbsolutePosition()->getX(),				
-				m_pAllMeshes[2]->getAbsolutePosition()->getY(),
-				m_pAllMeshes[2]->getAbsolutePosition()->getZ());
 	
 	for (count = 0; count < m_pAllMeshes.size(); count++)
 	{
@@ -181,6 +176,10 @@ bool	MyGameControl::addObject()
 			tempObj->getScale()->setValues(2.0f, 2.0f, 2.0f);
 			m_pAllMeshes.push_back(tempObj);
 			
+			m_pView->getVP()->setPValues(
+				m_pAllMeshes[2]->getAbsolutePosition()->getPX(),				
+				m_pAllMeshes[2]->getAbsolutePosition()->getPY(),
+				m_pAllMeshes[2]->getAbsolutePosition()->getPZ());
 		} else {
 			return false;
 		}
