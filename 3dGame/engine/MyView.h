@@ -4,12 +4,6 @@
 
 #include "includes.h"
 
-typedef struct PositionPoint
-{
-	float	x;
-	float	y;
-	float	z;
-}PositionPoint;
 
 class MyView
 	/*
@@ -20,8 +14,8 @@ public:
 	MyView(void);
 	~MyView(void);
 	
-	PositionPoint m_Position;	//Betrachter-Position
-	PositionPoint m_ViewPoint;	//Fluchtpunkt
-	PositionPoint m_UpVector;	//zeigt nach oben
+	CUSTOMVERTEX	m_Position;		//Betrachter-Position
+	CUSTOMVERTEX	m_ViewPoint;	//Fluchtpunkt
+	CUSTOMVERTEX	m_UpVector;		//zeigt nach oben
 };
 #endif

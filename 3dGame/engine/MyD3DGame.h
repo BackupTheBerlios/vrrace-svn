@@ -3,6 +3,10 @@
 #define MYD3DGAME_H
 
 #include "includes.h"
+#include "MyGameControl.h"
+#include "MyTest.h"
+#include "MyUserInput.h"
+#include "MyMesh.h"
 
 class MyD3DGame
 {
@@ -11,7 +15,6 @@ public:
 	~MyD3DGame(void);
 
 	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd);	//Initialisierung von D3D
-	int		initGame(void);									//Initialisierung des Spiels
 	void	runGame();										//mainloop fuer das spiel
 
 	LPDIRECT3DDEVICE9	getDevice();						//zurueckgeben des 3d-devices ?
@@ -22,11 +25,10 @@ private:
 	bool	init3D();										//Device und so erstellen
 	bool	initFont();										//Initialisierung des Fontobjektes
 	bool	initInput();									//Benutzereingaben initialisieren
+	bool	initGame();										//Initialisierung des Spiels
 	void	doScene();										//Aufbau der Szene
 	void	showStatus();									//Statusfenster anzeigen
 	
-//	void	printText(String givenText, int posX, int posY);	//Text ausgeben
-
 	LPDIRECT3D9			m_d3d;								//3D-Device
 	LPDIRECT3DDEVICE9	m_pD3dDevice;						//Render-Device
 	HINSTANCE*			m_hInst;							//Instance auf Programmhandle ?
@@ -39,6 +41,5 @@ private:
 	MyGameControl*		m_pGameControl;						//Spielzustand
 	MyTest*				m_pKoordSys;						//Koordinatensystem
 	MyUserInput*		m_pUserInput;						//Benutzereingaben
-	bool				m_bShowStatus;
 };
 #endif

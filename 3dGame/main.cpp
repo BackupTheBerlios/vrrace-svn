@@ -58,7 +58,6 @@ INT WINAPI WinMain(HINSTANCE hInst,
 
 	if (g_pD3DGame->init(&hInst, &hWnd))
 	{
-		g_pD3DGame->initGame();
 	}
 
 	while (msg.message != WM_QUIT) 

@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
@@ -19,12 +19,15 @@ using namespace std;
 #include "../directx/d3dfont.h"
 
 //eigene Includes
-#include "MyUserInput.h"
+/*
+#include "MyMesh.h"
 #include "MyTest.h"
 #include "MyView.h"
 #include "MyGameControl.h"
+#include "MyUserInput.h"
 #include "MyD3DGame.h"
-
+#include "MyMesh.h"
+*/
 
 //Bibliotheken
 #pragma comment(lib, "d3dx9.lib")
@@ -41,8 +44,8 @@ using namespace std;
 const LPCSTR MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
 const LPCSTR MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
 
-struct CUSTOMVERTEX
+typedef struct CUSTOMVERTEX
 {
     float x,y,z;
-};
+}CUSTOMVERTEX;
 #endif

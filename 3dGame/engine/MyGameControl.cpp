@@ -1,8 +1,10 @@
-#include "includes.h"
+#include "MyGameControl.h"
 
 MyGameControl::MyGameControl(void)
 {
-	m_pView	= new MyView();
+	m_pView			= new MyView();
+	m_bShowStatus	= false;
+	m_pShip			= new MyMesh();
 }
 
 MyGameControl::~MyGameControl(void)
@@ -23,6 +25,8 @@ int MyGameControl::init(void)
 	m_pView->m_ViewPoint.x	= 0.0f;
 	m_pView->m_ViewPoint.y	= 0.0f;
 	m_pView->m_ViewPoint.z	= 0.0f;
+
+	m_pShip->init();
 
 	return 0;
 }

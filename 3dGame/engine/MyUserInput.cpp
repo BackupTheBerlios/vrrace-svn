@@ -1,19 +1,21 @@
-#include "includes.h"
+#include "MyUserInput.h"
 
 MyUserInput::MyUserInput()
 {
 	m_lpDI			= NULL;
 	m_lpDIDevice	= NULL;
+	_m_pGameControl	= NULL;
 }
 
 MyUserInput::~MyUserInput(void)
 {
 }
 
-bool	MyUserInput::init(HINSTANCE* hInst, HWND* hWnd)
+bool	MyUserInput::init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC)
 {
 	m_hInst			= hInst;
 	m_hWnd			= hWnd;
+	_m_pGameControl	= givenGC;
 
 	if FAILED(initDinput())
 	{
@@ -95,16 +97,12 @@ void	MyUserInput::inputKB()
 			}
 			if (KEYDOWN(buffer, DIK_F1 ))
 			{
-				//m_bShowStatus	= true;
+				if (_m_pGameControl->m_bShowStatus)
+					_m_pGameControl->m_bShowStatus	= false;
+				else
+					_m_pGameControl->m_bShowStatus	= true;
 			}
-			/*
-			switch ()
-			{
-			case KEYDOWN(buffer, DIK_ESCAPE):
-				exit(0);
-				break;
-			}
-			*/
+			
 		}
 		else
 		{
@@ -117,7 +115,4 @@ void	MyUserInput::inputKB()
 		}
 	}
 	return;
-
-//	if (KEYDOWN(buffer, DIK_RIGHT));
-//	else if (KEYDOWN(buffer, DIK_LEFT));
 }

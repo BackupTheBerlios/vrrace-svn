@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "MyTest.h"
 
 void MyTest::drawKS(LPDIRECT3DDEVICE9 givenDevice)
 {

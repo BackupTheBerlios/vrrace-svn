@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "MyD3DGame.h"
 
 MyD3DGame::MyD3DGame(void)
 {
@@ -6,7 +6,6 @@ MyD3DGame::MyD3DGame(void)
 	m_pD3dDevice	= NULL;
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
-	m_bShowStatus	= false;
 
 	m_red			= 255;
 	m_green			= 255;
@@ -81,12 +80,17 @@ bool	MyD3DGame::init(HINSTANCE* givenHInst, HWND* givenHWnd)
 		return false;
 	}
 
-	if (FAILED(this->initInput()))
+	if (FAILED(this->initFont()))
 	{
 		return false;
 	}
 
-	if (FAILED(this->initFont()))
+	if (FAILED(this->initGame()))
+	{
+		return false;
+	}
+
+	if (FAILED(this->initInput()))
 	{
 		return false;
 	}
@@ -96,7 +100,7 @@ bool	MyD3DGame::init(HINSTANCE* givenHInst, HWND* givenHWnd)
 
 bool	MyD3DGame::initInput()
 {
-	return m_pUserInput->init(m_hInst, m_hWnd);
+	return m_pUserInput->init(m_hInst, m_hWnd, m_pGameControl);
 }
 	
 bool	MyD3DGame::initFont()
@@ -110,10 +114,6 @@ bool	MyD3DGame::initFont()
 
 void	MyD3DGame::prepareScene()
 {
-	//m_red++;
-
-	if ((m_red % 2)	== 0)
-	m_FontX++;
 	//world matrix
 	D3DXMatrixIdentity(&m_matWorld);
 	m_pD3dDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
@@ -147,12 +147,6 @@ void	MyD3DGame::prepareScene()
 	m_pD3dDevice->BeginScene();
 }
 
-/*void	MyD3DGame::printText(String givenText, int posX, int posY)
-{
-	TCHAR* temp = new TCHAR[100];
-	m_pFont->DrawText(posX, posY, D3DCOLOR_ARGB(255, 0, 0, 0), givenText);
-}*/
-
 void	MyD3DGame::showStatus()
 {
 	TCHAR* temp = new TCHAR[100];
@@ -167,8 +161,7 @@ void	MyD3DGame::showStatus()
 
 	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
 
-	//m_pFont->DrawText(200, 200, D3DCOLOR_ARGB(255,0,0,0), _T("test %2.2f", m_pGameControl->m_pView->m_Position.x));
-
+	
 	//Zeige den Fluchtpunkt
 	sprintf(
 		temp,
@@ -187,7 +180,8 @@ void	MyD3DGame::doScene()
 	m_pGameControl->m_pView->m_Position.z	+= 0.001f;
 	m_pGameControl->m_pView->m_Position.x	+= 0.01f;
 	m_pKoordSys->drawKS(m_pD3dDevice);
-	this->showStatus();
+	if (m_pGameControl->m_bShowStatus) this->showStatus();
+	m_pGameControl->m_pShip->draw(m_pD3dDevice);
 }
 
 void	MyD3DGame::presentScene()
@@ -201,10 +195,11 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 	return m_pD3dDevice;
 }
 
-int		MyD3DGame::initGame(void)
+bool	MyD3DGame::initGame(void)
 {
 	m_pGameControl->init();
-	return 0;
+	m_pGameControl->m_pShip->load(m_pD3dDevice);
+	return true;
 }
 
 void	MyD3DGame::runGame()
