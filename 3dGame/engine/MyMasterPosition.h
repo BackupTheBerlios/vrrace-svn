@@ -41,6 +41,12 @@ public:
 	void						setScale(CUSTOMVERTEX givenScale);
 	bool						m_bToSend;
 	bool						m_bDestroyable;								//kann Objekt durch kollision zerstört werden
+	int							m_iStatus;									//Objektstatus
+	/*
+	0=zertört
+	1=ok, sichtbar
+	
+	*/
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

@@ -66,7 +66,7 @@ bool	MyGameControl::drawObjects()
 	
 	for (count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
-		if (_DirectPlay->m_pAllMeshes[count] != NULL)
+		if ((_DirectPlay->m_pAllMeshes[count] != NULL) && (_DirectPlay->m_pAllMeshes[count]->m_iStatus == 1))
 		{
 			_DirectPlay->m_pAllMeshes[count]->draw();
 		}
@@ -86,7 +86,42 @@ bool	MyGameControl::drawLights()
 	return true;
 }
 
-bool	MyGameControl::moveObjects()
+bool	MyGameControl::collision(MyMesh* givenObject1, MyMesh* givenObject2)
+{
+
+	D3DXVECTOR3 pOut;
+	
+	D3DXVec3Subtract(
+		&pOut,
+		&D3DXVECTOR3(
+			givenObject1->getAbsolutePosition()->getX(),
+			givenObject1->getAbsolutePosition()->getY(),
+			givenObject1->getAbsolutePosition()->getZ()),
+		&D3DXVECTOR3(
+			givenObject2->getAbsolutePosition()->getX(),
+			givenObject2->getAbsolutePosition()->getY(),
+			givenObject2->getAbsolutePosition()->getZ()));
+
+/*	TCHAR* temp = new TCHAR[100];
+
+	//Zeige aktuelle Betrachterposition
+	sprintf(
+		temp,
+		"abstand: %2.2f",
+		D3DXVec3Length(&pOut));
+
+	MessageBox(NULL, "abstand", temp, MB_OK);
+*/
+	if (D3DXVec3Length(&pOut) <= 10.0f)
+	{
+		
+		return true;
+	}
+
+	return false;
+}
+
+void	MyGameControl::moveObjects()
 {
 	m_pStarsField->move();
 	for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
@@ -95,6 +130,27 @@ bool	MyGameControl::moveObjects()
 		if (_DirectPlay->m_pAllMeshes[count] != NULL)
 		{
 			_DirectPlay->m_pAllMeshes[count]->move();
+			//es folgt Kollision
+			if (_DirectPlay->m_pAllMeshes[count]->m_bDestroyable)
+			{
+				for (DWORD cCount = 0; cCount < _DirectPlay->m_pAllMeshes.size(); cCount++)
+				{
+					if (count != cCount)
+					{
+						if (collision(_DirectPlay->m_pAllMeshes[count], _DirectPlay->m_pAllMeshes[cCount]))
+						{
+							_DirectPlay->m_pAllMeshes[count]->m_iStatus = 0;
+							if (_DirectPlay->m_pAllMeshes[cCount]->m_bDestroyable)
+							{
+								_DirectPlay->m_pAllMeshes[cCount]->m_iStatus = 0;
+							}
+						}
+					}
+				}
+			}
+
+
+
 			if(_DirectPlay->m_pMeshSounds[count] != NULL)
 			{
 				_DirectPlay->m_pMeshSounds[count]->set3DSoundPosition(_DirectPlay->m_pAllMeshes[count]->getAbsolutePosition()->getX(),
@@ -111,8 +167,6 @@ bool	MyGameControl::moveObjects()
 	m_pDirectSound->setListenerDirection(m_pMainCam->getDirection()->getX(), m_pMainCam->getDirection()->getY(), m_pMainCam->getDirection()->getZ());
 	m_pDirectSound->setListenerOrientation(m_pMainCam->getVP()->getX(), m_pMainCam->getVP()->getY(), m_pMainCam->getVP()->getZ(),
 		m_pMainCam->getUV()->getX(), m_pMainCam->getUV()->getY(), m_pMainCam->getUV()->getZ());
-			
-	return true;
 }
 
 bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,

@@ -32,7 +32,7 @@ public:
 	bool				drawStarsField();
 	bool				drawLights();
 	bool				presentMusic();
-	bool				moveObjects();
+	void				moveObjects();
 	bool				buildGame();
 	bool				addLight();
 	bool				addPlayer(string* givenName);
@@ -46,6 +46,7 @@ public:
 	MyView*				m_pMainCam;
 	bool				m_bShowStatus;
 	void				sendPlayer(float givenX, float givenY, float givenZ, int status);
+	bool				collision(MyMesh* givenObject1, MyMesh* givenObject2);
 
 private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
