@@ -2,15 +2,15 @@
 
 MyGameControl::MyGameControl(void)
 {
-	m_initCount		= 0;
-	m_pView			= new MyView();
-	m_bShowStatus	= true;
+	m_initCount			= 0;
+	m_pView				= new MyView();
+	m_bShowStatus		= true;
 	//m_pMeshes		= new vector(new MyMesh());
 }
 
 MyGameControl::~MyGameControl(void)
 {
-	delete m_pView;
+	delete m_pView;	
 }
 
 bool	MyGameControl::loadObjects()

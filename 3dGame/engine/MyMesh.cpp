@@ -6,6 +6,7 @@ MyMesh::MyMesh(void)
 	m_FileName				= NULL;
 	m_TextureFileName		= NULL;
 	m_pbAlphaBlending		= new bool(false);
+	m_pbIsDrawn				= new bool(false);
 	m_piLayers				= new int(0);
 	m_afDiffuse				= new float[4];
 	m_afAmbient				= new float[3];
@@ -28,6 +29,7 @@ MyMesh::~MyMesh()
 {
 	delete		m_TextureFileName;
 	delete		m_pbAlphaBlending;
+	delete		m_pbIsDrawn;
 	delete		m_piLayers;
 	delete[]	m_afDiffuse;
 	delete[]	m_afAmbient;
@@ -186,9 +188,15 @@ HRESULT	MyMesh::load()
 
 void	MyMesh::draw()
 {
-	float tmpScaleX = this->getScale()->getX();
-	float tmpScaleY = this->getScale()->getY();
-	float tmpScaleZ = this->getScale()->getZ();
+	if(!*m_pbIsDrawn)
+	{
+		m_InitialScaleValues.x = this->getScale()->getX();
+		m_InitialScaleValues.y = this->getScale()->getY();
+		m_InitialScaleValues.z = this->getScale()->getZ();
+		*m_pbIsDrawn = true;
+	}
+
+	this->getScale()->setValues(m_InitialScaleValues.x,m_InitialScaleValues.y,m_InitialScaleValues.z);
 
 	//Alpha-Blending
 	if(*m_pbAlphaBlending)
@@ -198,10 +206,16 @@ void	MyMesh::draw()
 		_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	}
 
+	/*char temp[118];
+	sprintf(temp,"%s %d | %f - %f - %f",m_FileName,*m_piLayers,tmpScaleX,tmpScaleY,tmpScaleZ);
+
+	MessageBox(NULL,temp,"Message",MB_OK);
+	*/
+
 	for(int pcount = 0; pcount < *m_piLayers; pcount++)
 	{
+		this->getScale()->setValues((this->getScale()->getX())+1,(this->getScale()->getY())+1,(this->getScale()->getZ())+1);
 		this->transform();
-		this->getScale()->setValues(tmpScaleX+pcount,tmpScaleY+pcount,tmpScaleZ+pcount);
 		for (DWORD count = 0; count < m_dwNumMaterials; count++)
 		{
 			if(*m_pbAlphaBlending)
@@ -232,5 +246,5 @@ void	MyMesh::draw()
 			m_pMesh->DrawSubset(count);
 		}
 	}
-	this->getScale()->setValues(tmpScaleX,tmpScaleY,tmpScaleZ);
+	//this->getScale()->setValues(tmpScaleX,tmpScaleY,tmpScaleZ);
 }

@@ -14,6 +14,8 @@ MyD3DGame::MyD3DGame(void)
 	m_pGameControl	= new MyGameControl();
 	m_pUserInput	= new MyUserInput();
 	m_pKoordSys		= new MyTest();
+
+	m_pfFramesPerSecond	= new float(0.0);
 }
 
 MyD3DGame::~MyD3DGame(void)
@@ -22,6 +24,7 @@ MyD3DGame::~MyD3DGame(void)
 	delete	m_pUserInput;
 	delete	m_pKoordSys;
 	delete	m_pFont;
+	delete	m_pfFramesPerSecond;
 }
 
 bool	MyD3DGame::init3D()
@@ -210,6 +213,9 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumLights(),
 		m_pGameControl->getNumMeshes());
 
+	//Zeige Anzahl der Frames per Second
+	sprintf(temp,"FPS: %2.2f",*m_pfFramesPerSecond);
+
 	m_pFont->DrawText(
 		5,
 		35,
@@ -260,10 +266,16 @@ bool	MyD3DGame::moveScene()
 
 void	MyD3DGame::runGame()
 {
+	DWORD dwTime0 = timeGetTime();
+
 	m_pUserInput->inputKB();
 
 	this->moveScene();
 	this->prepareScene();
 	this->doScene();
 	this->presentScene();
+	
+	DWORD dwTime1 = timeGetTime();
+
+	*m_pfFramesPerSecond = 1.0f / ((float)(dwTime1-dwTime0)/1000.0f);
 }

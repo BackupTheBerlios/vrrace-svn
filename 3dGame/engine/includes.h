@@ -55,9 +55,9 @@ const BYTE		MM_BGCOLOR_RED			= 2;				//Hintergrund Rot
 const BYTE		MM_BGCOLOR_GREEN		= 2;				//Hintergrund Gruen
 const BYTE		MM_BGCOLOR_BLUE			= 2;				//Hintergrund Blau
 
-const BYTE		MM_TEXTCOLOR_RED		= 2;				//Textfarbe Rot
-const BYTE		MM_TEXTCOLOR_GREEN		= 2;				//Textfarbe Gruen
-const BYTE		MM_TEXTCOLOR_BLUE		= 2;				//Textfarbe Blau
+const BYTE		MM_TEXTCOLOR_RED		= 255;				//Textfarbe Rot
+const BYTE		MM_TEXTCOLOR_GREEN		= 255;				//Textfarbe Gruen
+const BYTE		MM_TEXTCOLOR_BLUE		= 255;				//Textfarbe Blau
 const BYTE		MM_TEXTCOLOR_ALPHA		= 255;				//Textfarbe Alpha
 
 //Defines

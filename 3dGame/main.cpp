@@ -62,13 +62,14 @@ INT WINAPI WinMain(HINSTANCE hInst,
 
 	while (msg.message != WM_QUIT) 
 	{
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+		while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		} else {
+		} 
+		//else {
 			g_pD3DGame->runGame();
-		}
+		//}
 	}
 
 	delete g_pD3DGame;

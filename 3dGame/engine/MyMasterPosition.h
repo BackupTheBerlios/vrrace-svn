@@ -21,11 +21,11 @@ public:
 	void	addClient(MyMasterPosition* givenClient);
 	MyVertex*	getScale();
 
-	MyVertex*					m_pPosition;	//aktuelle Position
-	MyVertex*					m_pDirection;	//Bewegungsrichtung
-	MyVertex*					m_pRotation;	//aktuelle Rotation/StellWinkel
-	MyVertex*					m_pRotDir;		//Rotationsrichtung
-	MyVertex*					m_pScaleFactor;	//Skalierungsfaktor
+	MyVertex*					m_pPosition;		//aktuelle Position
+	MyVertex*					m_pDirection;		//Bewegungsrichtung
+	MyVertex*					m_pRotation;		//aktuelle Rotation/StellWinkel
+	MyVertex*					m_pRotDir;			//Rotationsrichtung
+	MyVertex*					m_pScaleFactor;		//Skalierungsfaktor
 	LPDIRECT3DDEVICE9			_D3DDevice;
 	int						m_pType;
 

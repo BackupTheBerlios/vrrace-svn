@@ -41,5 +41,6 @@ private:
 	MyGameControl*		m_pGameControl;						//Spielzustand
 	MyTest*				m_pKoordSys;						//Koordinatensystem
 	MyUserInput*		m_pUserInput;						//Benutzereingaben
+	float*				m_pfFramesPerSecond;				//Anzahl Frames
 };
 #endif

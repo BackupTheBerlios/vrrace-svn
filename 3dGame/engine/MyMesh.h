@@ -47,9 +47,11 @@ private:
 	D3DXMATRIX*			_matWorld;
 	MyMesh*				m_pMasterObject;
 	bool*				m_pbAlphaBlending;
+	bool*				m_pbIsDrawn;	//Status, ob Mesh bereits einmal gezeichnet
 	int*				m_piLayers;
 	float*				m_afDiffuse;
 	float*				m_afAmbient;
 	float*				m_afEmissive;
+	CUSTOMVERTEX		m_InitialScaleValues;
 };
 #endif
