@@ -56,6 +56,7 @@ public:
 	static CRITICAL_SECTION			m_csDP;
 	static int						m_iFrameRate;
 	static HWND*					m_hWnd;
+	static bool						m_bInitialized;
 private:
 	static LPDIRECT3DDEVICE9	_D3DDevice;
 	static D3DXMATRIX*			_matWorld;

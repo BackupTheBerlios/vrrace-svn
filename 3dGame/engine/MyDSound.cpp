@@ -61,7 +61,7 @@ bool MyDSound::setListenerPosition(float x, float y, float z)
 {
 	if(FAILED(m_p3DListener->SetPosition(x,y,z,DS3D_IMMEDIATE)))
 	{
-		MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+		//MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
 		return false;
 	}
 	return true;
@@ -72,7 +72,7 @@ bool MyDSound::setListenerDirection(float x, float y, float z)
 {
 	if(FAILED(m_p3DListener->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
 	{
-		MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+		//MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
 		return false;
 	}
 	return true;
@@ -83,7 +83,7 @@ bool MyDSound::setListenerOrientation(float vpX, float vpY, float vpZ, float uvX
 {
 	if(FAILED(m_p3DListener->SetOrientation(vpX, vpY, vpZ, uvX, uvY, uvZ,DS3D_IMMEDIATE)))
 	{
-		MessageBox(NULL,"Fehler beim Setzen der Orientierung des 3D-Listener","ERROR",MB_OK | MB_ICONSTOP);
+		//MessageBox(NULL,"Fehler beim Setzen der Orientierung des 3D-Listener","ERROR",MB_OK | MB_ICONSTOP);
 		return false;
 	}
 	return true;

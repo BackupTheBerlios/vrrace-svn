@@ -53,6 +53,10 @@ MyView::~MyView(void)
 
 void	MyView::setMaster(MyMasterPosition* givenMaster)
 {
+	if (m_pMaster != NULL)
+	{
+		m_pMaster->m_bIsCam = false;
+	}
 	m_pMaster	= givenMaster;
 	m_pViewPoint->setPValues(
 		m_pMaster->getAbsolutePosition()->getPX(),
@@ -62,6 +66,7 @@ void	MyView::setMaster(MyMasterPosition* givenMaster)
 		m_pMaster->m_pDirection->getPX(),
 		m_pMaster->m_pDirection->getPY(),
 		m_pMaster->m_pDirection->getPZ());
+	m_pMaster->m_bIsCam = true;
 }
 
 MyMasterPosition*	MyView::getMaster()

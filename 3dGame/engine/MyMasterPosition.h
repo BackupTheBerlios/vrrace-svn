@@ -3,6 +3,7 @@
 #define MYMASTERPOSITION_H
 
 #include "myvertex.h"
+//#include "MyView.h"
 
 class MyMasterPosition
 {
@@ -42,12 +43,16 @@ public:
 	bool						m_bToSend;
 	bool						m_bDestroyable;								//kann Objekt durch kollision zerstört werden
 	int							m_iStatus;									//Objektstatus
+	bool						m_bIsCam;
+	bool						m_bIsMoveable;
+	bool						m_mustSleep;
 	/*
 	0=zertört
 	1=ok, sichtbar
 	
 	*/
 	void						collided();
+	void						newInit();
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

@@ -311,6 +311,7 @@ bool	MyD3DGame::initGame(void)
 	m_pGameControl->loadObjects();
 	m_pGameControl->initStarsField();
 	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
+	m_pDirectPlay->m_bInitialized = true;
 	return true;
 }
 
@@ -330,10 +331,16 @@ void	MyD3DGame::runGame()
 
 	this->moveScene();
 
+	int counter = 0;
 	if ((((float)(dwTime0 - m_dwTmpTime)/1000.0f) > 0.15f) && (m_iDPchoice != 0))
 	{
+		//counter++;
 		m_pGameControl->sendData();
-		//m_pGameControl->sendPlayer();
+		//if (counter == 10)
+		//{
+			m_pGameControl->sendPlayer(0.0f, 0.0f, 0.0f, 1);
+			//counter = 0;
+		//}
 		m_dwTmpTime = dwTime0;
 	}
 

@@ -22,6 +22,7 @@ LPDIRECTSOUND8		MyDPlay::_DSoundDevice	= NULL;
 int					MyDPlay::m_iFrameRate	= 100;
 TCHAR*				MyDPlay::m_pUsername	= NULL;
 HWND*				MyDPlay::m_hWnd			= NULL;
+bool				MyDPlay::m_bInitialized	= false;
 	
 
 /*Callback-Funktion fuer DirectPlay*/
@@ -132,165 +133,176 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 
 	case DPN_MSGID_RECEIVE:
 		{
-			PDPNMSG_RECEIVE	pMsg;
-
-			pMsg = (PDPNMSG_RECEIVE) pvMsgBuffer;
-			//MessageBox(NULL, "rec", "Message", MB_OK);
-			if(pMsg->dwReceiveDataSize == sizeof(GAMEOBJECTS))
+			if (m_bInitialized)
 			{
-				GAMEOBJECTS* recToken	= (GAMEOBJECTS*)pMsg->pReceiveData;
+				PDPNMSG_RECEIVE	pMsg;
 
-				EnterCriticalSection(&m_csDP);
-
-				if(recToken->vectorId < m_pNetworkMeshes.size())
+				pMsg = (PDPNMSG_RECEIVE) pvMsgBuffer;
+				//MessageBox(NULL, "rec", "Message", MB_OK);
+				if(pMsg->dwReceiveDataSize == sizeof(GAMEOBJECTS))
 				{
-			
-					m_pNetworkMeshes[recToken->vectorId]->m_pPosition->setValues(
-						recToken->posinfo.position.x, recToken->posinfo.position.y, recToken->posinfo.position.z);
-					m_pNetworkMeshes[recToken->vectorId]->m_pDirection->setValues(
-						recToken->posinfo.direction.x, recToken->posinfo.direction.y, recToken->posinfo.direction.z);
-					m_pNetworkMeshes[recToken->vectorId]->m_pRotation->setValues(
-						recToken->posinfo.rotation.x, recToken->posinfo.rotation.y, recToken->posinfo.rotation.z);
-					m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
-						recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
-				}
+					GAMEOBJECTS* recToken	= (GAMEOBJECTS*)pMsg->pReceiveData;
 
-				LeaveCriticalSection(&m_csDP);
-
-			} else if(pMsg->dwReceiveDataSize == sizeof(PLAYEROBJECTS))
-			{
-				PLAYEROBJECTS* recToken	= (PLAYEROBJECTS*)pMsg->pReceiveData;
-				bool isContent = false;
-				DWORD tmpCount;
-				
-				if(recToken->status == 1)
-				{
 					EnterCriticalSection(&m_csDP);
 
-					for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
+					if(recToken->vectorId < m_pNetworkMeshes.size())
 					{
-						if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
+				
+						m_pNetworkMeshes[recToken->vectorId]->m_pPosition->setValues(
+							recToken->posinfo.position.x, recToken->posinfo.position.y, recToken->posinfo.position.z);
+						m_pNetworkMeshes[recToken->vectorId]->m_pDirection->setValues(
+							recToken->posinfo.direction.x, recToken->posinfo.direction.y, recToken->posinfo.direction.z);
+						m_pNetworkMeshes[recToken->vectorId]->m_pRotation->setValues(
+							recToken->posinfo.rotation.x, recToken->posinfo.rotation.y, recToken->posinfo.rotation.z);
+						m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
+							recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
+						m_pNetworkMeshes[recToken->vectorId]->m_iStatus = recToken->status;
+						/*if (recToken->status == 0)
 						{
-							//MessageBox(NULL,"schon da","Message",MB_OK);
-							tmpCount = count;
-							isContent = true;
-							break;
-						}
+							MessageBox(NULL, "schiff weg", "...", MB_OK);
+						}*/
 					}
 
 					LeaveCriticalSection(&m_csDP);
 
-					if(!isContent)
+				} else if(pMsg->dwReceiveDataSize == sizeof(PLAYEROBJECTS))
+				{
+					PLAYEROBJECTS* recToken	= (PLAYEROBJECTS*)pMsg->pReceiveData;
+					bool isContent = false;
+					DWORD tmpCount;
+					
+					if(recToken->status == 1)
 					{
-						//MessageBox(NULL,"noch nicht","Message",MB_OK);
-						MyPlayer* newPlayer	= new MyPlayer();
 
-						if (newPlayer && _D3DDevice && _DSoundDevice)
+						EnterCriticalSection(&m_csDP);
+
+						for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
 						{
-				
-							EnterCriticalSection(&m_csDP);
-
-							newPlayer->m_pShipChoice	= recToken->ship;
-							if (newPlayer->getMesh()->init(_D3DDevice,
-																_matWorld,
-																MyDPlay::m_pMeshPaths[newPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
-																NULL,
-																105.0f, 0.0f, 1000.0f,
-																0.0f, 0.0f, 0.0f,
-																0.0f,
-																0.0f, 0.0f, 0.0f,
-																0.0f, 0.0f, 0.0f,
-																false, true))
+							if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
 							{
-								newPlayer->m_pPlayerID		= recToken->dpnid;
-								if(SUCCEEDED(newPlayer->getMesh()->load()))
+								//MessageBox(NULL,"schon da","Message",MB_OK);
+								tmpCount = count;
+								isContent = true;
+								break;
+							}
+						}
+						
+						LeaveCriticalSection(&m_csDP);
+						
+						if(!isContent)
+						{
+							//MessageBox(NULL,"noch nicht","Message",MB_OK);
+							MyPlayer* newPlayer	= new MyPlayer();
+
+							if (newPlayer && _D3DDevice && _DSoundDevice)
+							{
+					
+								EnterCriticalSection(&m_csDP);
+
+								newPlayer->m_pShipChoice	= recToken->ship;
+								if (newPlayer->getMesh()->init(_D3DDevice,
+																	_matWorld,
+																	MyDPlay::m_pMeshPaths[newPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
+																	NULL,
+																	105.0f, 0.0f, 1000.0f,
+																	0.0f, 0.0f, 0.0f,
+																	0.0f,
+																	0.0f, 0.0f, 0.0f,
+																	0.0f, 0.0f, 0.0f,
+																	false, true))
 								{
-									if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+									newPlayer->m_pPlayerID		= recToken->dpnid;
+									if(SUCCEEDED(newPlayer->getMesh()->load()))
 									{
-										newPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
-										m_pAllMeshes.push_back(newPlayer->getMesh());
-										m_pMasterMeshes.push_back(newPlayer->getMesh());
-										m_pNetworkPlayers.push_back(newPlayer);
-										m_pMeshSounds.push_back(newPlayer->getSound());
-										newPlayer->getSound()->play(true, 0);
-										newPlayer->getMesh()->move();
+										if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+										{
+											newPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
+											m_pAllMeshes.push_back(newPlayer->getMesh());
+											m_pMasterMeshes.push_back(newPlayer->getMesh());
+											m_pNetworkPlayers.push_back(newPlayer);
+											m_pMeshSounds.push_back(newPlayer->getSound());
+											newPlayer->getSound()->play(true, 0);
+											newPlayer->getMesh()->move();
+										}
 									}
 								}
+
+								LeaveCriticalSection(&m_csDP);
+
 							}
-
-							LeaveCriticalSection(&m_csDP);
-
+							tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
 						}
-						tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
+
+						EnterCriticalSection(&m_csDP);
+
+						m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
+							recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
+						m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
+							recToken->position.posinfo.direction.x, recToken->position.posinfo.direction.y, recToken->position.posinfo.direction.z);
+						m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotation->setValues(
+							recToken->position.posinfo.rotation.x, recToken->position.posinfo.rotation.y, recToken->position.posinfo.rotation.z);
+						m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotDir->setValues(
+							recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
+						m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
+							recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
+						*m_pNetworkPlayers[tmpCount]->getMesh()->m_pSpeed = recToken->position.speed;
+						m_pNetworkPlayers[tmpCount]->getMesh()->m_iStatus = recToken->position.status;
+
+						LeaveCriticalSection(&m_csDP);
+
+						//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
+						//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
+						//m_pNetworkPlayers[tmpCount]->getMesh()->move();
 					}
-
-					EnterCriticalSection(&m_csDP);
-
-					m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
-						recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
-					m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
-						recToken->position.posinfo.direction.x, recToken->position.posinfo.direction.y, recToken->position.posinfo.direction.z);
-					m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotation->setValues(
-						recToken->position.posinfo.rotation.x, recToken->position.posinfo.rotation.y, recToken->position.posinfo.rotation.z);
-					m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotDir->setValues(
-						recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
-					m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
-						recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
-					*m_pNetworkPlayers[tmpCount]->getMesh()->m_pSpeed = recToken->position.speed;
-
-					LeaveCriticalSection(&m_csDP);
-
-					//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
-					//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
-					//m_pNetworkPlayers[tmpCount]->getMesh()->move();
-				}
-				else if(recToken->status == 0)
-				{
-					EnterCriticalSection(&m_csDP);
-
-					for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
+					else if(recToken->status == 0)
 					{
-						if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
+						EnterCriticalSection(&m_csDP);
+
+						for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
 						{
-							m_pNetworkPlayers[count]->getMesh()->activateScaling();
-							m_pNetworkPlayers[count]->getMesh()->getScale()->setValues(0.0f, 0.0f, 0.0f);
-							m_pNetworkPlayers[count]->getMesh()->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
-							m_pNetworkPlayers[count]->getMesh()->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
-							m_pNetworkPlayers[count]->getMesh()->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
-							m_pNetworkPlayers[count]->getMesh()->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
-							m_pNetworkPlayers[count]->getMesh()->rotate(0.0f, 0.0f, 0.0f);
-							*m_pNetworkPlayers[count]->getMesh()->m_pSpeed = 0.0f;
-							m_pNetworkPlayers[count]->getSound()->stop();
-							break;
+							if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
+							{
+								m_pNetworkPlayers[count]->getMesh()->collided();
+								m_pNetworkPlayers[count]->getMesh()->activateScaling();
+								/*m_pNetworkPlayers[count]->getMesh()->getScale()->setValues(0.0f, 0.0f, 0.0f);
+								m_pNetworkPlayers[count]->getMesh()->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+								m_pNetworkPlayers[count]->getMesh()->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+								m_pNetworkPlayers[count]->getMesh()->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+								m_pNetworkPlayers[count]->getMesh()->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
+								m_pNetworkPlayers[count]->getMesh()->rotate(0.0f, 0.0f, 0.0f);
+								*m_pNetworkPlayers[count]->getMesh()->m_pSpeed = 0.0f;*/
+								m_pNetworkPlayers[count]->getSound()->stop();
+								break;
+							}
 						}
+
+						LeaveCriticalSection(&m_csDP);
 					}
+				} else if(pMsg->dwReceiveDataSize == sizeof(INFO))
+				{
+					INFO* recToken	= (INFO*)pMsg->pReceiveData;
+					
+					EnterCriticalSection(&m_csDP);
 
+					m_iFrameRate	= recToken->framerate;
+
+					//char temp[100];
+					//sprintf(temp, "%d %d", recToken->framerate, g_iFrameRate);
+					//MessageBox(NULL, temp, "Message", MB_OK);
+					
 					LeaveCriticalSection(&m_csDP);
+
 				}
-			} else if(pMsg->dwReceiveDataSize == sizeof(INFO))
-			{
-				INFO* recToken	= (INFO*)pMsg->pReceiveData;
-				
-				EnterCriticalSection(&m_csDP);
-
-				m_iFrameRate	= recToken->framerate;
-
-				//char temp[100];
-				//sprintf(temp, "%d %d", recToken->framerate, g_iFrameRate);
-				//MessageBox(NULL, temp, "Message", MB_OK);
-				
-				LeaveCriticalSection(&m_csDP);
-
+				//MyToken* recToken = (MyToken*)pMsg->pReceiveData;
+				//if(recToken->vectorId < m_pAllMeshes.size())
+				//{
+					//char temp[100];
+					//sprintf(temp,"%f %f %f",recToken->scaleFactor.x,recToken->scaleFactor.y,recToken->scaleFactor.z);
+					//MessageBox(NULL,temp,"Message",MB_OK);
+					//m_pAllMeshes[recToken->vectorId]->setScale(recToken->scaleFactor);
+					//m_pAllMeshes[recToken->vectorId]->setPositionMatrix(&recToken->positionMatrix);
+				//}
 			}
-			//MyToken* recToken = (MyToken*)pMsg->pReceiveData;
-			//if(recToken->vectorId < m_pAllMeshes.size())
-			//{
-				//char temp[100];
-				//sprintf(temp,"%f %f %f",recToken->scaleFactor.x,recToken->scaleFactor.y,recToken->scaleFactor.z);
-				//MessageBox(NULL,temp,"Message",MB_OK);
-				//m_pAllMeshes[recToken->vectorId]->setScale(recToken->scaleFactor);
-				//m_pAllMeshes[recToken->vectorId]->setPositionMatrix(&recToken->positionMatrix);
-			//}
 			break;
 		}
 

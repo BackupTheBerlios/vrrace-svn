@@ -19,6 +19,9 @@ MyMasterPosition::MyMasterPosition(void)
 	m_pSpeed				= new float(0.0f);
 	m_bDestroyable			= false;
 	m_iStatus				= 1;
+	m_bIsCam				= false;
+	m_bIsMoveable			= true;
+	m_mustSleep				= false;
 
 	D3DXMatrixRotationYawPitchRoll(
 			m_pRotationMatrix,
@@ -108,19 +111,22 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 
 void	MyMasterPosition::move()
 {
-	D3DXVECTOR4	pOut;
-	D3DXVec3Transform(&pOut, &D3DXVECTOR3(0.0f, 0.0f, *m_pSpeed), m_pRotationMatrix);
-	m_pDirection->setValues(pOut.x, pOut.y, pOut.z);
+	if (m_bIsMoveable)
+	{
+		D3DXVECTOR4	pOut;
+		D3DXVec3Transform(&pOut, &D3DXVECTOR3(0.0f, 0.0f, *m_pSpeed), m_pRotationMatrix);
+		m_pDirection->setValues(pOut.x, pOut.y, pOut.z);
 
-	m_pPosition->addX(m_pDirection->getX());
-	m_pPosition->addY(m_pDirection->getY());
-	m_pPosition->addZ(m_pDirection->getZ());
+		m_pPosition->addX(m_pDirection->getX());
+		m_pPosition->addY(m_pDirection->getY());
+		m_pPosition->addZ(m_pDirection->getZ());
 
-	m_pRotation->addX(m_pRotDir->getX());
-	m_pRotation->addY(m_pRotDir->getY());
-	m_pRotation->addZ(m_pRotDir->getZ());
+		m_pRotation->addX(m_pRotDir->getX());
+		m_pRotation->addY(m_pRotDir->getY());
+		m_pRotation->addZ(m_pRotDir->getZ());
 
-	this->calcOwnMatrix();
+		this->calcOwnMatrix();
+	}
 }
 
 void	MyMasterPosition::calcMatrix(D3DXMATRIX* givenMatrix)
@@ -242,13 +248,24 @@ D3DXMATRIX*	MyMasterPosition::getRotationMatrix()
 
 void	MyMasterPosition::collided()
 {
-	/*m_pPosition->setValues(0.0f, 0.0f, 0.0f);
-	m_pAbsolutePosition->setValues(0.0f, 0.0f, 0.0f);
-	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
-	m_pRotation->setValues(0.0f, 0.0f, 0.0f);
-	m_pLocalRotation->setValues(0.0f, 0.0f, 0.0f);
-	m_pRotDir->setValues(0.0f, 0.0f, 0.0f);*/
+	//m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	//m_pAbsolutePosition->setValues(0.0f, 0.0f, 0.0f);
+	//m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	//m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+	//m_pLocalRotation->setValues(0.0f, 0.0f, 0.0f);
+	//m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
 	//m_pScaleFactor->setValues(0.0f, 0.0f, 0.0f);
 	*m_pSpeed = 0.0f;
 	m_iStatus = 0;
+	m_bIsMoveable = false;
+	m_mustSleep	= true;
+}
+
+void	MyMasterPosition::newInit()
+{
+	srand( (unsigned)time( NULL ) );
+	m_pPosition->setValues(100.0f, 0.0f, 1000.0f + rand()%10001);
+	m_iStatus = 1;
+	m_bIsMoveable = true;
+	m_mustSleep = false;
 }

@@ -286,6 +286,11 @@ void	MyUserInput::inputKB()
 				//_m_pGameControl->m_pMainCam->calcPosition();
 //				pEff[1]->Start(1,0);
 			}
+			if (KEYDOWN(buffer, DIK_N))
+			{
+				if (_m_pGameControl->getPlayer()->getMesh()->m_mustSleep)
+				_m_pGameControl->getPlayer()->getMesh()->newInit();
+			}
 		}
 		else
 		{

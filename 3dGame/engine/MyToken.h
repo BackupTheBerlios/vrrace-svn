@@ -11,6 +11,7 @@ typedef struct GAMEOBJECTS
 	MYPOS		posinfo;
 	bool		scale;
 	float		speed;
+	int			status;
 }MYGAMEOBJECTS;
 
 typedef struct PLAYEROBJECTS
