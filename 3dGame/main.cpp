@@ -197,8 +197,18 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 							WPARAM WParam,
 							LPARAM LParam)
 {
-	static HBITMAP hBitmap;
-	BITMAP bitmap;
+	static HBITMAP hBitmapBigship;
+	static BITMAP bitmapBigship;
+	static HBITMAP hBitmapShusui;
+	static BITMAP bitmapShusui;
+	static HBITMAP hBitmapSpaceship2;
+	static BITMAP bitmapSpaceship2;
+	static HBITMAP hBitmapSpaceship5;
+	static BITMAP bitmapSpaceship5;
+	static HBITMAP hBitmapSpaceship13;
+	static BITMAP bitmapSpaceship13;
+	static HBITMAP hBitmapStarsail;
+	static BITMAP bitmapStarsail;
 	HDC hdc, hdcMem;
 	PAINTSTRUCT ps;
 	
@@ -207,9 +217,20 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 	{
 	case WM_INITDIALOG:
 		{
-			hBitmap = (HBITMAP) LoadImage(g_hInst,"resources\\ships\\bigship1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-			GetObject(hBitmap,sizeof(BITMAP),(LPVOID) &bitmap);
-			if(hBitmap == NULL)
+			hBitmapBigship			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\bigship1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapBigship,sizeof(BITMAP),(LPVOID) &bitmapBigship);
+			hBitmapShusui			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\shusui.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapShusui,sizeof(BITMAP),(LPVOID) &bitmapShusui);
+			hBitmapSpaceship2		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 2.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapSpaceship2,sizeof(BITMAP),(LPVOID) &bitmapSpaceship2);
+			hBitmapSpaceship5		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 5.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapSpaceship5,sizeof(BITMAP),(LPVOID) &bitmapSpaceship5);
+			hBitmapSpaceship13		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 13.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapSpaceship13,sizeof(BITMAP),(LPVOID) &bitmapSpaceship13);
+			hBitmapStarsail			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\star sail.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			GetObject(hBitmapStarsail,sizeof(BITMAP),(LPVOID) &bitmapStarsail);
+			if((hBitmapBigship == NULL) || (hBitmapShusui == NULL) || (hBitmapSpaceship2 == NULL) ||
+				(hBitmapSpaceship5 == NULL) || (hBitmapSpaceship13 == NULL) || (hBitmapStarsail == NULL))
 			{
 				MessageBox(NULL, "Fehler beim Laden des Bildes", "ERROR", MB_OK | MB_ICONSTOP);
 			}
@@ -222,7 +243,86 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
 			EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
 			EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
-			
+						
+			break;
+		}
+
+	case WM_PAINT:
+		{
+			HBITMAP hOldBitmap;
+			RECT rect;
+			if(hBitmapBigship != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPBIGSHIP),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPBIGSHIP), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapBigship);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapBigship.bmWidth, bitmapBigship.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
+			if(hBitmapShusui != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSHUSUI),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSHUSUI), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapShusui);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapShusui.bmWidth, bitmapShusui.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
+			if(hBitmapSpaceship2 != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP2),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP2), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship2);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship2.bmWidth, bitmapSpaceship2.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
+			if(hBitmapSpaceship5 != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP5),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP5), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship5);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship5.bmWidth, bitmapSpaceship5.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
+			if(hBitmapSpaceship13 != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP13),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP13), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship13);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship13.bmWidth, bitmapSpaceship13.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
+			if(hBitmapStarsail != NULL)
+			{
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSTARSAIL),&rect);
+				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSTARSAIL), &ps);
+				hdcMem = CreateCompatibleDC(hdc);
+				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapStarsail);
+				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapStarsail.bmWidth, bitmapStarsail.bmHeight, SRCCOPY);
+				EndPaint(hWnd, &ps);
+				SelectObject(hdcMem, hOldBitmap);
+				DeleteDC(hdcMem);
+				DeleteObject(hOldBitmap);
+			}
 			break;
 		}
 
