@@ -22,6 +22,7 @@ using namespace std;
 //Directx-Includes
 #include "../directx/d3dutil.h"
 #include "../directx/dxutil.h"
+#include "../directx/dsutil.h"
 #include "../directx/d3dfont.h"
 
 //eigene Includes

@@ -19,6 +19,8 @@ private:
 	bool	initKeyboard();												//Initialisierung der Tastatur
 	bool	initJoystick();												//Initialisierung des Joysticks
 	bool	initMouse();												//Initialisierung der Maus
+	BOOL	CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext);
+//	BOOL	CALLBACK	EnumAxesCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext);
 
 	HINSTANCE*				m_hInst;
 	HWND*					m_hWnd;
@@ -26,6 +28,7 @@ private:
 	LPDIRECTINPUT8			m_lpDI;
 	LPDIRECTINPUTDEVICE8	m_lpDIDevice;
 	LPDIRECTINPUTDEVICE8	m_pMouse;
+	LPDIRECTINPUTDEVICE8	m_pJoystick;
 	MyGameControl*			_m_pGameControl;
 };
 #endif
