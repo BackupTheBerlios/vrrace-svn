@@ -234,6 +234,7 @@ void	MyD3DGame::doScene()
 	m_pGameControl->drawLights();
 	//m_pKoordSys->drawKS(m_pD3dDevice);
 	m_pGameControl->drawObjects();
+	m_pGameControl->drawStarsField();
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 }
 
@@ -254,6 +255,7 @@ bool	MyD3DGame::initGame(void)
 	m_pGameControl->addObject();
 	m_pGameControl->addLight();
 	m_pGameControl->loadObjects();
+	m_pGameControl->initStarsField();
 	return true;
 }
 

@@ -68,6 +68,7 @@ typedef struct CUSTOMVERTEX
     float	x;
 	float	y;
 	float	z;
+	DWORD	dwColor;
 }CUSTOMVERTEX;
 
 #endif

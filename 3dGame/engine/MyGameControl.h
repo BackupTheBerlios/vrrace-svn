@@ -7,6 +7,7 @@
 #include "MyMesh.h"
 #include "MyLight.h"
 #include "MyVertex.h"
+#include "MyStarsField.h"
 
 class MyGameControl
 {
@@ -16,8 +17,10 @@ public:
 
 	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld);
 	bool				initObjects();
+	bool				initStarsField();
 	bool				loadObjects();
 	bool				drawObjects();
+	bool				drawStarsField();
 	bool				drawLights();
 	bool				moveObjects();
 	bool				addObject();
@@ -33,6 +36,7 @@ private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
 	int					m_initCount;	//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
 	MyMesh*				m_pShip;
+	MyStarsField*		m_pStarsField;
 //	vector<MyMesh*>		m_pMeshes;
 //	vector<MyLight*>	m_pLights;
 	D3DXMATRIX*			_matWorld;
