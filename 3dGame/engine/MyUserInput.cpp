@@ -81,7 +81,7 @@ bool	MyUserInput::initJoystick()
 	m_hr	= m_pJoystick->GetCapabilities(&m_diDevCaps);
 	if (FAILED(m_hr))	{return false;}
 
-	m_hr	= m_pJoystick->EnumObjects(EnumAxesCallback, (VOID*)*m_hWnd, DIDFT_AXIS);
+	m_hr	= m_pJoystick->EnumObjects(EnumObjectsCallback, (VOID*)*m_hWnd, DIDFT_AXIS);
 	if (FAILED(m_hr))	{return false;}
 
 	return true;
@@ -95,6 +95,31 @@ BOOL CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIns
 	} else {
 		return DIENUM_STOP;
 	}
+}
+
+BOOL CALLBACK MyUserInput::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext)
+{
+	if (pdidoi->dwType & DIDFT_AXIS)
+	{
+		DIPROPRANGE diprg;
+		diprg.diph.dwSize		= sizeof(DIPROPRANGE);
+		diprg.diph.dwHeaderSize	= sizeof(DIPROPHEADER);
+		diprg.diph.dwHow		= DIPH_BYID;
+		diprg.diph.dwObj		= pdidoi->dwType;
+		diprg.lMin				= -MAXVAL;
+		diprg.lMax				= +MAXVAL;
+
+		DWORD*	pdwNumForceFeedbackAxis = (DWORD*)pContext;
+		if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0)
+		{
+			(*pdwNumForceFeedbackAxis)++;
+		}
+		if (FAILED(m_pJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)))
+		{
+			return DIENUM_STOP;
+		}
+	}
+	return DIENUM_CONTINUE;
 }
 
 bool	MyUserInput::initKeyboard()
