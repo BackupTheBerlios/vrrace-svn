@@ -25,17 +25,6 @@ using namespace std;
 #include "../directx/dsutil.h"
 #include "../directx/d3dfont.h"
 
-//eigene Includes
-/*
-#include "MyMesh.h"
-#include "MyTest.h"
-#include "MyView.h"
-#include "MyGameControl.h"
-#include "MyUserInput.h"
-#include "MyD3DGame.h"
-#include "MyMesh.h"
-*/
-
 #include "MyTools.h"
 
 //Bibliotheken

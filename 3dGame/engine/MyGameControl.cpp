@@ -106,19 +106,19 @@ bool	MyGameControl::addPlayer(string* givenName)
 	} else {
 		if (m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
-											"resources/x_files/space station 5.x",
+											"resources/x_files/shusui.x",
 											NULL,
 											1000.0f, 0.0f, 1000.0f,
-											0.01f, 0.10f, 0.0f,
-											0.0f, 3.1412f, 0.0f,
 											0.0f, 0.0f, 0.0f,
-											false))
+											0.0f, 0.0f, 0.0f,
+											0.0f, 0.01f, 0.01f,
+											false, true))
 		{
 			m_pLocalPlayer->getMesh()->load();
 
 			m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
 			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
-			m_pView->getPos()->setValues(1500.0f, 0.0f, 1500.0f);
+			m_pView->getPos()->setValues(1010.0f, 0.0f, 1010.0f);
 			m_pView->getVP()->setPValues(
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPX(),				
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPY(),
@@ -129,6 +129,11 @@ bool	MyGameControl::addPlayer(string* givenName)
 	}
 
 	return true;
+}
+
+MyPlayer*	MyGameControl::getPlayer()
+{
+	return m_pLocalPlayer;
 }
 
 bool	MyGameControl::buildGame()
@@ -146,7 +151,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.01f, 0.0f,
-							true))
+							true, false))
 		{
 			tempObjd->load();
 			tempObjd->activateScaling();
@@ -174,7 +179,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 3.0f, 0.0f,
 							0.0f, -0.05f, 0.0f,
-							true))
+							true, false))
 		{
 			tempObjb->load();
 			tempObjb->activateScaling();
@@ -203,7 +208,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							false))
+							false, false))
 		{
 			tempObj->setMaster(m_pAllMeshes[1]);
 			tempObj->load();
@@ -230,7 +235,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
 							0.0f, 0.0f, 0.01f,
-							false))
+							false, false))
 		{
 			tempObjc->load();
 			
@@ -256,7 +261,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							false))
+							false, false))
 		{
 			tempObje->load();
 			tempObje->setMaster(m_pMasterMeshes[1]);
@@ -279,7 +284,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.05f,
-							true))
+							true, false))
 		{
 			sunLayer1->load();
 			sunLayer1->activateScaling();

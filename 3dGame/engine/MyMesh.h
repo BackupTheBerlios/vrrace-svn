@@ -27,7 +27,8 @@ public:
 								float rotDirX,
 								float rotDirY,
 								float rotDirZ,
-								bool givenAlphaBlending
+								bool givenAlphaBlending,
+								bool givenControl
 								);
 	void				initMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
 											float rAmbient, float gAmbient, float bAmbient,

@@ -1,11 +1,13 @@
 #include "MyUserInput.h"
 
+LPDIRECTINPUT8			MyUserInput::m_lpDI			= NULL;
+HRESULT					MyUserInput::m_hr			= NULL;
+LPDIRECTINPUTDEVICE8	MyUserInput::m_pJoystick	= NULL;
+
 MyUserInput::MyUserInput()
 {
-	m_lpDI			= NULL;
 	m_lpDIDevice	= NULL;
 	_m_pGameControl	= NULL;
-	m_pJoystick		= NULL;
 }
 
 MyUserInput::~MyUserInput(void)
@@ -65,14 +67,14 @@ bool	MyUserInput::initMouse()
 
 	return true;
 }
-/*
+
 bool	MyUserInput::initJoystick()
 {
 	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
 	return true;
 }
-/*
-BOOL static CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext)
+
+BOOL CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext)
 {
 	if (FAILED(m_hr = m_lpDI->CreateDevice(pdidInstance->guidInstance, &m_pJoystick, NULL)))
 	{
@@ -81,7 +83,7 @@ BOOL static CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* 
 		return DIENUM_STOP;
 	}
 }
-*/
+
 bool	MyUserInput::initKeyboard()
 {
 	//Device erstellen
@@ -119,23 +121,54 @@ void	MyUserInput::inputKB()
 			if (KEYDOWN(buffer, DIK_ESCAPE ))
 			{
 				exit(1);
-			}
+			} else 
 			if (KEYDOWN(buffer, DIK_F1 ))
 			{
 				if (_m_pGameControl->m_bShowStatus)
 					_m_pGameControl->m_bShowStatus	= false;
 				else
 					_m_pGameControl->m_bShowStatus	= true;
-			}
+			} else
 			if (KEYDOWN(buffer, DIK_F2))
 			{
 //				_m_pGameControl->buildGame();
-			}
+			} else
 			if (KEYDOWN(buffer, DIK_F3))
 			{
 				_m_pGameControl->addLight();
+			} else
+			if (KEYDOWN(buffer, DIK_LEFT))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f,-0.01f);
+			} else
+			if (KEYDOWN(buffer, DIK_RIGHT))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f,0.01f);
 			}
-			
+			if (KEYDOWN(buffer, DIK_UP))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f,0.0f,0.0f);
+			} else
+			if (KEYDOWN(buffer, DIK_DOWN))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f,0.0f,0.0f);
+			}
+			if (KEYDOWN(buffer, DIK_A))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,-0.01f,0.0f);
+			} else
+			if (KEYDOWN(buffer, DIK_D))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,0.01f,0.0f);
+			}
+			if (KEYDOWN(buffer, DIK_W))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);
+			} else
+			if (KEYDOWN(buffer, DIK_S))
+			{
+				_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);
+			}
 		}
 		else
 		{

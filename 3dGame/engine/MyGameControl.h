@@ -27,6 +27,7 @@ public:
 	bool				buildGame();
 	bool				addLight();
 	bool				addPlayer(string* givenName);
+	MyPlayer*			getPlayer();
 	int					getNumLights();
 	int					getNumMeshes();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);

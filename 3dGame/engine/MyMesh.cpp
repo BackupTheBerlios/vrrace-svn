@@ -52,7 +52,8 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 float rotDirX,
 					 float rotDirY,
 					 float rotDirZ,
-					 bool givenAlphaBlending
+					 bool givenAlphaBlending,
+					 bool givenControl
 					 )
 {
 	if (givenDevice != NULL)
@@ -83,7 +84,8 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	*m_pbAlphaBlending		= givenAlphaBlending;
 
-	
+	m_bControl				= givenControl;
+
 	m_pPosition->setValues(posX, posY, posZ);
 	m_pDirection->setValues(dirX, dirY, dirZ);
 	m_pRotation->setValues(rotX, rotY, rotZ);

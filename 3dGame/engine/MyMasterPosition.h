@@ -25,11 +25,15 @@ public:
 	MyVertex*					m_pAbsolutePosition;						//absolute Position
 	MyVertex*					m_pDirection;								//Bewegungsrichtung
 	MyVertex*					m_pRotation;								//aktuelle Rotation/StellWinkel
+	MyVertex*					m_pLocalRotation;							//lokale Rotation
 	MyVertex*					m_pRotDir;									//Rotationsrichtung
 	MyVertex*					m_pScaleFactor;								//Skalierungsfaktor
 	LPDIRECT3DDEVICE9			_D3DDevice;
 	int							m_pType;
+	bool						m_bControl;
+
 	MyVertex*					getAbsolutePosition();
+	void						rotate(float givenX, float givenY, float givenZ);
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

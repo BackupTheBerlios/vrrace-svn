@@ -12,10 +12,13 @@ public:
 	~MyPlayer(void);
 	void	setMesh(MyMesh* givenMesh);
 	MyMesh*	getMesh();
+	DPNID*	getID();
 
 private:
 	string*	m_Name;	//Spielername
 	MyMesh*	m_pPlayerMesh;
+	DPNID*	m_pPlayerID;
+	int*	m_pEnergy;
 
 };
 #endif
