@@ -106,7 +106,7 @@ bool	MyGameControl::addObject(int x)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/space station 5.x", 0.0f, 0.0f, x* 2, 0.0f, 0.0f, -0.01f))
+		if (tempObj->init(_D3DDevice, "resources/orbiter.x", 0.0f, 0.0f, x* 2+5, 0.0f, 0.0f, -0.01f))
 		{
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);

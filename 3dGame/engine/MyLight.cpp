@@ -11,7 +11,7 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 
 	ZeroMemory(&m_d3dLight, sizeof(m_d3dLight));
 
-	m_d3dLight.Type			= D3DLIGHT_POINT;
+	m_d3dLight.Type			= D3DLIGHT_SPOT;
 
 	m_d3dLight.Diffuse.r	= 1.0f;
 	m_d3dLight.Diffuse.g	= 1.0f;
@@ -26,18 +26,33 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_d3dLight.Specular.b	= 1.0f;
 
 	m_d3dLight.Position.x	= 0.0f;
-	m_d3dLight.Position.y	= 1.0f;
-	m_d3dLight.Position.z	= 100.0f;
+	m_d3dLight.Position.y	= 10.0f;
+	m_d3dLight.Position.z	= 0.0f;
+
+	m_d3dLight.Direction.x	= 0.0f;
+	m_d3dLight.Direction.y	= -1.0f;
+	m_d3dLight.Direction.z	= 0.0f;
 
 	m_d3dLight.Attenuation0	= 1.0f;
-	m_d3dLight.Range		= 100.0f;
+	m_d3dLight.Attenuation1	= 0.025f;
+	m_d3dLight.Attenuation2	= 0.02f;
+
+	m_d3dLight.Falloff		= 1.0f;
+	m_d3dLight.Theta		= 0.5f;
+	m_d3dLight.Phi			= 1.0f;
+	m_d3dLight.Range		= 10.0f;
 
 	return true;
 }
 
 void	MyLight::show()
 {
+	//m_d3dLight.Position.z	+= 0.01f;
 	_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	//_D3DDevice->SetRenderState(D3DRS_COLORVERTEX, FALSE);
+	//_D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+	_D3DDevice->SetRenderState( D3DRS_DITHERENABLE,   FALSE );
+	_D3DDevice->SetRenderState( D3DRS_SPECULARENABLE, FALSE );
 	_D3DDevice->SetLight(0, &m_d3dLight);
 	_D3DDevice->LightEnable(0, TRUE);
 }
