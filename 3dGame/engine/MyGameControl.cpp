@@ -8,6 +8,9 @@ MyGameControl::MyGameControl(void)
 	m_pLocalPlayer		= new MyPlayer();
 
 	m_pStarsField		= new MyStarsField();
+
+	_DirectPlay		= NULL;
+	m_iDPchoice			= -1;
 }
 
 MyGameControl::~MyGameControl(void)
@@ -71,7 +74,9 @@ bool	MyGameControl::moveObjects()
 }
 
 bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
-							D3DXMATRIX* givenMatWorld)
+							D3DXMATRIX* givenMatWorld,
+							MyDPlay* givenDPlay,
+							int choice)
 {
 	if (m_initCount == 0)
 	{
@@ -82,6 +87,8 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	_D3DDevice				= givenDevice;
 	_matWorld				= givenMatWorld;
+	_DirectPlay				= givenDPlay;
+	m_iDPchoice				= choice;
 
 	m_pMainCam->getPos()->setValues(200.0f, 50.0f, 200.0f);
 	m_pMainCam->getVP()->setValues(0.0f, 0.0f, 0.0f);

@@ -14,7 +14,7 @@ public:
 	MyD3DGame(void);
 	~MyD3DGame(void);
 
-	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd);	//Initialisierung von D3D
+	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay, int choice);	//Initialisierung von D3D
 	void	runGame();										//mainloop fuer das spiel
 
 	LPDIRECT3DDEVICE9	getDevice();						//zurueckgeben des 3d-devices ?
@@ -41,6 +41,8 @@ private:
 	MyGameControl*		m_pGameControl;						//Spielzustand
 	MyTest*				m_pKoordSys;						//Koordinatensystem
 	MyUserInput*		m_pUserInput;						//Benutzereingaben
+	MyDPlay*			m_pDirectPlay;						//DirectPlay
+	int					m_iDPchoice;						//Verbindungsart
 	float*				m_pfFramesPerSecond;				//Anzahl Frames
 };
 #endif

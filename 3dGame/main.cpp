@@ -32,7 +32,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, msg,	wParam,	lParam);
 }
 
-bool GenerateGameWindow()
+bool GenerateGameWindow(MyDPlay* givenDPlay, int choice)
 {
 	int iWidth;
 	int iHeight;
@@ -85,7 +85,7 @@ bool GenerateGameWindow()
 
 	g_pD3DGame	= new MyD3DGame();
 	
-	if (g_pD3DGame->init(&g_hInst, &hWnd))
+	if (g_pD3DGame->init(&g_hInst, &hWnd, givenDPlay, choice))
 	{
 	}
 
@@ -132,7 +132,7 @@ void GameManagement(HWND hWnd, bool isCheck)
 				else {
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
-					GenerateGameWindow();
+					GenerateGameWindow(mydplay, 1);
 				}
 			}
 			else {
@@ -163,7 +163,7 @@ void GameManagement(HWND hWnd, bool isCheck)
 					else {
 						EndDialog(hWnd, 0);
 						//Spielfenster erzeugen
-						GenerateGameWindow();
+						GenerateGameWindow(mydplay, 2);
 					}
 				}
 				else {
@@ -234,7 +234,7 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 				{
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
-					GenerateGameWindow();
+					GenerateGameWindow(NULL, 0);
 				}
 				else if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)) {
 					//MultiPlayer
