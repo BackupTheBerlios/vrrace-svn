@@ -43,5 +43,7 @@ private:
 	MyMasterPosition*	m_pReferencePoint;
 	LPDIRECT3DDEVICE9	_D3DDevice;
 	D3DXMATRIX*			_matWorld;
+	bool				m_bScale;
+	float*				m_pScaleFactor;
 };
 #endif
