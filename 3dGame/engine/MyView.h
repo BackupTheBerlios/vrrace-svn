@@ -3,19 +3,23 @@
 #define MYVIEW_H
 
 #include "includes.h"
+#include "MyVertex.h"
 
 
 class MyView
-	/*
-	Klasse fuer die Cameraposition
-	*/
 {
 public:
 	MyView(void);
 	~MyView(void);
-	
-	CUSTOMVERTEX	m_Position;		//Betrachter-Position
-	CUSTOMVERTEX	m_ViewPoint;	//Fluchtpunkt
-	CUSTOMVERTEX	m_UpVector;		//zeigt nach oben
+
+	MyVertex*	getPos();
+	MyVertex*	getVP();
+	MyVertex*	getUV();
+
+private:
+
+	MyVertex*	m_pPosition;
+	MyVertex*	m_pViewPoint;
+	MyVertex*	m_pUpVector;		//zeigt nach oben
 };
 #endif
