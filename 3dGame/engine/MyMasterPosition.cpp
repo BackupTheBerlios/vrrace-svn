@@ -17,6 +17,7 @@ MyMasterPosition::MyMasterPosition(void)
 
 	m_bToSend				= false;
 	m_pSpeed				= new float(0.0f);
+	m_bDestroyable			= false;
 
 	D3DXMatrixRotationYawPitchRoll(
 			m_pRotationMatrix,

@@ -40,6 +40,7 @@ public:
 	void						setPositionMatrix(D3DXMATRIX* givenMatrix);
 	void						setScale(CUSTOMVERTEX givenScale);
 	bool						m_bToSend;
+	bool						m_bDestroyable;								//kann Objekt durch kollision zerstört werden
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

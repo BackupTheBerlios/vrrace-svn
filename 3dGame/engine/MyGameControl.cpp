@@ -202,6 +202,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 		return false;
 	} else {
 		_DirectPlay->m_pLocalPlayer->m_pShipChoice = m_iShipChoice;
+		_DirectPlay->m_pLocalPlayer->getMesh()->m_bDestroyable = true;
 		if (_DirectPlay->m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
 											MyDPlay::m_pMeshPaths[_DirectPlay->m_pLocalPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
@@ -558,10 +559,10 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/space station 5.x",
 							NULL,
-							60.0f, 0.0f, -500.0f,
+							60.0f, 0.0f, 1500.0f,
 							0.0f, 0.0f, 0.3f,
-							-10.0f,
-							0.0f, 3.142f, 0.0f,
+							-1.0f,
+							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
@@ -579,6 +580,7 @@ bool	MyGameControl::buildGame()
 							_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
 						}
 					}
+					kreuzer1->m_bDestroyable = true;
 					_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
 					_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 					_DirectPlay->m_pMeshSounds.push_back(kreuzer1Sound);
@@ -635,6 +637,7 @@ bool	MyGameControl::buildGame()
 							_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
 						}
 					}
+					jaeger1->m_bDestroyable = true;
 					_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 					_DirectPlay->m_pMeshSounds.push_back(jaeger1Sound);
 				} else {
