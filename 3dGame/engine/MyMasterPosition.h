@@ -24,6 +24,7 @@ public:
 	MyVertex*					m_pPosition;								//aktuelle Position
 	MyVertex*					m_pAbsolutePosition;						//absolute Position
 	MyVertex*					m_pDirection;								//Bewegungsrichtung
+	float*						m_pSpeed;									//Bewegungsgeschwindigkeit
 	MyVertex*					m_pRotation;								//aktuelle Rotation/StellWinkel
 	MyVertex*					m_pLocalRotation;							//lokale Rotation
 	MyVertex*					m_pRotDir;									//Rotationsrichtung

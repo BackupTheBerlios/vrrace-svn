@@ -16,6 +16,7 @@ MyMasterPosition::MyMasterPosition(void)
 	m_pRotationMatrix		= new D3DXMATRIX;
 
 	m_bToSend				= false;
+	m_pSpeed				= new float(0.0f);
 
 	D3DXMatrixRotationYawPitchRoll(
 			m_pRotationMatrix,
@@ -100,22 +101,24 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 		&tempMatrixNeu,
 		tempMatrixAlt);
 
-	//direction und upvector mitrotieren lassen!
-	
 	delete tempMatrixAlt;
 }
 
 void	MyMasterPosition::move()
 {
-		m_pPosition->addX(m_pDirection->getX());
-		m_pPosition->addY(m_pDirection->getY());
-		m_pPosition->addZ(m_pDirection->getZ());
+	D3DXVECTOR4	pOut;
+	D3DXVec3Transform(&pOut, &D3DXVECTOR3(0.0f, 0.0f, *m_pSpeed), m_pRotationMatrix);
+	m_pDirection->setValues(pOut.x, pOut.y, pOut.z);
 
-		m_pRotation->addX(m_pRotDir->getX());
-		m_pRotation->addY(m_pRotDir->getY());
-		m_pRotation->addZ(m_pRotDir->getZ());
+	m_pPosition->addX(m_pDirection->getX());
+	m_pPosition->addY(m_pDirection->getY());
+	m_pPosition->addZ(m_pDirection->getZ());
 
-		this->calcOwnMatrix();
+	m_pRotation->addX(m_pRotDir->getX());
+	m_pRotation->addY(m_pRotDir->getY());
+	m_pRotation->addZ(m_pRotDir->getZ());
+
+	this->calcOwnMatrix();
 }
 
 void	MyMasterPosition::calcMatrix(D3DXMATRIX* givenMatrix)
