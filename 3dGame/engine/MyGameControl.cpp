@@ -5,14 +5,14 @@ MyGameControl::MyGameControl(void)
 	m_initCount			= 0;
 	m_pView				= new MyView();
 	m_bShowStatus		= true;
-	m_pStarsField		= new MyStarsField();
+//	m_pStarsField		= new MyStarsField();
 	//m_pMeshes		= new vector(new MyMesh());
 }
 
 MyGameControl::~MyGameControl(void)
 {
 	delete m_pView;
-	delete m_pStarsField;
+//	delete m_pStarsField;
 }
 
 bool	MyGameControl::loadObjects()
@@ -268,18 +268,18 @@ int MyGameControl::getNumMeshes()
 
 bool MyGameControl::initStarsField()
 {
-	if(!m_pStarsField->init(_D3DDevice, 1024))
-	{
-		return false;
-	}
+//	if(!m_pStarsField->init(_D3DDevice, 1024))
+//	{
+//		return false;
+//	}
 	return true;
 }
 
 bool MyGameControl::drawStarsField()
 {
-	if(!m_pStarsField->draw())
-	{
-		return false;
-	}
+//	if(!m_pStarsField->draw())
+//	{
+//		return false;
+//	}
 	return true;
 }
