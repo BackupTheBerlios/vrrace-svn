@@ -240,9 +240,7 @@ void	MyUserInput::inputKB()
 
 HRESULT	MyUserInput::inputJS()
 {
-	CHAR		strText[128];
 	DIJOYSTATE2	js;
-	CHAR*		str;
 
 	if (NULL == m_pJoystick)	{return S_OK;}
 
@@ -254,6 +252,7 @@ HRESULT	MyUserInput::inputJS()
 		{
 			m_hr	= m_pJoystick->Acquire();
 		}
+		//MessageBox(NULL, "mmm", "mmm", MB_OK);
 		return S_OK;
 	}
 
@@ -269,5 +268,5 @@ HRESULT	MyUserInput::inputJS()
 	if (js.rglSlider[0] < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);}
 	if (js.rglSlider[0] > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);}
 
-
+	return S_OK;
 }
