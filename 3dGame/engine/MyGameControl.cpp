@@ -4,7 +4,7 @@ MyGameControl::MyGameControl(void)
 {
 	m_initCount		= 0;
 	m_pView			= new MyView();
-	m_bShowStatus	= false;
+	m_bShowStatus	= true;
 	//m_pMeshes		= new vector(new MyMesh());
 }
 
@@ -18,9 +18,12 @@ bool	MyGameControl::loadObjects()
 	if (m_initCount > 0)
 	{
 		m_initCount++;
-		for (int count = 0; count < m_pMeshes.size(); count++)
+		for (DWORD count = 0; count < m_pAllMeshes.size(); count++)
 		{
-			m_pMeshes[count]->load();
+			if (m_pAllMeshes[count]->m_pType	== 1)
+			{
+				m_pAllMeshes[count]->load();
+			}
 		}
 	} else {
 		return false;
@@ -30,28 +33,35 @@ bool	MyGameControl::loadObjects()
 
 bool	MyGameControl::drawObjects()
 {
-	for (int count = 0; count < m_pMeshes.size(); count++)
+	for (DWORD count = 0; count < m_pMasterMeshes.size(); count++)
 	{
-		m_pMeshes[count]->draw();
+		m_pMasterMeshes[count]->calcClients();
 	}
+
+	
+	for (count = 0; count < m_pAllMeshes.size(); count++)
+	{
+		m_pAllMeshes[count]->draw();
+	}
+	//m_pAllMeshes[4]->draw();
 
 	return true;
 }
 
 bool	MyGameControl::drawLights()
 {
-	for (int count = 0; count < m_pLights.size(); count++)
+	for (DWORD count = 0; count < m_pAllLights.size(); count++)
 	{
-		m_pLights[count]->show();
+		m_pAllLights[count]->show();
 	}
 	return true;
 }
 
 bool	MyGameControl::moveObjects()
 {
-	for (int count = 0; count < m_pMeshes.size(); count++)
+	for (DWORD count = 0; count < m_pAllMeshes.size(); count++)
 	{
-		m_pMeshes[count]->move();
+		m_pAllMeshes[count]->move();
 	}
 	
 	return true;
@@ -104,7 +114,8 @@ bool	MyGameControl::addObject()
 			tempObjb->load();
 			tempObjb->activateScaling();
 			tempObjb->getScale()->setValues(300.0f, 300.0f, 300.0f);
-			m_pMeshes.push_back(tempObjb);
+			m_pAllMeshes.push_back(tempObjb);
+			m_pMasterMeshes.push_back(tempObjb);
 		} else {
 			return false;
 		}
@@ -123,11 +134,12 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f))
 		{
-			tempObj->setReference(tempObjb->getPosition());
+			tempObj->setMaster((MyMasterPosition*)tempObjb);
 			tempObj->load();
 			tempObj->activateScaling();
 			tempObj->getScale()->setValues(20.0f, 20.0f, 20.0f);
-			m_pMeshes.push_back(tempObj);
+			m_pAllMeshes.push_back(tempObj);
+			m_pMasterMeshes[0]->addClient(tempObj);
 		} else {
 			return false;
 		}
@@ -147,12 +159,13 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.01f))
 		{
 			tempObjc->load();
-			m_pView->getVP()->setPValues(
+			/*m_pView->getVP()->setValues(100.0f, 100.0f, 100.0f);/*
 				tempObjc->getPosition()->m_pPosition->getPX(),
 				tempObjc->getPosition()->m_pPosition->getPY(),
-				tempObjc->getPosition()->m_pPosition->getPZ());
+				tempObjc->getPosition()->m_pPosition->getPZ());*/
 
-			m_pMeshes.push_back(tempObjc);
+			m_pAllMeshes.push_back(tempObjc);
+			m_pMasterMeshes.push_back(tempObjc);
 		} else {
 			return false;
 		}
@@ -172,7 +185,8 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.0f))
 		{
 			tempObjd->load();
-			m_pMeshes.push_back(tempObjd);
+			m_pAllMeshes.push_back(tempObjd);
+			m_pMasterMeshes[1]->addClient(tempObjd);
 		} else {
 			return false;
 		}
@@ -192,7 +206,8 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.0f))
 		{
 			tempObje->load();
-			m_pMeshes.push_back(tempObje);
+			m_pAllMeshes.push_back(tempObje);
+			m_pMasterMeshes[1]->addClient(tempObje);
 		} else {
 			return false;
 		}
@@ -202,7 +217,7 @@ bool	MyGameControl::addObject()
 
 bool	MyGameControl::addLight()
 {
-	if (m_pLights.capacity() == 0) {
+	if (m_pAllLights.size() == 0) {
 	MyLight*	tempLight	= new MyLight();
 	if (tempLight == NULL)
 	{
@@ -211,7 +226,7 @@ bool	MyGameControl::addLight()
 	} else {
 		if (tempLight->init(_D3DDevice))
 		{
-			m_pLights.push_back(tempLight);
+			m_pAllLights.push_back(tempLight);
 		} else {
 			MessageBox(NULL, "konnte Licht nicht initialisieren", "Achtung", MB_OK);
 			return false;
@@ -223,10 +238,10 @@ bool	MyGameControl::addLight()
 
 int	MyGameControl::getNumLights()
 {
-	return m_pLights.size();
+	return m_pAllLights.size();
 }
 
 int MyGameControl::getNumMeshes()
 {
-	return m_pMeshes.size();
+	return m_pAllMeshes.size();
 }
