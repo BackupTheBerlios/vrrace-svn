@@ -6,7 +6,6 @@ MyGameControl::MyGameControl(void)
 	m_pView				= new MyView();
 	m_bShowStatus		= true;
 //	m_pStarsField		= new MyStarsField();
-	//m_pMeshes		= new vector(new MyMesh());
 }
 
 MyGameControl::~MyGameControl(void)
@@ -39,17 +38,17 @@ bool	MyGameControl::drawObjects()
 	{
 		m_pMasterMeshes[count]->calcClients();
 	}
+
+	m_pView->getVP()->setValues(
+				m_pAllMeshes[2]->getAbsolutePosition()->getX(),				
+				m_pAllMeshes[2]->getAbsolutePosition()->getY(),
+				m_pAllMeshes[2]->getAbsolutePosition()->getZ());
 	
 	for (count = 0; count < m_pAllMeshes.size(); count++)
 	{
 		m_pAllMeshes[count]->draw();
 	}
-	//m_pAllMeshes[4]->draw();
-/*
-	m_pView->getVP()->setPValues(
-				m_pAllMeshes[2]->getAbsolutePosition()->getPX(),
-				m_pAllMeshes[2]->getAbsolutePosition()->getPY(),
-				m_pAllMeshes[2]->getAbsolutePosition()->getPZ());*/
+	
 	return true;
 }
 
@@ -155,7 +154,6 @@ bool	MyGameControl::addObject()
 											1.0f, 1.0f, 1.0f);
 			tempObjb->setMaster(m_pMasterMeshes[0]);
 			m_pAllMeshes.push_back(tempObjb);
-			//m_pMasterMeshes[0]->addClient(tempObjb);
 		} else {
 			return false;
 		}
@@ -182,7 +180,7 @@ bool	MyGameControl::addObject()
 			tempObj->activateScaling();
 			tempObj->getScale()->setValues(2.0f, 2.0f, 2.0f);
 			m_pAllMeshes.push_back(tempObj);
-			//m_pAllMeshes[0]->addClient(tempObj);
+			
 		} else {
 			return false;
 		}
@@ -204,13 +202,7 @@ bool	MyGameControl::addObject()
 							false))
 		{
 			tempObjc->load();
-			//m_pView->getVP()->setValues(0.0f, 0.0f, 0.0f);
 			m_pView->getPos()->setValues(500.0f, 500.0f, 500.0f);
-			/*
-				tempObjc->getPosition()->m_pPosition->getPX(),
-				tempObjc->getPosition()->m_pPosition->getPY(),
-				tempObjc->getPosition()->m_pPosition->getPZ());*/
-
 			m_pAllMeshes.push_back(tempObjc);
 			m_pMasterMeshes.push_back(tempObjc);
 		} else {
@@ -237,9 +229,7 @@ bool	MyGameControl::addObject()
 		{
 			tempObje->load();
 			tempObje->setMaster(m_pMasterMeshes[1]);
-			//addclient kann der client machen
 			m_pAllMeshes.push_back(tempObje);
-			//m_pMasterMeshes[1]->addClient(tempObje);
 		} else {
 			return false;
 		}
@@ -268,7 +258,6 @@ bool	MyGameControl::addObject()
 											1.0f, 1.0f, 1.0f);
 			m_pAllMeshes.push_back(sunLayer1);
 			sunLayer1->setMaster(m_pMasterMeshes[0]);
-			//m_pMasterMeshes.push_back(sunLayer1);
 		} else {
 			return false;
 		}

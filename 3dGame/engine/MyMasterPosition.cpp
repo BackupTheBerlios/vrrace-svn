@@ -161,8 +161,21 @@ MyVertex*	MyMasterPosition::getAbsolutePosition()
 		m_pAbsolutePosition->setValues(pOut->x, pOut->y, pOut->z);
 	}
 
+
 	delete pVector;
 	delete pOut;
+
+	TCHAR* temp = new TCHAR[100];
+
+	//Zeige aktuelle Betrachterposition
+	sprintf(
+		temp,
+		"Position: %2.2f %2.2f %2.2f",
+		m_pAbsolutePosition->getX(),
+		m_pAbsolutePosition->getY(),
+		m_pAbsolutePosition->getZ());
+
+	//MessageBox(NULL, temp, "test", MB_OK);
 
 	return m_pAbsolutePosition;
 }
