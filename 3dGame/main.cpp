@@ -111,9 +111,10 @@ bool GenerateGameWindow(MyDPlay* givenDPlay, int choice)
 void GameManagement(HWND hWnd, bool isCheck)
 {
 	//MultiPlayer
-	TCHAR*		tcPort	= new TCHAR[10];
-	DWORD		dwPort	= 0;
-	MyDPlay*	mydplay = new MyDPlay();
+	TCHAR*		tcPort		= new TCHAR[10];
+	TCHAR*		tcUsername	= new TCHAR[48];
+	DWORD		dwPort		= 0;
+	MyDPlay*	mydplay		= new MyDPlay();
 	if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED))
 	{
 		GetDlgItemText(hWnd, IDC_PORT, tcPort, 10);
@@ -130,6 +131,8 @@ void GameManagement(HWND hWnd, bool isCheck)
 					MessageBox(NULL, "Hosten der Session erfolgreich", "Message", MB_OK | MB_ICONINFORMATION);
 				}
 				else {
+					GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
+					mydplay->m_pUsername = tcUsername;
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
 					GenerateGameWindow(mydplay, 1);
@@ -161,6 +164,8 @@ void GameManagement(HWND hWnd, bool isCheck)
 						MessageBox(NULL, "Verbindungstest erfolgreich", "Message", MB_OK | MB_ICONINFORMATION);
 					}
 					else {
+						GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
+						mydplay->m_pUsername = tcUsername;
 						EndDialog(hWnd, 0);
 						//Spielfenster erzeugen
 						GenerateGameWindow(mydplay, 2);
@@ -182,6 +187,7 @@ void GameManagement(HWND hWnd, bool isCheck)
 		MyTools::deleteArray(tcIPAddr);
 	}
 	MyTools::deleteArray(tcPort);
+	MyTools::deleteArray(tcUsername);
 	MyTools::deleteObject(mydplay);	
 }
 
@@ -229,6 +235,9 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			{
 				TCHAR*	tcUsername = new TCHAR[100];
 				GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 100);
+
+				InitializeCriticalSection(&MyDPlay::m_csDP);
+
 				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
 					//SinglePlayer
 				{

@@ -72,7 +72,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					pServerNode->pAppDesc->dwReservedDataSize				= 0;
 					pServerNode->pAppDesc->pvApplicationReservedData		= NULL;
 					pServerNode->pAppDesc->dwApplicationReservedDataSize	= 0;
-					MessageBox(NULL, pSessionName, "Message", MB_OK | MB_ICONINFORMATION);
+					//MessageBox(NULL, pSessionName, "Message", MB_OK | MB_ICONINFORMATION);
 				}
 				/*else
 				{
@@ -131,6 +131,9 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			if(pMsg->dwReceiveDataSize == sizeof(GAMEOBJECTS))
 			{
 				GAMEOBJECTS* recToken	= (GAMEOBJECTS*)pMsg->pReceiveData;
+
+				EnterCriticalSection(&m_csDP);
+
 				if(recToken->vectorId < m_pNetworkMeshes.size())
 				{
 			
@@ -143,11 +146,17 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
 						recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
 				}
+
+				LeaveCriticalSection(&m_csDP);
+
 			} else if(pMsg->dwReceiveDataSize == sizeof(PLAYEROBJECTS))
 			{
 				PLAYEROBJECTS* recToken	= (PLAYEROBJECTS*)pMsg->pReceiveData;
 				bool isContent = false;
 				DWORD tmpCount;
+
+				EnterCriticalSection(&m_csDP);
+
 				for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
 				{
 					if(m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid)
@@ -158,6 +167,9 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 						break;
 					}
 				}
+
+				LeaveCriticalSection(&m_csDP);
+
 				if(!isContent)
 				{
 					//MessageBox(NULL,"noch nicht","Message",MB_OK);
@@ -165,6 +177,9 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 
 					if (newPlayer && _D3DDevice)
 					{
+			
+						EnterCriticalSection(&m_csDP);
+
 						if (newPlayer->getMesh()->init(_D3DDevice,
 															_matWorld,
 															"resources/x_files/shusui.x",
@@ -182,9 +197,15 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 							m_pNetworkPlayers.push_back(newPlayer);
 							newPlayer->getMesh()->move();
 						}
+
+						LeaveCriticalSection(&m_csDP);
+
 					}
 					tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
 				}
+
+				EnterCriticalSection(&m_csDP);
+
 				m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
 					recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
 				m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
@@ -195,6 +216,9 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
 				m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
 					recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
+
+				LeaveCriticalSection(&m_csDP);
+
 				//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
 				//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
 				//m_pNetworkPlayers[tmpCount]->getMesh()->move();
@@ -275,7 +299,7 @@ MyDPlay::MyDPlay(void)
 	m_pbHostingApp		= new bool(false);
 	m_pbConnected		= new bool(false);
 	m_pdwPort			= NULL;
-	InitializeCriticalSection(&m_csDP);
+	//InitializeCriticalSection(&m_csDP);
 }
 
 MyDPlay::~MyDPlay(void)

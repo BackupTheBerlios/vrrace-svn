@@ -45,6 +45,8 @@ public:
 	static vector<MyPlayer*>		m_pNetworkPlayers;	//andere Teilnehmer
 	static vector<MyMesh*>			m_pNetworkMeshes;   //Meshes vom Server aktualisiert
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
+	TCHAR*							m_pUsername;
+	static CRITICAL_SECTION			m_csDP;
 private:
 	static LPDIRECT3DDEVICE9	_D3DDevice;
 	static D3DXMATRIX*			_matWorld;
@@ -54,7 +56,6 @@ private:
 	static IDirectPlay8Peer*		m_pDP;
 	IDirectPlay8Address*			m_pOwnAddress;
 	IDirectPlay8Address*			m_pServerAddress;
-	static CRITICAL_SECTION			m_csDP;
 	static HOST_NODE*				m_pServerNode;
 	DWORD*							m_pdwPort;
 	//LPDIRECTPLAYLOBBY2A	m_pDPLobby;

@@ -23,6 +23,9 @@ bool	MyGameControl::loadObjects()
 	if (m_initCount > 0)
 	{
 		m_initCount++;
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 		{
 			if (_DirectPlay->m_pAllMeshes[count]->m_pType	== 1)
@@ -30,6 +33,9 @@ bool	MyGameControl::loadObjects()
 				_DirectPlay->m_pAllMeshes[count]->load();
 			}
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+
 	} else {
 		return false;
 	}
@@ -38,6 +44,8 @@ bool	MyGameControl::loadObjects()
 
 bool	MyGameControl::drawObjects()
 {
+
+	EnterCriticalSection(&_DirectPlay->m_csDP);
 
 	for (DWORD count = 0; count < _DirectPlay->m_pMasterMeshes.size(); count++)
 	{
@@ -49,6 +57,8 @@ bool	MyGameControl::drawObjects()
 	{
 		_DirectPlay->m_pAllMeshes[count]->draw();
 	}
+
+	LeaveCriticalSection(&_DirectPlay->m_csDP);
 	
 	return true;
 }
@@ -126,12 +136,18 @@ bool	MyGameControl::addPlayer(string* givenName)
 											0.0f, 0.0f, 0.0f,
 											false, true))
 		{
+
+			EnterCriticalSection(&_DirectPlay->m_csDP);
+
 			_DirectPlay->m_pLocalPlayer->m_pPlayerID = _DirectPlay->m_pid;
 			_DirectPlay->m_pLocalPlayer->getMesh()->load();
 			//if(m_iDPchoice != 0)
 				//m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
 			_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
 			_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+
 			m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
 			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
 //			m_pMainCam->calcPosition();
@@ -161,6 +177,9 @@ bool	MyGameControl::buildGame()
 	{
 		return false;
 	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		if (sonne->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sun.x",
@@ -189,8 +208,11 @@ bool	MyGameControl::buildGame()
 			_DirectPlay->m_pAllMeshes.push_back(sonne);
 			_DirectPlay->m_pMasterMeshes.push_back(sonne);
 		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
 	MyMesh*	erde	= new MyMesh();
@@ -198,6 +220,9 @@ bool	MyGameControl::buildGame()
 	{
 		return false;
 	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		if (erde->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere.x",
@@ -226,8 +251,11 @@ bool	MyGameControl::buildGame()
 			}
 			_DirectPlay->m_pAllMeshes.push_back(erde);
 		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
 	
@@ -236,6 +264,9 @@ bool	MyGameControl::buildGame()
 	{
 		return false;
 	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		if (mond->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
@@ -263,8 +294,11 @@ bool	MyGameControl::buildGame()
 			
 			
 		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 	
 	MyMesh*	kreuzer1	= new MyMesh();
@@ -272,6 +306,9 @@ bool	MyGameControl::buildGame()
 	{
 		return false;
 	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		if (kreuzer1->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/space station 5.x",
@@ -295,8 +332,11 @@ bool	MyGameControl::buildGame()
 			_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
 			_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
 	
@@ -306,6 +346,9 @@ bool	MyGameControl::buildGame()
 	{
 		return false;
 	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		if (jaeger1->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/bigship1.x",
@@ -329,8 +372,11 @@ bool	MyGameControl::buildGame()
 			}
 			_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 			return false;
 		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 	
 	MyMesh*	sunLayer1	= NULL;
@@ -341,6 +387,9 @@ bool	MyGameControl::buildGame()
 		{
 			return false;
 		} else {
+
+			EnterCriticalSection(&_DirectPlay->m_csDP);
+
 			if (sunLayer1->init(_D3DDevice,
 								_matWorld,
 								"resources/x_files/sun.x",
@@ -371,8 +420,11 @@ bool	MyGameControl::buildGame()
 				sunLayer1->setMaster(sonne);
 				sunLayer1 = NULL;
 			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
 			}
+
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
 		}
 	}
 	return true;
@@ -384,6 +436,9 @@ bool	MyGameControl::sendData()
 	{
 		GAMEOBJECTS sendingToken;
 		sendingToken.vectorId			= count;
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		sendingToken.posinfo.position.x	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getX();
 		sendingToken.posinfo.position.y	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getY();
 		sendingToken.posinfo.position.z	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getZ();
@@ -400,18 +455,9 @@ bool	MyGameControl::sendData()
 		sendingToken.posinfo.rotdir.y	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getY();
 		sendingToken.posinfo.rotdir.z	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getZ();
 
-		_DirectPlay->sendMessage(&sendingToken, 0);
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 
-		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend)
-		//{
-/*			MyToken sendingToken;
-			sendingToken.vectorId = count;
-			sendingToken.positionMatrix = *_DirectPlay->m_pLocalMeshes[count]->getPositionMatrix();
-			sendingToken.scaleFactor.x = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getX());
-			sendingToken.scaleFactor.y = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getY());
-			sendingToken.scaleFactor.z = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getZ());
-			_DirectPlay->sendMessage(&sendingToken);*/
-		//}
+		_DirectPlay->sendMessage(&sendingToken, 0);
 	}
 	return true;
 }
@@ -423,6 +469,9 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 		_DirectPlay->m_pLocalPlayer->getMesh()->move();
 		PLAYEROBJECTS	sendingToken;
 		sendingToken.dpnid	= _DirectPlay->m_pLocalPlayer->m_pPlayerID;
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
 		sendingToken.position.posinfo.position.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getX();
 		sendingToken.position.posinfo.position.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getY();
 		sendingToken.position.posinfo.position.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pPosition->getZ();
@@ -444,6 +493,8 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 		sendingToken.position.posinfo.rotate.z	= givenZ;
 
 		sendingToken.matrix							= *_DirectPlay->m_pLocalPlayer->getMesh()->getPositionMatrix();
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
 
 		_DirectPlay->sendMessage(&sendingToken, 1);
 	}
