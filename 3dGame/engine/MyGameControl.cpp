@@ -164,9 +164,8 @@ bool	MyGameControl::collision(MyMesh* givenObject1, MyMesh* givenObject2)
 			givenObject2->getAbsolutePosition()->getY(),
 			givenObject2->getAbsolutePosition()->getZ()));
 
-	if (D3DXVec3Length(&pOut) <= 10.0f)
-	{
-		
+	if (D3DXVec3Length(&pOut) <= givenObject1->m_colRadius+givenObject2->m_colRadius)
+	{//wenn Abstand kleiner als Summe der Radien
 		return true;
 	}
 
@@ -360,6 +359,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 		srand( (unsigned)time( NULL ) );
 		_DirectPlay->m_pLocalPlayer->m_pShipChoice = m_iShipChoice;
 		_DirectPlay->m_pLocalPlayer->getMesh()->m_bDestroyable = true;
+		_DirectPlay->m_pLocalPlayer->getMesh()->m_colRadius = 5.0f;
 		if (_DirectPlay->m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
 											MyDPlay::m_pMeshPaths[_DirectPlay->m_pLocalPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
@@ -430,13 +430,14 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0005f, 0.0f,
+							0.0f, 0.0f/*005f*/, 0.0f,
 							true, false))
 		{
 			if(SUCCEEDED(sonne->load()))
 			{
 				sonne->m_isPlanet = true;
 				sonne->m_graviRadius = 10000.0f;
+				sonne->m_colRadius = 1000.0f;
 				sonne->activateScaling();
 				sonne->getScale()->setValues(1000.0f, 1000.0f, 1000.0f);
 				sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
@@ -554,7 +555,8 @@ bool	MyGameControl::buildGame()
 			if(SUCCEEDED(erde->load()))
 			{
 				erde->m_isPlanet = true;
-				erde->m_graviRadius = 1000;
+				erde->m_graviRadius = 1000.0f;
+				erde->m_colRadius = 100.0f;
 				erde->activateScaling();
 				erde->getScale()->setValues(100.0f, 100.0f, 100.0f);
 				erde->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
@@ -736,7 +738,8 @@ bool	MyGameControl::buildGame()
 							true, false))
 		{
 			mond->m_isPlanet = true;
-			mond->m_graviRadius = 100;
+			mond->m_graviRadius = 100.0f;
+			mond->m_colRadius = 20.0f;
 			mond->setMaster(erdkern);
 			if(SUCCEEDED(mond->load()))
 			{
@@ -812,7 +815,8 @@ bool	MyGameControl::buildGame()
 							_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
 						}
 					}
-					kreuzer1->m_bDestroyable = true;
+					kreuzer1->m_bDestroyable = false;
+					kreuzer1->m_colRadius = 10.0f;
 					_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
 					_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 					_DirectPlay->m_pMeshSounds.push_back(kreuzer1Sound);
@@ -849,7 +853,7 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							NULL,
-							90.0f, -30.0f, 0.0f,
+							90.0f, -50.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
@@ -871,7 +875,8 @@ bool	MyGameControl::buildGame()
 							_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
 						}
 					}
-					jaeger1->m_bDestroyable = true;
+					jaeger1->m_bDestroyable = false;
+					jaeger1->m_colRadius = 5.0f;
 					_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 					_DirectPlay->m_pMeshSounds.push_back(jaeger1Sound);
 				} else {

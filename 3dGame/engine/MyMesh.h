@@ -39,6 +39,7 @@ public:
 	void				setReference(MyMasterPosition* givenReference);
 	bool				m_isPlanet;
 	float				m_graviRadius;
+	float				m_colRadius;
 	
 private:
 	void				matrixOperations();

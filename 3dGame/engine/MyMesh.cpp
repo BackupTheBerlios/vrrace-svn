@@ -8,6 +8,7 @@ MyMesh::MyMesh(void)
 	m_pbAlphaBlending		= new bool(false);
 	m_isPlanet				= false;
 	m_graviRadius			= 0.0f;
+	m_colRadius				= 0.0f;
 	
 	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
