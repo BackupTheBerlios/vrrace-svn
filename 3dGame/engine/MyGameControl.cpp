@@ -51,10 +51,10 @@ bool	MyGameControl::drawObjects()
 
 bool	MyGameControl::drawLights()
 {
-	for (DWORD count = 0; count < m_pAllLights.size(); count++)
+	/*for (DWORD count = 0; count < m_pAllLights.size(); count++)
 	{
 		m_pAllLights[count]->show();
-	}
+	}*/
 	return true;
 }
 
