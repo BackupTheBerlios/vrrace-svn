@@ -63,6 +63,7 @@ static const char*		MM_SESSION_NAME			= "vrrace";			//Sessionname fuer DirectPla
 
 //Defines
 #define	SAMPLE_BUFFER_SIZE	16
+#define	MAXVAL				1000
 
 typedef struct CUSTOMVERTEX
 {
