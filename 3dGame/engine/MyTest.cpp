@@ -12,56 +12,56 @@ void MyTest::drawKS(LPDIRECT3DDEVICE9 givenDevice)
 	{
 		Vertices[counter].x	= 0;
 		Vertices[counter].y	= 0;
-		Vertices[counter].z = count - max/2;
+		Vertices[counter].z = (float)count - (float)max/2;
 		counter++;
-		Vertices[counter].x	= max-1;
+		Vertices[counter].x	= (float)max-1;
 		Vertices[counter].y	= 0;
-		Vertices[counter].z = count - max/2;
+		Vertices[counter].z = (float)count - (float)max/2;
 		counter++;
 
-		Vertices[counter].x	= count - max/2;
-		Vertices[counter].y	= 0;
-		Vertices[counter].z = 0;
-		counter++;
-		Vertices[counter].x	= count - max/2;
-		Vertices[counter].y	= 0;
-		Vertices[counter].z = max-1;
-		counter++;
-
-		Vertices[counter].x	= 0;
-		Vertices[counter].y	= count - max/2;
-		Vertices[counter].z = 0;
-		counter++;
-		Vertices[counter].x	= max-1;
-		Vertices[counter].y	= count - max/2;
-		Vertices[counter].z = 0;
-		counter++;
-
-		Vertices[counter].x	= count - max/2;
+		Vertices[counter].x	= (float)count - (float)max/2;
 		Vertices[counter].y	= 0;
 		Vertices[counter].z = 0;
 		counter++;
-		Vertices[counter].x	= count - max/2;
-		Vertices[counter].y	= max-1;
+		Vertices[counter].x	= (float)count - (float)max/2;
+		Vertices[counter].y	= 0;
+		Vertices[counter].z = (float)max-1;
+		counter++;
+
+		Vertices[counter].x	= 0;
+		Vertices[counter].y	= (float)count - (float)max/2;
+		Vertices[counter].z = 0;
+		counter++;
+		Vertices[counter].x	= (float)max-1;
+		Vertices[counter].y	= (float)count - (float)max/2;
+		Vertices[counter].z = 0;
+		counter++;
+
+		Vertices[counter].x	= (float)count - (float)max/2;
+		Vertices[counter].y	= 0;
+		Vertices[counter].z = 0;
+		counter++;
+		Vertices[counter].x	= (float)count - (float)max/2;
+		Vertices[counter].y	= (float)max-1;
 		Vertices[counter].z = 0;
 		counter++;
 
 		Vertices[counter].x	= 0;
-		Vertices[counter].y	= count - max/2;
+		Vertices[counter].y	= (float)count - (float)max/2;
 		Vertices[counter].z = 0;
 		counter++;
 		Vertices[counter].x	= 0;
-		Vertices[counter].y	= count - max/2;
-		Vertices[counter].z = max-1;
+		Vertices[counter].y	= (float)count - (float)max/2;
+		Vertices[counter].z = (float)max-1;
 		counter++;
 
 		Vertices[counter].x	= 0;
 		Vertices[counter].y	= 0;
-		Vertices[counter].z = count - max/2;
+		Vertices[counter].z = (float)count - (float)max/2;
 		counter++;
 		Vertices[counter].x	= 0;
-		Vertices[counter].y	= max-1;
-		Vertices[counter].z = count - max/2;
+		Vertices[counter].y	= (float)max-1;
+		Vertices[counter].z = (float)count - (float)max/2;
 		counter++;
 
 	}

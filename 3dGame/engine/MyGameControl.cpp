@@ -324,12 +324,12 @@ bool	MyGameControl::addLight()
 
 int	MyGameControl::getNumLights()
 {
-	return m_pAllLights.size();
+	return (int)m_pAllLights.size();
 }
 
 int MyGameControl::getNumMeshes()
 {
-	return m_pAllMeshes.size();
+	return (int)m_pAllMeshes.size();
 }
 
 bool MyGameControl::initStarsField()
