@@ -4,6 +4,7 @@
 
 #include "includes.h"
 #include "MyVertex.h"
+#include "MyMasterPosition.h"
 
 
 class MyView
@@ -12,14 +13,21 @@ public:
 	MyView(void);
 	~MyView(void);
 
-	MyVertex*	getPos();
-	MyVertex*	getVP();
-	MyVertex*	getUV();
+	MyVertex*			getPos();
+	MyVertex*			getLP();
+	MyVertex*			getVP();
+	MyVertex*			getUV();
+	void				setMaster(MyMasterPosition* givenMaster);
+	MyMasterPosition*	getMaster();
+	void				move();
+//	void				calcPosition();		//absolute Position berechnen
 
 private:
 
-	MyVertex*	m_pPosition;
-	MyVertex*	m_pViewPoint;
-	MyVertex*	m_pUpVector;		//zeigt nach oben
+	MyVertex*			m_pPosition;		//absolute Position
+	MyVertex*			m_pViewPoint;		//zeiger auf Fluchtpunkt
+	MyVertex*			m_pUpVector;		//zeigt nach oben
+	MyVertex*			m_pLocalPos;		//abstand vom Master
+	MyMasterPosition*	m_pMaster;
 };
 #endif
