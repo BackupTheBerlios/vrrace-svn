@@ -37,6 +37,8 @@ public:
 	HRESULT				load();
 	void				draw();
 	void				setReference(MyMasterPosition* givenReference);
+	bool				m_isPlanet;
+	float				m_graviRadius;
 	
 private:
 	void				matrixOperations();

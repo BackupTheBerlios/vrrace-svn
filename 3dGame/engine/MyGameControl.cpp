@@ -414,13 +414,15 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.01f, 0.0f,
+							0.0f, 0.0005f, 0.0f,
 							true, false))
 		{
 			if(SUCCEEDED(sonne->load()))
 			{
+				sonne->m_isPlanet = true;
+				sonne->m_graviRadius = 10000.0f;
 				sonne->activateScaling();
-				sonne->getScale()->setValues(100.0f, 100.0f, 100.0f);
+				sonne->getScale()->setValues(1000.0f, 1000.0f, 1000.0f);
 				sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
@@ -526,17 +528,19 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/sphere.x",
 							"resources/x_files/earth.bmp",
-							500.0f, 0.0f, 0.0f,
+							15000.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, -0.3f, 0.0f,
+							0.0f, -0.03f, 0.0f,
 							true, false))
 		{
 			if(SUCCEEDED(erde->load()))
 			{
+				erde->m_isPlanet = true;
+				erde->m_graviRadius = 1000;
 				erde->activateScaling();
-				erde->getScale()->setValues(10.0f, 10.0f, 10.0f);
+				erde->getScale()->setValues(100.0f, 100.0f, 100.0f);
 				erde->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
@@ -587,11 +591,11 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/sphere.x",
 							"resources/x_files/earth.bmp",//NULL,
-							500.0f, 0.0f, 0.0f,
+							15000.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, 0.02f, 0.0f,
+							0.0f, 0.01f, 0.0f,
 							true, false))
 		{
 			if(SUCCEEDED(erdkern->load()))
@@ -647,18 +651,18 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/sphere.x",
 							"resources/x_files/Planet5.dds",
-							500.0f, 0.0f, 0.0f,
+							15000.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.08f, 0.0f, 0.08f,
+							0.02f, 0.0f, 0.02f,
 							//(float)pow((double)-1.0f,1.0)*1.0f/1000.0f, (float)-pow((double)-1.0f,1.0)*1.0f/1000.0f, (float)pow((double)-1.0f,1.0)*1.0f/1000.0f,
 							true, false))
 		{
 			if(SUCCEEDED(erdLayer1->load()))
 			{
 				erdLayer1->activateScaling();
-				erdLayer1->getScale()->setValues(12.0f, 12.0f, 12.0f);
+				erdLayer1->getScale()->setValues(102.0f, 102.0f, 102.0f);
 				erdLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 0.58f,
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
@@ -707,19 +711,25 @@ bool	MyGameControl::buildGame()
 		if (mond->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
-							"resources/x_files/Planet1.bmp",//NULL,
-							50.0f, 0.0f, 0.0f,
+							"resources/x_files/Planet5.dds",//NULL,
+							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							false, false))
+							true, false))
 		{
+			mond->m_isPlanet = true;
+			mond->m_graviRadius = 100;
 			mond->setMaster(erdkern);
 			if(SUCCEEDED(mond->load()))
 			{
 				mond->activateScaling();
-				mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
+				//WERTE korrigieren
+				mond->initMaterialValues(0.0f, 0.0f, 0.0f, 0.58f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				mond->getScale()->setValues(20.0f, 20.0f, 20.0f);
 				if(mondSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
 					mondSound->set3DSoundDistance(10.0f, 1000.0f);
@@ -894,7 +904,7 @@ bool	MyGameControl::buildGame()
 				if(SUCCEEDED(sunLayer1->load()))
 				{
 					sunLayer1->activateScaling();
-					sunLayer1->getScale()->setValues(99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f), 99.9f-((float)count/1000.0f));
+					sunLayer1->getScale()->setValues(999.9f-((float)count/1000.0f), 999.9f-((float)count/1000.0f), 999.9f-((float)count/1000.0f));
 					sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 													0.0f, 0.0f, 0.0f,
 													1.0f, 1.0f, 1.0f);

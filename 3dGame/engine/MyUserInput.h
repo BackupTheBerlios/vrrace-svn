@@ -14,6 +14,7 @@ public:
 	bool	init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC);	//alles Initialisieren
 	void	inputKB();													//Tastatureingaben verarbeiten
 	HRESULT	inputJS();
+	bool						m_JoystickAvailable;
 
 private:
 	bool	initDinput();												//Initialisierung des Input-Objektes
@@ -41,6 +42,6 @@ private:
 
 
 	MyGameControl*				_m_pGameControl;
-	bool						m_JoystickAvailable;
+	
 };
 #endif
