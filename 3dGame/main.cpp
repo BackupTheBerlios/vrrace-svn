@@ -133,6 +133,8 @@ void GameManagement(HWND hWnd, bool isCheck)
 				else {
 					GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
 					mydplay->m_pUsername = tcUsername;
+					//Timer löschen
+					KillTimer(hWnd, 0);
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
 					GenerateGameWindow(mydplay, 1);
@@ -166,6 +168,8 @@ void GameManagement(HWND hWnd, bool isCheck)
 					else {
 						GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
 						mydplay->m_pUsername = tcUsername;
+						//Timer löschen
+						KillTimer(hWnd, 0);
 						EndDialog(hWnd, 0);
 						//Spielfenster erzeugen
 						GenerateGameWindow(mydplay, 2);
@@ -197,20 +201,29 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 							WPARAM WParam,
 							LPARAM LParam)
 {
-	static HBITMAP hBitmapBigship;
-	static BITMAP bitmapBigship;
-	static HBITMAP hBitmapShusui;
-	static BITMAP bitmapShusui;
-	static HBITMAP hBitmapSpaceship2;
-	static BITMAP bitmapSpaceship2;
-	static HBITMAP hBitmapSpaceship5;
-	static BITMAP bitmapSpaceship5;
-	static HBITMAP hBitmapSpaceship13;
-	static BITMAP bitmapSpaceship13;
-	static HBITMAP hBitmapStarsail;
-	static BITMAP bitmapStarsail;
-	HDC hdc, hdcMem;
-	PAINTSTRUCT ps;
+	static HBITMAP	hBitmapBigship;
+	static BITMAP	bitmapBigship;
+	static HBITMAP	hBitmapShusui;
+	static BITMAP	bitmapShusui;
+	static HBITMAP	hBitmapSpaceship2;
+	static BITMAP	bitmapSpaceship2;
+	static HBITMAP	hBitmapSpaceship5;
+	static BITMAP	bitmapSpaceship5;
+	static HBITMAP	hBitmapSpaceship13;
+	static BITMAP	bitmapSpaceship13;
+	static HBITMAP	hBitmapStarsail;
+	static BITMAP	bitmapStarsail;
+	
+	static BOOL		mode			= TRUE;
+	static BOOL		server			= FALSE;
+	static BOOL		client			= FALSE;
+	static BOOL		ip				= FALSE;
+	static BOOL		port			= FALSE;
+	static BOOL		check			= FALSE;
+
+	HDC				hdc;
+	HDC				hdcMem;
+	PAINTSTRUCT		ps;
 	
 	// Nachricht verarbeiten
 	switch(uiMsg)
@@ -234,94 +247,106 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			{
 				MessageBox(NULL, "Fehler beim Laden des Bildes", "ERROR", MB_OK | MB_ICONSTOP);
 			}
+			CheckDlgButton(hWnd, IDC_PLAYERMODE, mode);
+			EnableWindow(GetDlgItem(hWnd, IDC_SERVER), server);
+			EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), client);
+			EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), ip);
+			EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+			EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
+
 			// Timer installieren
-			//SetTimer(hWnd, 0, 25, NULL);
-			CheckDlgButton(hWnd, IDC_PLAYERMODE, BST_CHECKED);
-			//CheckDlgButton(hWnd, IDC_RADIO3, BST_CHECKED);
-			EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
-			EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
-			EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
-			EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
-			EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
+			SetTimer(hWnd, 0, 25, NULL);
 						
 			break;
 		}
 
-	case WM_PAINT:
+	case WM_TIMER:
 		{
 			HBITMAP hOldBitmap;
 			RECT rect;
 			if(hBitmapBigship != NULL)
 			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPBIGSHIP),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPBIGSHIP), &ps);
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPBIGSHIP), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPBIGSHIP1));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapBigship);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPBIGSHIP1),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapBigship.bmWidth, bitmapBigship.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPBIGSHIP1), hdc);
 			}
 			if(hBitmapShusui != NULL)
 			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPSHUSUI),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSHUSUI), &ps);
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSHUSUI), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPSHUSUI));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapShusui);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSHUSUI),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapShusui.bmWidth, bitmapShusui.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPSHUSUI), hdc);
 			}
 			if(hBitmapSpaceship2 != NULL)
-			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP2),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP2), &ps);
+			{	
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP2), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP2));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship2);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP2),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship2.bmWidth, bitmapSpaceship2.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP2), hdc);
 			}
 			if(hBitmapSpaceship5 != NULL)
 			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP5),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP5), &ps);
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP5), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP5));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship5);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP5),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship5.bmWidth, bitmapSpaceship5.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP5), hdc);
 			}
 			if(hBitmapSpaceship13 != NULL)
 			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP13),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP13), &ps);
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSPACESHIP13), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP13));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapSpaceship13);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSPACESHIP13),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapSpaceship13.bmWidth, bitmapSpaceship13.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPSPACESHIP13), hdc);
 			}
 			if(hBitmapStarsail != NULL)
 			{
-				GetClientRect(GetDlgItem(hWnd,IDC_BMPSTARSAIL),&rect);
-				hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSTARSAIL), &ps);
+				//hdc = BeginPaint(GetDlgItem(hWnd,IDC_BMPSTARSAIL), &ps);
+				hdc = GetDC(GetDlgItem(hWnd,IDC_BMPSTARSAIL));
 				hdcMem = CreateCompatibleDC(hdc);
 				hOldBitmap = (HBITMAP) SelectObject(hdcMem, hBitmapStarsail);
+				GetClientRect(GetDlgItem(hWnd,IDC_BMPSTARSAIL),&rect);
 				StretchBlt(hdc, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), hdcMem, 0, 0, bitmapStarsail.bmWidth, bitmapStarsail.bmHeight, SRCCOPY);
-				EndPaint(hWnd, &ps);
+				//EndPaint(hWnd, &ps);
 				SelectObject(hdcMem, hOldBitmap);
 				DeleteDC(hdcMem);
 				DeleteObject(hOldBitmap);
+				ReleaseDC(GetDlgItem(hWnd,IDC_BMPSTARSAIL), hdc);
 			}
 			break;
 		}
@@ -332,11 +357,8 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 		break;
 
 	case WM_DESTROY:
-		// Timer löschen
-		//KillTimer(hWnd, 0);
-		break;
-
-	case WM_TIMER:
+		//Timer löschen
+		KillTimer(hWnd, 0);
 		break;
 
 	case WM_COMMAND:
@@ -354,6 +376,8 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
 					//SinglePlayer
 				{
+					//Timer löschen
+					KillTimer(hWnd, 0);
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
 					GenerateGameWindow(NULL, 0);
@@ -361,96 +385,6 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 				else if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)) {
 					//MultiPlayer
 					GameManagement(hWnd, false);
-					/*TCHAR*		tcPort	= new TCHAR[10];
-					DWORD		dwPort	= 0;
-					MyDPlay*	mydplay = new MyDPlay();
-					if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED))
-					{
-						GetDlgItemText(hWnd, IDC_PORT, tcPort, 10);
-						dwPort = _ttoi(tcPort);
-					}
-					if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
-					{
-						if(mydplay->init(&hWnd,"test",NULL,&dwPort,true))
-						{
-							if(mydplay->createSession())
-							{
-								EndDialog(hWnd, 0);
-								//Spielfenster erzeugen
-								GenerateGameWindow();
-							}
-							else {
-								MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
-							}
-						}
-						else {
-							MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
-						}
-						MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
-						mydplay->closeConnection();
-					}
-					else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
-					{
-						TCHAR* tcIPAddr = new TCHAR[18];
-						GetDlgItemText(hWnd, IDC_IPADDRESS, tcIPAddr, 18);
-						//MessageBox(NULL,tcIPAddr,"Message",MB_OK | MB_ICONINFORMATION);
-						if(mydplay->init(&hWnd,"test",tcIPAddr,&dwPort,false))
-						{
-							if(mydplay->enumAvailServer())
-							{
-								if(mydplay->connectSession())
-								{
-									EndDialog(hWnd, 0);
-									//Spielfenster erzeugen
-									GenerateGameWindow();
-								}
-								else {
-									MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
-								}
-							}
-							else {
-								MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
-							}
-						}
-						else {
-							MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
-						}
-						MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
-						mydplay->closeConnection();
-						MyTools::deleteArray(tcIPAddr);
-					}*/
-					//MessageBox(NULL,tcPort,"Message",MB_OK | MB_ICONINFORMATION);
-
-					/*MyDPlay* mydplay = new MyDPlay();
-					if(mydplay->init(&hWnd,"test","vrrace","127.0.0.1",true))
-					{
-						if(mydplay->enumAvailServer())
-						{
-							if(mydplay->connectSession())
-							{
-							}
-							else {
-								MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
-							}
-						}
-						else {
-							MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
-						}
-						if(mydplay->createSession())
-						{
-						}
-						else {
-							MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
-						}
-					}
-					else {
-						MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
-					}*/
-					
-					/*mydplay->closeConnection();
-					delete mydplay;*/
-						/*MyTools::deleteArray(tcPort);
-						MyTools::deleteObject(mydplay);*/
 				}
 				else {
 					MessageBox(hWnd, "Korrigieren Sie Ihre Eingaben", "Error", MB_OK | MB_ICONSTOP);
@@ -474,48 +408,60 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			break;
 		case IDC_PLAYERMODE:
 			{
-				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
+				mode = IsDlgButtonChecked(hWnd, IDC_PLAYERMODE);
+				if(mode == BST_CHECKED)
 				{
-					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
-					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
-					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
-					EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
-					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
+					server = client = ip = port = check = FALSE;
+					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), server);
+					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), client);
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), ip);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
 				}
 				else {
-					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), TRUE);
-					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), TRUE);
-					if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+					server = client = TRUE;
+					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), server);
+					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), client);
+					server = IsDlgButtonChecked(hWnd, IDC_SERVER);
+					client = IsDlgButtonChecked(hWnd, IDC_CLIENT);
+					if(server == BST_CHECKED)
 					{
-						EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
-						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+						port = check = TRUE;
+						EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
 					}
-					else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+					else if(client == BST_CHECKED)
 					{
-						EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), TRUE);
-						EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
-						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+						ip = port = check = TRUE;
+						EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), ip);
+						EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
 					}
 				}
 				break;
 			}
 		case IDC_SERVER:
 			{
-				if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+				server = IsDlgButtonChecked(hWnd, IDC_SERVER);
+				if(server == BST_CHECKED)
 				{
-					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
-					EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
-					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+					ip = FALSE;
+					port = check = TRUE;
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), ip);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
 				}
 				break;
 			}
 		case IDC_CLIENT:
 			{
-				if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+				client = IsDlgButtonChecked(hWnd, IDC_CLIENT);
+				if(client == BST_CHECKED)
 				{
-					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), TRUE);
-					EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
-					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+					ip = port = check = TRUE;
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), ip);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), port);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), check);
 				}
 				break;
 			}

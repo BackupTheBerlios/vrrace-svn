@@ -89,8 +89,6 @@ BEGIN
     CONTROL         "",IDC_IPADDRESS,"SysIPAddress32",WS_TABSTOP,353,136,102,
                     12
     GROUPBOX        "RAUMSCHIFFE",IDC_STATIC,24,12,225,235
-    CONTROL         "Bigship1",IDC_BIGSHIP,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,29,25,109,10
     LTEXT           "Username",IDC_STATIC,281,16,48,12,SS_CENTERIMAGE
     LTEXT           "IP-Adresse",IDC_STATIC,299,136,48,12,SS_CENTERIMAGE
     EDITTEXT        IDC_PORT,353,154,102,12,ES_AUTOHSCROLL
@@ -98,24 +96,26 @@ BEGIN
     CONTROL         "SinglePlayer",IDC_PLAYERMODE,"Button",BS_AUTOCHECKBOX,
                     281,58,71,12
     PUSHBUTTON      "C&heck",IDC_CHECKCON,347,184,50,14
-    CONTROL         "",IDC_BMPBIGSHIP,"Static",SS_BLACKFRAME,45,36,78,50
-    CONTROL         "Shusui",IDC_SHUSUI,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,137,26,109,10
+    CONTROL         "Shusui",IDC_SHUSUI,"Button",BS_AUTORADIOBUTTON,137,26,
+                    109,10
     CONTROL         "",IDC_BMPSHUSUI,"Static",SS_BLACKFRAME,153,37,78,50
-    CONTROL         "Spaceship2",IDC_SPACESHIP2,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,27,100,109,10
+    CONTROL         "Spaceship2",IDC_SPACESHIP2,"Button",BS_AUTORADIOBUTTON,
+                    27,100,109,10
     CONTROL         "",IDC_BMPSPACESHIP2,"Static",SS_BLACKFRAME,43,111,78,50
-    CONTROL         "Spaceship5",IDC_SPACESHIP5,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,135,100,109,10
+    CONTROL         "Spaceship5",IDC_SPACESHIP5,"Button",BS_AUTORADIOBUTTON,
+                    135,100,109,10
     CONTROL         "",IDC_BMPSPACESHIP5,"Static",SS_BLACKFRAME,151,111,78,
                     50
-    CONTROL         "Spaceship13",IDC_SPCASHIP13,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,27,175,109,10
+    CONTROL         "Spaceship13",IDC_SPCASHIP13,"Button",BS_AUTORADIOBUTTON,
+                    27,175,109,10
     CONTROL         "",IDC_BMPSPACESHIP13,"Static",SS_BLACKFRAME,43,185,78,
                     50
-    CONTROL         "StarSail",IDC_STARSAIL,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,135,175,109,10
+    CONTROL         "StarSail",IDC_STARSAIL,"Button",BS_AUTORADIOBUTTON,135,
+                    175,109,10
     CONTROL         "",IDC_BMPSTARSAIL,"Static",SS_BLACKFRAME,151,185,78,50
+    CONTROL         "Bigship",IDC_BIGSHIP,"Button",BS_AUTORADIOBUTTON,27,25,
+                    109,10
+    CONTROL         "",IDC_BMPBIGSHIP1,"Static",SS_BLACKFRAME,43,36,78,50
 END
 
 

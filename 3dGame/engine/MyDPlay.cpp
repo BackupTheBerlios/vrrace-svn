@@ -282,21 +282,30 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 
 			pDestroyMsg = (PDPNMSG_DESTROY_PLAYER) pvMsgBuffer;
 
-			if(pDestroyMsg->dpnidPlayer) //=eigene PID
+			if(pDestroyMsg->dpnidPlayer == m_pid) 
 			{
 				switch(pDestroyMsg->dwReason)
 				{
 				case DPNDESTROYPLAYERREASON_CONNECTIONLOST:
+					{
 					//Verbindung verloren
+					MessageBox(NULL, "Verbindung verloren", "Message", MB_OK);
 					break;
+					}
 
 				case DPNDESTROYPLAYERREASON_SESSIONTERMINATED:
+					{
 					//Session terminated
+					MessageBox(NULL, "Session beendet", "Message", MB_OK);
 					break;
+					}
 
 				case DPNDESTROYPLAYERREASON_HOSTDESTROYEDPLAYER:
+					{
 					//Spieler vom Host zerstört
+					MessageBox(NULL, "Spieler destroyed", "Message", MB_OK);
 					break;
+					}
 				}
 			}
 			break;
@@ -304,6 +313,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 
 	case DPN_MSGID_TERMINATE_SESSION:
 		{
+			MessageBox(NULL, "Session terminated", "Message", MB_OK);
 			*m_pbHostingApp = *m_pbConnected = false;
 			break;
 		}
@@ -572,7 +582,7 @@ bool MyDPlay::createSession(void)
 	pAppDesc.dwSize				= sizeof(DPN_APPLICATION_DESC);
 	pAppDesc.guidApplication	= MyDPlayGUID;
 	pAppDesc.pwszSessionName	= wcSessionName;
-	pAppDesc.dwFlags			= DPNSESSION_NODPNSVR | DPNSESSION_MIGRATE_HOST;
+	pAppDesc.dwFlags			= DPNSESSION_NODPNSVR; //| DPNSESSION_MIGRATE_HOST;
 
 	if(FAILED(m_pDP->Host(&pAppDesc, &m_pOwnAddress, 1, NULL, NULL, NULL, 0)))
 	{
