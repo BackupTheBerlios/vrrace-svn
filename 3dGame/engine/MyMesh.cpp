@@ -4,6 +4,7 @@ MyMesh::MyMesh(void)
 {
 	_D3DDevice				= NULL;
 	m_FileName				= NULL;
+	m_TextureFileName		= NULL;
 
 	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
@@ -40,6 +41,7 @@ MyMesh::~MyMesh()
 bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 D3DXMATRIX* givenMatWorld,
 					 LPCTSTR givenFileName,
+					 LPSTR givenTextureFileName,
 					 float posX,
 					 float posY,
 					 float posZ,
@@ -55,23 +57,28 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 {
 	if (givenDevice != NULL)
 	{
-		_D3DDevice		= givenDevice;
+		_D3DDevice			= givenDevice;
 	} else {
 		return false;
 	}
 
 	if (givenMatWorld != NULL)
 	{
-		_matWorld		= givenMatWorld;
+		_matWorld			= givenMatWorld;
 	} else {
 		return false;
 	}
 
 	if (givenFileName != NULL)
 	{
-		m_FileName		= givenFileName;
+		m_FileName			= givenFileName;
 	} else {
 		return false;
+	}
+
+	if(givenTextureFileName != NULL)
+	{
+		m_TextureFileName	= givenTextureFileName;
 	}
 
 	m_pPosition->setValues(posX, posY, posZ);
@@ -117,6 +124,11 @@ HRESULT	MyMesh::load()
 		//m_pMaterials[count].Diffuse.a	= 1.0f;
 		
 		m_pTextures[count]				= NULL;
+
+		if(m_TextureFileName != NULL)
+		{
+			d3dxMaterials[count].pTextureFilename = m_TextureFileName;
+		}
 		
 		if (d3dxMaterials[count].pTextureFilename != NULL
 			&& lstrlen(d3dxMaterials[count].pTextureFilename) > 0)

@@ -14,6 +14,7 @@ public:
 	bool				init(LPDIRECT3DDEVICE9 givenDevice,
 								D3DXMATRIX* givenMatWorld,
 								LPCTSTR givenFileName,
+								LPSTR givenTextureFileName,
 								float posX,
 								float posY,
 								float posZ,
@@ -33,6 +34,7 @@ public:
 private:
 	void				matrixOperations();
 	LPCTSTR				m_FileName;
+	LPSTR				m_TextureFileName;
 	DWORD				m_dwNumMaterials;
 	LPD3DXMESH			m_pMesh;
 	D3DMATERIAL9*		m_pMaterials;	//Materialbuffer
