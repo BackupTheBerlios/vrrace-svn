@@ -45,6 +45,15 @@ bool	MyGameControl::drawObjects(D3DXMATRIX* givenMatWorld)
 	return true;
 }
 
+bool	MyGameControl::drawLights()
+{
+	for (int count = 0; count < m_pLights.capacity(); count++)
+	{
+		m_pLights[count]->show();
+	}
+	return true;
+}
+
 bool	MyGameControl::moveObjects()
 {
 	for (int count = 0; count < m_pMeshes.capacity(); count++)
@@ -66,9 +75,9 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
 
 	_D3DDevice				= givenDevice;
 
-	m_pView->m_Position.x	= 0.0f;
+	m_pView->m_Position.x	= 3.0f;
 	m_pView->m_Position.y	= 1.0f;
-	m_pView->m_Position.z	= 0.0f;
+	m_pView->m_Position.z	= 3.0f;
 
 	m_pView->m_UpVector.x	= 0.0f;
 	m_pView->m_UpVector.y	= 1.0f;
@@ -121,7 +130,7 @@ bool	MyGameControl::addObject()
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.05f))
+		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.001f))
 		{
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);
@@ -133,3 +142,33 @@ bool	MyGameControl::addObject()
 	return true;
 }
 
+bool	MyGameControl::addLight()
+{
+	if (m_pLights.capacity() == 0) {
+	MyLight*	tempLight	= new MyLight();
+	if (tempLight == NULL)
+	{
+		MessageBox(NULL, "konnte Licht nicht erstellen", "Achtung", MB_OK);
+		return false;
+	} else {
+		if (tempLight->init(_D3DDevice))
+		{
+			m_pLights.push_back(tempLight);
+		} else {
+			MessageBox(NULL, "konnte Licht nicht initialisieren", "Achtung", MB_OK);
+			return false;
+		}
+	}
+	}
+	return true;
+}
+
+int	MyGameControl::getNumLights()
+{
+	return m_pLights.capacity();
+}
+
+int MyGameControl::getNumMeshes()
+{
+	return m_pMeshes.capacity();
+}

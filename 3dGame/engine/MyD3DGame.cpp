@@ -65,6 +65,9 @@ bool	MyD3DGame::init3D()
 
 	m_pD3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pD3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pD3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff111111);
 
 	return true;
 }
@@ -171,13 +174,22 @@ void	MyD3DGame::showStatus()
 
 	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
 
+	//Zeige Menge der Lichter und Meshes
+	sprintf(
+		temp,
+		"Lichter: %d | Meshes: %d",
+		m_pGameControl->getNumLights(),
+		m_pGameControl->getNumMeshes());
+
+	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
+
 	delete temp;
 }
 
 void	MyD3DGame::doScene()
 {
-	m_pGameControl->m_pView->m_Position.z	+= 0.01f;
-	m_pGameControl->m_pView->m_Position.x	+= 0.1f;
+//	m_pGameControl->m_pView->m_Position.z	+= 0.01f;
+//	m_pGameControl->m_pView->m_Position.x	+= 0.01f;
 	m_pKoordSys->drawKS(m_pD3dDevice);
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 	m_pGameControl->drawObjects(&m_matWorld);

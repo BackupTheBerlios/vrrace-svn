@@ -106,6 +106,10 @@ void	MyUserInput::inputKB()
 			{
 				_m_pGameControl->addObject();
 			}
+			if (KEYDOWN(buffer, DIK_F3))
+			{
+				_m_pGameControl->addLight();
+			}
 			
 		}
 		else

@@ -5,6 +5,7 @@
 #include "includes.h"
 #include "MyView.h"
 #include "MyMesh.h"
+#include "MyLight.h"
 
 class MyGameControl
 {
@@ -16,8 +17,12 @@ public:
 	bool				initObjects();
 	bool				loadObjects();
 	bool				drawObjects(D3DXMATRIX* givenMatWorld);
+	bool				drawLights();
 	bool				moveObjects();
 	bool				addObject();
+	bool				addLight();
+	int					getNumLights();
+	int					getNumMeshes();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
 
 	MyView*				m_pView;
@@ -28,5 +33,6 @@ private:
 	int					m_initCount;	//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
 	MyMesh*				m_pShip;
 	vector<MyMesh*>		m_pMeshes;
+	vector<MyLight*>	m_pLights;
 };
 #endif
