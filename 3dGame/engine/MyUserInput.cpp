@@ -3,6 +3,9 @@
 LPDIRECTINPUT8			MyUserInput::m_lpDI			= NULL;
 HRESULT					MyUserInput::m_hr			= NULL;
 LPDIRECTINPUTDEVICE8	MyUserInput::m_pJoystick	= NULL;
+BOOL					MyUserInput::EffectFound	= FALSE;
+LPDIRECTINPUTEFFECT		MyUserInput::pEff[3];
+
 
 MyUserInput::MyUserInput()
 {
@@ -73,14 +76,14 @@ bool	MyUserInput::initMouse()
 
 bool	MyUserInput::initJoystick()
 {
-	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
+	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_FORCEFEEDBACK | DIEDFL_ATTACHEDONLY);
 
 	if (m_pJoystick == NULL)	{return false;}
 
-	m_hr	= m_pJoystick->SetDataFormat(&c_dfDIJoystick2);
+	m_hr	= m_pJoystick->SetCooperativeLevel(*m_hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	if (FAILED(m_hr))	{return false;}
 
-	m_hr	= m_pJoystick->SetCooperativeLevel(*m_hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	m_hr	= m_pJoystick->SetDataFormat(&c_dfDIJoystick2);
 	if (FAILED(m_hr))	{return false;}
 
 	m_diDevCaps.dwSize	= sizeof(DIDEVCAPS);
@@ -90,6 +93,11 @@ bool	MyUserInput::initJoystick()
 	m_hr	= m_pJoystick->EnumObjects(EnumObjectsCallback, (VOID*)*m_hWnd, DIDFT_AXIS);
 	if (FAILED(m_hr))	{return false;}
 
+	m_hr	= m_pJoystick->EnumEffectsInFile("resources/ffeffects/blowout.ffe", EnumEffectsInFileProc, NULL, DIFEF_MODIFYIFNEEDED);
+	if (FAILED(m_hr))	{return false;}
+	//m_hr	= m_pJoystick->EnumEffectsInFile("resources/ffeffects/explode.ffe", EnumEffectsInFileProc, NULL, DIFEF_MODIFYIFNEEDED);
+	//if (FAILED(m_hr))	{return false;}
+
 	m_hr	= m_pJoystick->Acquire();
 	if (FAILED(m_hr))
 	{
@@ -97,6 +105,24 @@ bool	MyUserInput::initJoystick()
 	}
 
 	return true;
+}
+
+BOOL CALLBACK MyUserInput::EnumEffectsInFileProc(LPCDIFILEEFFECT lpdife, LPVOID pvRef)
+{
+    HRESULT     hr;
+    static int  i;
+ 
+
+    hr = m_pJoystick->CreateEffect(lpdife->GuidEffect, 
+                               lpdife->lpDiEffect,
+                               &pEff[i], 
+                               NULL);
+    if (FAILED(hr))
+    {
+        // Error handling
+    }
+    if (++i > 2) return DIENUM_STOP;
+    else return DIENUM_CONTINUE;
 }
 
 BOOL CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext)
@@ -120,6 +146,7 @@ BOOL CALLBACK MyUserInput::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdi
 		diprg.diph.dwObj		= pdidoi->dwType;
 		diprg.lMin				= -MAXVAL;
 		diprg.lMax				= +MAXVAL;
+		
 /*
 		DWORD*	pdwNumForceFeedbackAxis = (DWORD*)pContext;
 		if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0)
@@ -132,6 +159,13 @@ BOOL CALLBACK MyUserInput::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdi
 		}
 	}
 	return DIENUM_CONTINUE;
+}
+
+BOOL CALLBACK MyUserInput::DIEnumEffectsProc(LPCDIEFFECTINFO pei, LPVOID pv)
+{
+	*((GUID *)pv) = pei->guid;
+	EffectFound	= TRUE;
+	return DIENUM_STOP;
 }
 
 bool	MyUserInput::initKeyboard()
@@ -242,6 +276,7 @@ void	MyUserInput::inputKB()
 				//_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
+//				pEff[0]->Start(1,0);
 			} else
 			if (KEYDOWN(buffer, DIK_S))
 			{
@@ -249,6 +284,7 @@ void	MyUserInput::inputKB()
 				//_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
+//				pEff[1]->Start(1,0);
 			}
 		}
 		else

@@ -23,6 +23,9 @@ private:
 	float	inputFactor(float givenValue);
 	static	BOOL	CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext);
 	static	BOOL	CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext);
+	static  BOOL	CALLBACK	DIEnumEffectsProc(LPCDIEFFECTINFO pei, LPVOID pv);
+	void	loadEffects();
+	static	BOOL	CALLBACK	EnumEffectsInFileProc(LPCDIFILEEFFECT lpdife, LPVOID pvRef);
 
 	HINSTANCE*					m_hInst;
 	HWND*						m_hWnd;
@@ -31,7 +34,12 @@ private:
 	DIDEVCAPS					m_diDevCaps;
 	LPDIRECTINPUTDEVICE8		m_lpDIDevice;
 	LPDIRECTINPUTDEVICE8		m_pMouse;
+	LPDIRECTINPUTEFFECT			m_lpdiEffect;
 	static LPDIRECTINPUTDEVICE8	m_pJoystick;
+	static BOOL					EffectFound;
+	static LPDIRECTINPUTEFFECT	pEff[3];
+
+
 	MyGameControl*				_m_pGameControl;
 	bool						m_JoystickAvailable;
 };
