@@ -3,13 +3,13 @@
 MyD3DGame::MyD3DGame(void)
 {
 	m_d3d			= NULL;
-	m_d3dDevice		= NULL;
+	m_pD3dDevice		= NULL;
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
 
-	m_red			= 0;
-	m_green			= 0;
-	m_blue			= 0;
+	m_red			= 255;
+	m_green			= 255;
+	m_blue			= 255;
 
 	m_FontX			= 0;
 
@@ -19,6 +19,7 @@ MyD3DGame::MyD3DGame(void)
 	m_pFont	= new CD3DFont( m_strFont, m_dwFontSize);
 
 	m_pGameControl	= new MyGameControl();
+	m_pKoordSys		= new MyTest();
 }
 
 MyD3DGame::~MyD3DGame(void)
@@ -52,7 +53,7 @@ bool	MyD3DGame::init3D(HINSTANCE* givenHInst, HWND* givenHWnd)
 	d3dpp.EnableAutoDepthStencil	= TRUE;
 	d3dpp.AutoDepthStencilFormat	= D3DFMT_D16;
 
-	HRESULT hr = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, *m_hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &m_d3dDevice);	//3d-Device erstellen
+	HRESULT hr = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, *m_hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &m_pD3dDevice);	//3d-Device erstellen
 	char* test =new char[100];
 	sprintf(test, "%d", hr);
 	if (FAILED(hr))
@@ -62,24 +63,31 @@ bool	MyD3DGame::init3D(HINSTANCE* givenHInst, HWND* givenHWnd)
 		return false;
 	}
 
-	m_d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_d3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pD3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 
-	m_pFont->InitDeviceObjects(m_d3dDevice);
-	m_pFont->RestoreDeviceObjects();
+	this->initFont();
+	
 
 	return true;
 }
 
+void	MyD3DGame::initFont()
+{
+	m_pFont->InitDeviceObjects(m_pD3dDevice);
+	m_pFont->RestoreDeviceObjects();
+}
+
+
 void	MyD3DGame::prepareScene()
 {
-	m_red++;
+	//m_red++;
 
 	if ((m_red % 2)	== 0)
 	m_FontX++;
 	//world matrix
 	D3DXMatrixIdentity(&m_matWorld);
-	m_d3dDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
+	m_pD3dDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
 
 	//view matrix
 	D3DXMatrixLookAtLH(&m_matView,
@@ -93,27 +101,43 @@ void	MyD3DGame::prepareScene()
 			m_pGameControl->m_pView->m_UpVector.y,
 			m_pGameControl->m_pView->m_UpVector.z));
 		
-	m_d3dDevice->SetTransform(D3DTS_VIEW, &m_matView);
+	m_pD3dDevice->SetTransform(D3DTS_VIEW, &m_matView);
 
 	//projection
 	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 100.0f);
-	m_d3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
-	m_d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_red,m_green,m_blue), 1.0f, 0L);
-	m_d3dDevice->BeginScene();
+	m_pD3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+	m_pD3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_red,m_green,m_blue), 1.0f, 0L);
+	m_pD3dDevice->BeginScene();
 
-	m_pFont->DrawText(2, m_FontX, D3DCOLOR_ARGB(255,255,255,0), "Hello Welt");
 	
+}
+
+void	MyD3DGame::doScene()
+{
+	m_pGameControl->m_pView->m_Position.z	+= 0.001f;
+	m_pGameControl->m_pView->m_Position.x	+= 0.01f;
+	TCHAR* temp = new TCHAR[100];
+	sprintf(temp, "Position: %2.2f %2.2f %2.2f", m_pGameControl->m_pView->m_Position.x, m_pGameControl->m_pView->m_Position.y,m_pGameControl->m_pView->m_Position.z);
+	m_pFont->DrawText(100, 5, D3DCOLOR_ARGB(120, 0, 0, 0), temp);
+	sprintf(temp, "Fluchtpunkt: %2.2f %2.2f %2.2f", m_pGameControl->m_pView->m_ViewPoint.x, m_pGameControl->m_pView->m_ViewPoint.y,m_pGameControl->m_pView->m_ViewPoint.z);
+	m_pFont->DrawText(100, 20, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
+
+	m_pKoordSys->drawKS(m_pD3dDevice);
+
+
+
+	delete temp;
 }
 
 void	MyD3DGame::presentScene()
 {
-	m_d3dDevice->EndScene();
-	m_d3dDevice->Present(NULL, NULL, NULL, NULL);
+	m_pD3dDevice->EndScene();
+	m_pD3dDevice->Present(NULL, NULL, NULL, NULL);
 }
 
 LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 {
-	return m_d3dDevice;
+	return m_pD3dDevice;
 }
 
 int MyD3DGame::initGame(void)
@@ -125,6 +149,6 @@ int MyD3DGame::initGame(void)
 void MyD3DGame::runGame()
 {
 	this->prepareScene();
-
+	this->doScene();
 	this->presentScene();
 }

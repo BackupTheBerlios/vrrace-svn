@@ -15,9 +15,11 @@ using namespace std;
 #include "../directx/d3dfont.h"
 
 //eigene Includes
+#include "MyTest.h"
 #include "MyView.h"
 #include "MyGameControl.h"
 #include "MyD3DGame.h"
+
 
 //Bibliotheken
 #pragma comment(lib, "d3dx9.lib")
@@ -34,4 +36,8 @@ using namespace std;
 const LPCSTR MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
 const LPCSTR MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
 
+struct CUSTOMVERTEX
+{
+    float x,y,z;
+};
 #endif

@@ -19,9 +19,11 @@ public:
 private:
 	void	prepareScene();									//zeichnen der Objekte, Vorbereitung
 	void	presentScene();									//abschliessen der Szene
+	void	initFont();										//Initialisierung des Fontobjektes
+	void	doScene();										//Aufbau der Szene
 
 	LPDIRECT3D9			m_d3d;								//3D-Device
-	LPDIRECT3DDEVICE9	m_d3dDevice;						//Render-Device
+	LPDIRECT3DDEVICE9	m_pD3dDevice;						//Render-Device
 	HINSTANCE*			m_hInst;							//Instance auf Programmhandle ?
 	HWND*				m_hWnd;								//Handler auf das aktuelle Fenster
 	D3DXMATRIX			m_matWorld, m_matView, m_matProj;	//Projektion, Sicht
@@ -30,5 +32,6 @@ private:
 	TCHAR				m_strFont[100];						//Zeichenkette fuer die Ausgabe
 	DWORD				m_dwFontSize;						//Schriftgroesse
 	MyGameControl*		m_pGameControl;						//Spielzustand
+	MyTest*				m_pKoordSys;						//Koordinatensystem
 };
 #endif

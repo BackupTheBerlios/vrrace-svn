@@ -150,6 +150,12 @@
 				RelativePath=".\engine\MyGameControl.h">
 			</File>
 			<File
+				RelativePath=".\engine\MyTest.cpp">
+			</File>
+			<File
+				RelativePath=".\engine\MyTest.h">
+			</File>
+			<File
 				RelativePath=".\engine\MyView.cpp">
 			</File>
 			<File
