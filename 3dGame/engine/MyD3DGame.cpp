@@ -137,7 +137,7 @@ void	MyD3DGame::prepareScene()
 	m_pD3dDevice->SetTransform(D3DTS_VIEW, &m_matView);
 
 	//projection
-	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 10000.0f);
 	m_pD3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 
 	m_pD3dDevice->Clear(

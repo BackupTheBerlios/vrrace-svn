@@ -168,7 +168,7 @@ HRESULT	MyMesh::load()
 							&m_pTextures[count]
 							)))
 			{
-				MessageBox(NULL, "Could not find Texture map", "3dGame.exe", MB_OK);
+			//	MessageBox(NULL, "Could not find Texture map", "3dGame.exe", MB_OK);
 			}
 		}
 	}
@@ -250,8 +250,8 @@ void	MyMesh::matrixOperations()
 		//fasse Transformation und Skalierung zusammen
 		D3DXMatrixMultiply(
 			_matWorld,
-			&tmpMatRotTrans,
-			&tmpMatScale);
+			&tmpMatScale,
+			&tmpMatRotTrans);
 
 	} else {
 		//fassee nur lokale und referentielle Transformation zusammen

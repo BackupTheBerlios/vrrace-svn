@@ -37,9 +37,9 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_d3dLight.Attenuation1	= 0.025f;
 //	m_d3dLight.Attenuation2	= 0.02f;
 
-	m_d3dLight.Falloff		= 0.0f;
-	m_d3dLight.Theta		= 0.5f;
-	m_d3dLight.Phi			= 1.0f;
+//	m_d3dLight.Falloff		= 0.0f;
+//	m_d3dLight.Theta		= 0.5f;
+//	m_d3dLight.Phi			= 1.0f;
 	m_d3dLight.Range		= 5000.0f;
 
 	return true;
@@ -57,8 +57,8 @@ void	MyLight::show()
 
 	//m_d3dLight.Position.z	+= 0.01f;
 	_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	//_D3DDevice->SetRenderState(D3DRS_COLORVERTEX, FALSE);
-	//_D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+	_D3DDevice->SetRenderState(D3DRS_COLORVERTEX, TRUE);
+	_D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 	_D3DDevice->SetRenderState( D3DRS_DITHERENABLE,   TRUE );
 	_D3DDevice->SetRenderState( D3DRS_SPECULARENABLE, TRUE );
 	_D3DDevice->SetLight(0, &m_d3dLight);

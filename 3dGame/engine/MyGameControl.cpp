@@ -4,7 +4,7 @@ MyGameControl::MyGameControl(void)
 {
 	m_initCount		= 0;
 	m_pView			= new MyView();
-	m_bShowStatus	= true;
+	m_bShowStatus	= false;
 	//m_pMeshes		= new vector(new MyMesh());
 }
 
@@ -95,15 +95,15 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObjb->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/sphere4.x",
+							"resources/x_files/sphere.x",
+							-1000.0f, -50.0f, -1000.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.001f, 0.0f))
+							0.0f, 3.0f, 0.0f,
+							0.0f, 0.005f, 0.0f))
 		{
 			tempObjb->load();
 			tempObjb->activateScaling();
-			tempObjb->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			tempObjb->getScale()->setValues(300.0f, 300.0f, 300.0f);
 			m_pMeshes.push_back(tempObjb);
 		} else {
 			return false;
@@ -117,14 +117,16 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObj->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/shusui.x",
-							50.0f, 0.0f, 0.0f,
+							"resources/x_files/sphere.x",
+							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f))
 		{
 			tempObj->setReference(tempObjb->getPosition());
 			tempObj->load();
+			tempObj->activateScaling();
+			tempObj->getScale()->setValues(20.0f, 20.0f, 20.0f);
 			m_pMeshes.push_back(tempObj);
 		} else {
 			return false;
@@ -140,9 +142,9 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/space station 5.x",
 							60.0f, 0.0f, -500.0f,
-							0.0f, 0.0f, 0.5f,
+							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.05f))
+							0.0f, 0.0f, 0.01f))
 		{
 			tempObjc->load();
 			m_pView->getVP()->setPValues(
@@ -165,7 +167,7 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							30.0f, -20.0f, -500.0f,
-							0.0f, 0.0f, 0.5f,
+							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
 							0.0f, 0.0f, 0.0f))
 		{
@@ -185,7 +187,7 @@ bool	MyGameControl::addObject()
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							90.0f, -30.0f, -510.0f,
-							0.0f, 0.0f, 0.5f,
+							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
 							0.0f, 0.0f, 0.0f))
 		{
