@@ -74,6 +74,9 @@ bool	MyUserInput::initMouse()
 bool	MyUserInput::initJoystick()
 {
 	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
+
+	if (m_pJoystick == NULL)	{return false;}
+
 	m_hr	= m_pJoystick->SetDataFormat(&c_dfDIJoystick2);
 	if (FAILED(m_hr))	{return false;}
 
@@ -240,33 +243,37 @@ void	MyUserInput::inputKB()
 
 HRESULT	MyUserInput::inputJS()
 {
-	DIJOYSTATE2	js;
-
-	if (NULL == m_pJoystick)	{return S_OK;}
-
-	m_hr	= m_pJoystick->Poll();
-	if (FAILED(m_hr))
+	if (m_JoystickAvailable)
 	{
-		m_hr	= m_pJoystick->Acquire();
-		while (m_hr == DIERR_INPUTLOST)
+		DIJOYSTATE2	js;
+
+		if (NULL == m_pJoystick)	{return S_OK;}
+
+		m_hr	= m_pJoystick->Poll();
+
+		if (FAILED(m_hr))
 		{
 			m_hr	= m_pJoystick->Acquire();
+			while (m_hr == DIERR_INPUTLOST)
+			{
+				m_hr	= m_pJoystick->Acquire();
+			}
+			//MessageBox(NULL, "mmm", "mmm", MB_OK);
+			return S_OK;
 		}
-		//MessageBox(NULL, "mmm", "mmm", MB_OK);
-		return S_OK;
+
+		m_hr	= m_pJoystick->GetDeviceState(sizeof(DIJOYSTATE2), &js);
+		if (FAILED(m_hr))	{return m_hr;}
+
+		if (js.lY < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f, 0.0f, 0.0f);}
+		if (js.lY > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f, 0.0f, 0.0f);}
+		if (js.lX < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -0.02f);}
+		if (js.lX > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, 0.02f);}
+		if (js.lRz < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);}
+		if (js.lRz > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);}
+		if (js.rglSlider[0] < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);}
+		if (js.rglSlider[0] > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);}
 	}
-
-	m_hr	= m_pJoystick->GetDeviceState(sizeof(DIJOYSTATE2), &js);
-	if (FAILED(m_hr))	{return m_hr;}
-
-	if (js.lY < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f, 0.0f, 0.0f);}
-	if (js.lY > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f, 0.0f, 0.0f);}
-	if (js.lX < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -0.02f);}
-	if (js.lX > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, 0.02f);}
-	if (js.lRz < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);}
-	if (js.lRz > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);}
-	if (js.rglSlider[0] < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);}
-	if (js.rglSlider[0] > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);}
 
 	return S_OK;
 }
