@@ -26,6 +26,7 @@ private:
 	HWND*						m_hWnd;
 	static HRESULT				m_hr;
 	static LPDIRECTINPUT8		m_lpDI;
+	DIDEVCAPS					m_diDevCaps;
 	LPDIRECTINPUTDEVICE8		m_lpDIDevice;
 	LPDIRECTINPUTDEVICE8		m_pMouse;
 	static LPDIRECTINPUTDEVICE8	m_pJoystick;

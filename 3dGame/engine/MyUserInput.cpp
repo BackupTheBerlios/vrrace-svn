@@ -71,6 +71,19 @@ bool	MyUserInput::initMouse()
 bool	MyUserInput::initJoystick()
 {
 	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
+	m_hr	= m_pJoystick->SetDataFormat(&c_dfDIJoystick2);
+	if (FAILED(m_hr))	{return false;}
+
+	m_hr	= m_pJoystick->SetCooperativeLevel(*m_hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	if (FAILED(m_hr))	{return false;}
+
+	m_diDevCaps.dwSize	= sizeof(DIDEVCAPS);
+	m_hr	= m_pJoystick->GetCapabilities(&m_diDevCaps);
+	if (FAILED(m_hr))	{return false;}
+
+	m_hr	= m_pJoystick->EnumObjects(EnumAxesCallback, (VOID*)*m_hWnd, DIDFT_AXIS);
+	if (FAILED(m_hr))	{return false;}
+
 	return true;
 }
 
