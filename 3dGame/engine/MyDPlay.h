@@ -52,7 +52,7 @@ public:
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
 	static vector<MySound*>			m_pMeshSounds;		//Sounds der Meshes
 	static vector<LPCTSTR>			m_pMeshPaths;		//Path der Meshes
-	TCHAR*							m_pUsername;
+	static TCHAR*					m_pUsername;
 	static CRITICAL_SECTION			m_csDP;
 	static int						m_iFrameRate;
 private:

@@ -15,7 +15,7 @@ public:
 	MyD3DGame(void);
 	~MyD3DGame(void);
 
-	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay, int choice);	//Initialisierung von D3D
+	bool	init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay, int choice, int shipChoice);	//Initialisierung von D3D
 	void	runGame();										//mainloop fuer das spiel
 
 	LPDIRECT3DDEVICE9	getDevice();						//zurueckgeben des 3d-devices ?
@@ -44,6 +44,7 @@ private:
 	MyUserInput*		m_pUserInput;						//Benutzereingaben
 	MyDPlay*			m_pDirectPlay;						//DirectPlay
 	int					m_iDPchoice;						//Verbindungsart
+	int					m_iShipChoice;						//Schiffwahl
 	float*				m_pfFramesPerSecond;				//Anzahl Frames
 	DWORD				m_dwTmpTime;						//TempZeit für Senden
 	double				m_dSumTime;							//Summe Time

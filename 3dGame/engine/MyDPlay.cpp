@@ -18,6 +18,7 @@ LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
 D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
 LPDIRECTSOUND8		MyDPlay::_DSoundDevice	= NULL;
 int					MyDPlay::m_iFrameRate	= 100;
+TCHAR*				MyDPlay::m_pUsername	= NULL;
 	
 
 /*Callback-Funktion fuer DirectPlay*/
@@ -184,9 +185,10 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			
 						EnterCriticalSection(&m_csDP);
 
+						newPlayer->m_pShipChoice	= recToken->ship;
 						if (newPlayer->getMesh()->init(_D3DDevice,
 															_matWorld,
-															"resources/x_files/star sail.x",
+															MyDPlay::m_pMeshPaths[newPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
 															NULL,
 															105.0f, 0.0f, 1000.0f,
 															0.0f, 0.0f, 0.0f,
@@ -195,7 +197,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 															0.0f, 0.0f, 0.0f,
 															false, true))
 						{
-							newPlayer->m_pPlayerID = recToken->dpnid;
+							newPlayer->m_pPlayerID		= recToken->dpnid;
 							if(SUCCEEDED(newPlayer->getMesh()->load()))
 							{
 								if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))

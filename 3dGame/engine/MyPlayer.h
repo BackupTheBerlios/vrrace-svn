@@ -23,6 +23,7 @@ public:
 	MyMesh*		m_pPlayerMesh;
 	MySound*	m_pPlayerSound;
 	DPNID		m_pPlayerID;
+	int			m_pShipChoice;
 /*	int*		m_pEnergy;
 	int*		m_pObjectID;	//Objektidentifikator -> welche Textur/Mesh/Objekttyp
 	int*		m_pStatus;		//zerstört, unsichbar, initialisiert, ....

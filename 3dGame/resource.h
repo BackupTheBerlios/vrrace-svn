@@ -17,8 +17,10 @@
 #define IDC_SPACESHIP2                  1022
 #define IDC_SPACESHIP5                  1023
 #define IDC_SPCASHIP13                  1024
+#define IDC_SPACESHIP13                 1024
 #define IDC_STARSAIL                    1025
 #define IDC_BIGSHIP                     1026
+#define IDC_BIGSHIP1                    1026
 #define IDC_PORT                        1028
 #define IDC_PLAYERMODE                  1029
 #define IDC_CHECKCON                    1030

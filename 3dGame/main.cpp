@@ -32,7 +32,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, msg,	wParam,	lParam);
 }
 
-bool GenerateGameWindow(MyDPlay* givenDPlay, int choice)
+bool GenerateGameWindow(MyDPlay* givenDPlay, int choice, int shipChoice)
 {
 	int iWidth;
 	int iHeight;
@@ -85,7 +85,7 @@ bool GenerateGameWindow(MyDPlay* givenDPlay, int choice)
 
 	g_pD3DGame	= new MyD3DGame();
 	
-	if (g_pD3DGame->init(&g_hInst, &hWnd, givenDPlay, choice))
+	if (g_pD3DGame->init(&g_hInst, &hWnd, givenDPlay, choice, shipChoice))
 	{
 	}
 
@@ -108,7 +108,7 @@ bool GenerateGameWindow(MyDPlay* givenDPlay, int choice)
 }
 
 /*Methode zur Verarbeitung*/
-void GameManagement(HWND hWnd, bool isCheck)
+void GameManagement(HWND hWnd, bool isCheck, int shipChoice)
 {
 	//MultiPlayer
 	TCHAR*		tcPort		= new TCHAR[10];
@@ -133,11 +133,12 @@ void GameManagement(HWND hWnd, bool isCheck)
 				else {
 					GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
 					mydplay->m_pUsername = tcUsername;
+					//MessageBox(NULL, mydplay->m_pUsername, "Message", MB_OK);
 					//Timer löschen
 					KillTimer(hWnd, 0);
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
-					GenerateGameWindow(mydplay, 1);
+					GenerateGameWindow(mydplay, 1, shipChoice);
 				}
 			}
 			else {
@@ -168,11 +169,12 @@ void GameManagement(HWND hWnd, bool isCheck)
 					else {
 						GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 48);
 						mydplay->m_pUsername = tcUsername;
+						//MessageBox(NULL, mydplay->m_pUsername, "Message", MB_OK);
 						//Timer löschen
 						KillTimer(hWnd, 0);
 						EndDialog(hWnd, 0);
 						//Spielfenster erzeugen
-						GenerateGameWindow(mydplay, 2);
+						GenerateGameWindow(mydplay, 2, shipChoice);
 					}
 				}
 				else {
@@ -369,25 +371,62 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			//falls OK-Button gedrueckt
 			{
 				TCHAR*	tcUsername = new TCHAR[100];
+				int		shipChoice = -1;
 				GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 100);
+
+				if(IsDlgButtonChecked(hWnd, IDC_BIGSHIP1) == BST_CHECKED)
+				{
+					shipChoice = 0;
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_SHUSUI) == BST_CHECKED)
+				{
+					shipChoice = 1;
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_SPACESHIP2) == BST_CHECKED)
+				{
+					shipChoice = 2;
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_SPACESHIP5) == BST_CHECKED)
+				{
+					shipChoice = 3;
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_SPACESHIP13) == BST_CHECKED)
+				{
+					shipChoice = 4;
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_STARSAIL) == BST_CHECKED)
+				{
+					shipChoice = 5;
+				}
 
 				InitializeCriticalSection(&MyDPlay::m_csDP);
 
-				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
+				if(!(IsDlgButtonChecked(hWnd, IDC_BIGSHIP1) == BST_CHECKED) && 
+					!(IsDlgButtonChecked(hWnd, IDC_SHUSUI) == BST_CHECKED) &&
+					!(IsDlgButtonChecked(hWnd, IDC_SPACESHIP2) == BST_CHECKED) &&
+					!(IsDlgButtonChecked(hWnd, IDC_SPACESHIP5) == BST_CHECKED) &&
+					!(IsDlgButtonChecked(hWnd, IDC_SPACESHIP13) == BST_CHECKED) &&
+					!(IsDlgButtonChecked(hWnd, IDC_STARSAIL) == BST_CHECKED))
+				{
+					MessageBox(NULL, "Waehlen Sie ein Schiff aus", "ERROR", MB_OK | MB_ICONSTOP);
+				}
+				else if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
 					//SinglePlayer
 				{
+					MyDPlay::m_pUsername = tcUsername;
+					//MessageBox(NULL, MyDPlay::m_pUsername, "Message", MB_OK);
 					//Timer löschen
 					KillTimer(hWnd, 0);
 					EndDialog(hWnd, 0);
 					//Spielfenster erzeugen
-					GenerateGameWindow(NULL, 0);
+					GenerateGameWindow(NULL, 0, shipChoice);
 				}
 				else if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)) {
 					//MultiPlayer
-					GameManagement(hWnd, false);
+					GameManagement(hWnd, false, shipChoice);
 				}
 				else {
-					MessageBox(hWnd, "Korrigieren Sie Ihre Eingaben", "Error", MB_OK | MB_ICONSTOP);
+					MessageBox(hWnd, "Korrigieren Sie Ihre Eingaben", "ERROR", MB_OK | MB_ICONSTOP);
 				}
 				MyTools::deleteArray(tcUsername);
 				
@@ -404,7 +443,7 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 				EndDialog(hWnd,0);
 			break;
 		case IDC_CHECKCON:
-			GameManagement(hWnd, true);
+			GameManagement(hWnd, true, -1);
 			break;
 		case IDC_PLAYERMODE:
 			{

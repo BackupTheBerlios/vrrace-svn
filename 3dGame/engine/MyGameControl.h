@@ -21,7 +21,7 @@ public:
 	MyGameControl(void);
 	~MyGameControl(void);
 
-	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld, HWND* givenHWnd, MyDPlay* givenDPlay, int choice);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld, HWND* givenHWnd, MyDPlay* givenDPlay, int choice, int shipChoice);
 	bool				initObjects();
 	bool				initStarsField();
 	bool				initMusic();
@@ -54,6 +54,7 @@ private:
 	MyMusic*			m_pMusic;		//Music
 	HWND*				m_hWnd;
 	int					m_iDPchoice;	//Verbindungsart
+	int					m_iShipChoice;	//Schiffwahl
 	int					m_initCount;	//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
 	MyMesh*				m_pShip;
 	MyStarsField*		m_pStarsField;

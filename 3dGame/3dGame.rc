@@ -106,14 +106,14 @@ BEGIN
                     135,100,109,10
     CONTROL         "",IDC_BMPSPACESHIP5,"Static",SS_BLACKFRAME,151,111,78,
                     50
-    CONTROL         "Spaceship13",IDC_SPCASHIP13,"Button",BS_AUTORADIOBUTTON,
-                    27,175,109,10
+    CONTROL         "Spaceship13",IDC_SPACESHIP13,"Button",
+                    BS_AUTORADIOBUTTON,27,175,109,10
     CONTROL         "",IDC_BMPSPACESHIP13,"Static",SS_BLACKFRAME,43,185,78,
                     50
     CONTROL         "StarSail",IDC_STARSAIL,"Button",BS_AUTORADIOBUTTON,135,
                     175,109,10
     CONTROL         "",IDC_BMPSTARSAIL,"Static",SS_BLACKFRAME,151,185,78,50
-    CONTROL         "Bigship",IDC_BIGSHIP,"Button",BS_AUTORADIOBUTTON,27,25,
+    CONTROL         "Bigship",IDC_BIGSHIP1,"Button",BS_AUTORADIOBUTTON,27,25,
                     109,10
     CONTROL         "",IDC_BMPBIGSHIP1,"Static",SS_BLACKFRAME,43,36,78,50
 END

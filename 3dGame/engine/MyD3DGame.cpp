@@ -89,12 +89,13 @@ bool	MyD3DGame::init3D()
 	return true;
 }
 
-bool	MyD3DGame::init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay, int choice)
+bool	MyD3DGame::init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay, int choice, int shipChoice)
 {
 	m_hInst			= givenHInst;
 	m_hWnd			= givenHWnd;
 	m_pDirectPlay	= givenDPlay;
 	m_iDPchoice		= choice;
+	m_iShipChoice	= shipChoice;
 
 	if (FAILED(this->init3D()))
 	{
@@ -285,7 +286,7 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 
 bool	MyD3DGame::initGame(void)
 {
-	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_hWnd, m_pDirectPlay, m_iDPchoice);
+	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_hWnd, m_pDirectPlay, m_iDPchoice, m_iShipChoice);
 	m_pGameControl->initMusic();
 	m_pGameControl->initDirectSound();
 	m_pGameControl->buildGame();

@@ -115,7 +115,8 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 							D3DXMATRIX* givenMatWorld,
 							HWND*	givenHWnd,
 							MyDPlay* givenDPlay,
-							int choice)
+							int choice,
+							int shipChoice)
 {
 	if (m_initCount == 0)
 	{
@@ -129,6 +130,7 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 	m_hWnd					= givenHWnd;
 	_DirectPlay				= givenDPlay;
 	m_iDPchoice				= choice;
+	m_iShipChoice			= shipChoice;
 
 	_DirectPlay->m_pLocalPlayer		= new MyPlayer();
 
@@ -195,9 +197,10 @@ bool	MyGameControl::addPlayer(string* givenName)
 	{
 		return false;
 	} else {
+		_DirectPlay->m_pLocalPlayer->m_pShipChoice = m_iShipChoice;
 		if (_DirectPlay->m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
-											MyDPlay::m_pMeshPaths[0],//"resources/x_files/star sail.x",
+											MyDPlay::m_pMeshPaths[_DirectPlay->m_pLocalPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
 											NULL,
 											100.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,
@@ -695,6 +698,7 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 
 		PLAYEROBJECTS	sendingToken;
 		sendingToken.dpnid	= _DirectPlay->m_pLocalPlayer->m_pPlayerID;
+		sendingToken.ship   = _DirectPlay->m_pLocalPlayer->m_pShipChoice;
 
 		EnterCriticalSection(&_DirectPlay->m_csDP);
 
