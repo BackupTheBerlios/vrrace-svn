@@ -29,6 +29,7 @@ public:
 	bool connectSession(void);
 	bool openConnection(void);
 	bool enumAvailServer(void);
+	bool sendMessage(void);
 	bool closeConnection(void);
 	static HRESULT WINAPI DPMessageProc(PVOID pvUserContext, DWORD dwMessageId, PVOID pvMsgBuffer);
 private:

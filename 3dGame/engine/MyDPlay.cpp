@@ -76,7 +76,6 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			LeaveCriticalSection(&m_csDP);
 			break;
 		}
-		
 
 	case DPN_MSGID_CREATE_PLAYER:
 		{
@@ -112,13 +111,60 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			break;
 		}
 
+	case DPN_MSGID_RECEIVE:
+		{
+			PDPNMSG_RECEIVE	pMsg;
+
+			pMsg = (PDPNMSG_RECEIVE) pvMsgBuffer;
+			//pMsg->pReceiveData
+			break;
+		}
+
+	case DPN_MSGID_HOST_MIGRATE:
+		{
+			PDPNMSG_HOST_MIGRATE pMigrateMsg;
+
+			pMigrateMsg = (PDPNMSG_HOST_MIGRATE) pvMsgBuffer;
+
+			if(pMigrateMsg->dpnidNewHost) //= eigene PID
+			{
+				*m_pbConnected	= false;
+				*m_pbHostingApp	= true;
+			}
+			break;
+		}
+
+	case DPN_MSGID_DESTROY_PLAYER:
+		{
+			PDPNMSG_DESTROY_PLAYER pDestroyMsg;
+
+			pDestroyMsg = (PDPNMSG_DESTROY_PLAYER) pvMsgBuffer;
+
+			if(pDestroyMsg->dpnidPlayer) //=eigene PID
+			{
+				switch(pDestroyMsg->dwReason)
+				{
+				case DPNDESTROYPLAYERREASON_CONNECTIONLOST:
+					//Verbindung verloren
+					break;
+
+				case DPNDESTROYPLAYERREASON_SESSIONTERMINATED:
+					//Session terminated
+					break;
+
+				case DPNDESTROYPLAYERREASON_HOSTDESTROYEDPLAYER:
+					//Spieler vom Host zerstört
+					break;
+				}
+			}
+			break;
+		}
+
 	case DPN_MSGID_TERMINATE_SESSION:
 		{
 			*m_pbHostingApp = *m_pbConnected = false;
 			break;
 		}
-
-		
 	}
 	return S_OK;
 }
@@ -454,6 +500,19 @@ bool MyDPlay::connectSession(void)
 		SAFE_RELEASE(pServerAddress);
 	}
 	
+	return true;
+}
+
+/*Methode zum Senden der Message*/
+bool MyDPlay::sendMessage(void)
+{
+	DPN_BUFFER_DESC dpnBuffer;
+
+	if(FAILED(m_pDP->SendTo(DPNID_ALL_PLAYERS_GROUP, &dpnBuffer, 1, 0, NULL, NULL, DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
+	{
+		//Fehler beim Senden
+		return false;
+	}
 	return true;
 }
 
