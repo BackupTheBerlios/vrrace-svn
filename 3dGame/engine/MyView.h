@@ -3,26 +3,25 @@
 #define MYVIEW_H
 
 #include "includes.h"
+
 typedef struct PositionPoint
 {
 	float	x;
 	float	y;
 	float	z;
 }PositionPoint;
+
 class MyView
+	/*
+	Klasse fuer die Cameraposition
+	*/
 {
 public:
 	MyView(void);
 	~MyView(void);
-
-
-	// Sicht-Position
-	PositionPoint m_Position;
-	// Sicht-Richtung
-	PositionPoint m_ViewPoint;
-	// Oben
-	PositionPoint m_UpVector;
-
-
+	
+	PositionPoint m_Position;	//Betrachter-Position
+	PositionPoint m_ViewPoint;	//Fluchtpunkt
+	PositionPoint m_UpVector;	//zeigt nach oben
 };
 #endif

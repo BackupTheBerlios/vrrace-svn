@@ -12,15 +12,6 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, msg,	wParam,	lParam);
 }
 
-void everyFrame()
-{
-	g_pD3DGame->prepareScene();
-	//hier alles zeichnen--
-
-	//---------------------
-	g_pD3DGame->presentScene();
-}
-
 INT WINAPI WinMain(HINSTANCE hInst,
 				   HINSTANCE,
 				   LPSTR,
@@ -37,15 +28,15 @@ INT WINAPI WinMain(HINSTANCE hInst,
 		NULL,
 		NULL,
 		NULL,
-		"vrrace_main",
+		MM_WINDOW_CLASS_NAME,
 		NULL
 	};
 
 	RegisterClassEx(&wc);
 
 	HWND	hWnd	= CreateWindow(
-						"vrrace_main",
-						"vrrace",
+						MM_WINDOW_CLASS_NAME,
+						MM_WINDOW_DESCRIPTION,
 						WS_OVERLAPPEDWINDOW,
 						100,
 						100,
@@ -77,12 +68,12 @@ INT WINAPI WinMain(HINSTANCE hInst,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
-			everyFrame();
+			g_pD3DGame->runGame();
 		}
 	}
 
 	delete g_pD3DGame;
 	
-	UnregisterClass("vrrace_main", wc.hInstance);
+	UnregisterClass(MM_WINDOW_CLASS_NAME, wc.hInstance);
 	return 0;
 }

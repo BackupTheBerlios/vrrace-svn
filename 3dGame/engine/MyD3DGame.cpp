@@ -121,3 +121,10 @@ int MyD3DGame::initGame(void)
 	m_pGameControl->init();
 	return 0;
 }
+
+void MyD3DGame::runGame()
+{
+	this->prepareScene();
+
+	this->presentScene();
+}
