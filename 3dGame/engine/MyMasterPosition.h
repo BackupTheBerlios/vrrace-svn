@@ -47,6 +47,7 @@ public:
 	1=ok, sichtbar
 	
 	*/
+	void						collided();
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

@@ -102,16 +102,6 @@ bool	MyGameControl::collision(MyMesh* givenObject1, MyMesh* givenObject2)
 			givenObject2->getAbsolutePosition()->getY(),
 			givenObject2->getAbsolutePosition()->getZ()));
 
-/*	TCHAR* temp = new TCHAR[100];
-
-	//Zeige aktuelle Betrachterposition
-	sprintf(
-		temp,
-		"abstand: %2.2f",
-		D3DXVec3Length(&pOut));
-
-	MessageBox(NULL, "abstand", temp, MB_OK);
-*/
 	if (D3DXVec3Length(&pOut) <= 10.0f)
 	{
 		
@@ -142,7 +132,7 @@ void	MyGameControl::moveObjects()
 							_DirectPlay->m_pAllMeshes[count]->m_iStatus = 0;
 							if (_DirectPlay->m_pAllMeshes[cCount]->m_bDestroyable)
 							{
-								_DirectPlay->m_pAllMeshes[cCount]->m_iStatus = 0;
+								_DirectPlay->m_pAllMeshes[cCount]->collided();
 							}
 						}
 					}

@@ -239,3 +239,16 @@ D3DXMATRIX*	MyMasterPosition::getRotationMatrix()
 {
 	return m_pRotationMatrix;
 }
+
+void	MyMasterPosition::collided()
+{
+	/*m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pAbsolutePosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+	m_pLocalRotation->setValues(0.0f, 0.0f, 0.0f);
+	m_pRotDir->setValues(0.0f, 0.0f, 0.0f);*/
+	//m_pScaleFactor->setValues(0.0f, 0.0f, 0.0f);
+	*m_pSpeed = 0.0f;
+	m_iStatus = 0;
+}
