@@ -524,25 +524,25 @@ bool	MyGameControl::sendData()
 	for(DWORD count = 0; count < _DirectPlay->m_pLocalMeshes.size(); count++)
 	{
 		GAMEOBJECTS sendingToken;
-		sendingToken.vectorId			= count;
+		sendingToken.vectorId				= count;
 
 		EnterCriticalSection(&_DirectPlay->m_csDP);
 
-		sendingToken.posinfo.position.x	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getX();
-		sendingToken.posinfo.position.y	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getY();
-		sendingToken.posinfo.position.z	= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getZ();
+		sendingToken.posinfo.position.x		= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getX();
+		sendingToken.posinfo.position.y		= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getY();
+		sendingToken.posinfo.position.z		= _DirectPlay->m_pLocalMeshes[count]->m_pPosition->getZ();
 		
 		sendingToken.posinfo.direction.x	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getX();
 		sendingToken.posinfo.direction.y	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getY();
 		sendingToken.posinfo.direction.z	= _DirectPlay->m_pLocalMeshes[count]->m_pDirection->getZ();
 		
-		sendingToken.posinfo.rotation.x	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getX();
-		sendingToken.posinfo.rotation.y	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getY();
-		sendingToken.posinfo.rotation.z	= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getZ();
+		sendingToken.posinfo.rotation.x		= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getX();
+		sendingToken.posinfo.rotation.y		= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getY();
+		sendingToken.posinfo.rotation.z		= _DirectPlay->m_pLocalMeshes[count]->m_pRotation->getZ();
 		
-		sendingToken.posinfo.rotdir.x	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getX();
-		sendingToken.posinfo.rotdir.y	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getY();
-		sendingToken.posinfo.rotdir.z	= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getZ();
+		sendingToken.posinfo.rotdir.x		= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getX();
+		sendingToken.posinfo.rotdir.y		= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getY();
+		sendingToken.posinfo.rotdir.z		= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getZ();
 
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 
@@ -574,15 +574,17 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 		sendingToken.position.posinfo.rotation.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotation->getY();
 		sendingToken.position.posinfo.rotation.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotation->getZ();
 		
-		sendingToken.position.posinfo.rotdir.x	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getX();
-		sendingToken.position.posinfo.rotdir.y	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getY();
-		sendingToken.position.posinfo.rotdir.z	= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getZ();
+		sendingToken.position.posinfo.rotdir.x		= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getX();
+		sendingToken.position.posinfo.rotdir.y		= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getY();
+		sendingToken.position.posinfo.rotdir.z		= _DirectPlay->m_pLocalPlayer->getMesh()->m_pRotDir->getZ();
 
-		sendingToken.position.posinfo.rotate.x	= givenX;
-		sendingToken.position.posinfo.rotate.y	= givenY;
-		sendingToken.position.posinfo.rotate.z	= givenZ;
+		sendingToken.position.posinfo.rotate.x		= givenX;
+		sendingToken.position.posinfo.rotate.y		= givenY;
+		sendingToken.position.posinfo.rotate.z		= givenZ;
 
 		sendingToken.matrix							= *_DirectPlay->m_pLocalPlayer->getMesh()->getPositionMatrix();
+
+		sendingToken.position.speed					= *_DirectPlay->m_pLocalPlayer->getMesh()->m_pSpeed;
 
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 

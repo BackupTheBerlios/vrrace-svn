@@ -220,6 +220,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
 				m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
 					recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
+				*m_pNetworkPlayers[tmpCount]->getMesh()->m_pSpeed = recToken->position.speed;
 
 				LeaveCriticalSection(&m_csDP);
 

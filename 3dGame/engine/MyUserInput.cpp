@@ -238,12 +238,14 @@ void	MyUserInput::inputKB()
 			{
 				//TODO andere Funktion aufrufen, der Betrag von Direction muss verändert werden!
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed -= this->inputFactor();
+				_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_S))
 			{
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor();
+				_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
