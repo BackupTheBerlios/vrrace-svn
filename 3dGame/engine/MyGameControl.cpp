@@ -99,7 +99,7 @@ bool	MyGameControl::addObject()
 							-1000.0f, -50.0f, -1000.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, 0.005f, 0.0f))
+							0.0f, -0.005f, 0.0f))
 		{
 			tempObjb->load();
 			tempObjb->activateScaling();
@@ -117,7 +117,7 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObj->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/sphere.x",
+							"resources/x_files/sphere0.x",
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,

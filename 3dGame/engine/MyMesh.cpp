@@ -168,7 +168,7 @@ HRESULT	MyMesh::load()
 							&m_pTextures[count]
 							)))
 			{
-			//	MessageBox(NULL, "Could not find Texture map", "3dGame.exe", MB_OK);
+				MessageBox(NULL, "Could not find Texture map", "3dGame.exe", MB_OK);
 			}
 		}
 	}
