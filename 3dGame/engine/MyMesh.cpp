@@ -16,30 +16,30 @@ MyMesh::MyMesh(void)
 
 MyMesh::~MyMesh()
 {
-	SAFE_DELETE(m_TextureFileName);
+	//SAFE_DELETE(m_TextureFileName);
 	SAFE_DELETE(m_pbAlphaBlending);
 	SAFE_DELETE(m_pPosition);
 	SAFE_DELETE(m_pDirection);
 	SAFE_DELETE(m_pRotation);
 	SAFE_DELETE(m_pRotDir);
 	SAFE_DELETE(m_pScaleFactor);
-
-	//if (m_pMaterials != NULL)
-		//delete[] m_pMaterials;
+	
+	if (m_pMaterials != NULL)
+		delete[] m_pMaterials;
 		//SAFE_DELETE(m_pMaterials);
 
-	//if (m_pTextures)
-	//{
-		//for (DWORD count = 0; count < m_dwNumMaterials; count++)
-		//{
-			//if (m_pTextures[count])
-				//m_pTextures[count]->Release();
-		//}
-		//delete[] m_pTextures;
-	//}
+	if (m_pTextures)
+	{
+		for (DWORD count = 0; count < m_dwNumMaterials; count++)
+		{
+			if (m_pTextures[count])
+				m_pTextures[count]->Release();
+		}
+		delete[] m_pTextures;
+	}
 	
-	//if (m_pMesh != NULL)
-		//m_pMesh->Release();
+	if (m_pMesh != NULL)
+		m_pMesh->Release();
 	//SAFE_RELEASE(m_pMesh);
 		
 }
@@ -176,6 +176,16 @@ HRESULT	MyMesh::load()
 			m_pMaterials[count].Diffuse.g	= 1.0f;
 			m_pMaterials[count].Diffuse.b	= 1.0f;
 			//m_pMaterials[count].Diffuse.a	= 1.0f;
+
+			if (this->m_isItem)
+			{
+				m_pMaterials[count].Diffuse.r	= 0.0f;
+				m_pMaterials[count].Diffuse.g	= 1.0f;
+				m_pMaterials[count].Diffuse.b	= 0.4f;
+				m_pMaterials[count].Diffuse.a	= 0.5f;
+				m_pMaterials[count].Ambient		= m_pMaterials[count].Diffuse;
+			}
+
 		}
 		m_pTextures[count]				= NULL;
 

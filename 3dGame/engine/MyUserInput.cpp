@@ -16,6 +16,8 @@ MyUserInput::MyUserInput()
 
 MyUserInput::~MyUserInput(void)
 {
+	m_lpDIDevice		= NULL;
+	_m_pGameControl		= NULL;
 }
 
 bool	MyUserInput::init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC)
@@ -229,67 +231,85 @@ void	MyUserInput::inputKB()
 			} else
 			if (KEYDOWN(buffer, DIK_LEFT))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -this->inputFactor(0.8));
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f, 0.0f, -this->inputFactor(0.8), 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_RIGHT))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, this->inputFactor(0.8));
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f, 0.0f, this->inputFactor(0.8), 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_UP))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(-this->inputFactor(0.8),0.0f,0.0f);
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(-this->inputFactor(0.8),0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_DOWN))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(this->inputFactor(0.8),0.0f,0.0f);
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(this->inputFactor(0.8),0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_A))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,-this->inputFactor(0.8),0.0f);
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f, -this->inputFactor(0.8),0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_D))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,this->inputFactor(0.8),0.0f);
 				_m_pGameControl->m_pMainCam->rotate();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f, this->inputFactor(0.8),0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_W))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				//TODO andere Funktion aufrufen, der Betrag von Direction muss verändert werden!
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed -= this->inputFactor(0.8);
 				//_m_pGameControl->getPlayer()->getMesh()->move();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 //				pEff[0]->Start(1,0);
 			} else
 			if (KEYDOWN(buffer, DIK_S))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(0.8);
 				//_m_pGameControl->getPlayer()->getMesh()->move();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 //				pEff[1]->Start(1,0);
 			}
 			if (KEYDOWN(buffer, DIK_N))
 			{
+				EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 				if (_m_pGameControl->getPlayer()->getMesh()->m_mustSleep)
 				_m_pGameControl->getPlayer()->getMesh()->newInit();
+				LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			}
 		}
 		else
@@ -329,50 +349,66 @@ HRESULT	MyUserInput::inputJS()
 
 		if (js.lY < 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(this->inputFactor(js.lY/(float)MAXVAL), 0.0f, 0.0f);
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(this->inputFactor(js.lY/(float)MAXVAL), 0.0f, 0.0f, 1);
 		}
 		if (js.lY > 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(this->inputFactor(js.lY/(float)MAXVAL), 0.0f, 0.0f);
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(this->inputFactor(js.lY/(float)MAXVAL), 0.0f, 0.0f, 1);
 		}
 		if (js.lX < 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, this->inputFactor(js.lX/(float)MAXVAL));
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f, 0.0f, this->inputFactor(js.lX/(float)MAXVAL), 1);
 		}
 		if (js.lX > 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, this->inputFactor(js.lX/(float)MAXVAL));
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f, 0.0f, this->inputFactor(js.lX/(float)MAXVAL), 1);
 		}
 		if (js.lRz < 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, this->inputFactor(js.lRz/(float)MAXVAL), 0.0f);
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f, this->inputFactor(js.lRz/(float)MAXVAL), 0.0f, 1);
 		}
 		if (js.lRz > 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, this->inputFactor(js.lRz/(float)MAXVAL), 0.0f);
 			_m_pGameControl->m_pMainCam->rotate();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f, this->inputFactor(js.lRz/(float)MAXVAL), 0.0f, 1);
 		}
 		if (js.rglSlider[0] < 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(js.rglSlider[0]/(float)MAXVAL);
 			//_m_pGameControl->getPlayer()->getMesh()->move();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 		}
 		if (js.rglSlider[0] > 0)
 		{
+			EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(js.rglSlider[0]/(float)MAXVAL);
 			//_m_pGameControl->getPlayer()->getMesh()->move();
+			LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
 			_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 		}
 	}

@@ -6,13 +6,14 @@ MyPlayer::MyPlayer()
 	m_pPlayerMesh	= new MyMesh();
 	m_pPlayerSound	= new MySound();
 	m_pCamera		= NULL;//new MyView();
+	m_points		= 0;
 }
 
 MyPlayer::~MyPlayer()
 {
 	delete m_Name;
-	if(m_pPlayerMesh)
-		delete m_pPlayerMesh;
+	//if(m_pPlayerMesh)
+	//	delete m_pPlayerMesh;
 	//if(m_pPlayerSound)
 	//	delete m_pPlayerSound;
 

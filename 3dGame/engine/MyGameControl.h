@@ -48,9 +48,10 @@ public:
 	void				sendPlayer(float givenX, float givenY, float givenZ, int status);
 	bool				collision(MyMesh* givenObject1, MyMesh* givenObject2);
 
+	MyDPlay*			_DirectPlay;	//DirectPlay
+
 private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
-	MyDPlay*			_DirectPlay;	//DirectPlay
 	MyDSound*			m_pDirectSound;	//PrimaryBuffer DirectSound
 	MyMusic*			m_pMusic;		//Music
 	HWND*				m_hWnd;

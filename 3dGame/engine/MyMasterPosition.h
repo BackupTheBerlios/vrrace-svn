@@ -33,6 +33,7 @@ public:
 	LPDIRECT3DDEVICE9			_D3DDevice;
 	int							m_pType;
 	bool						m_bControl;
+	vector<MyMasterPosition*>	m_pClients;
 
 	MyVertex*					getAbsolutePosition();
 	void						rotate(float givenX, float givenY, float givenZ);
@@ -46,6 +47,8 @@ public:
 	bool						m_bIsCam;
 	bool						m_bIsMoveable;
 	bool						m_mustSleep;
+	bool						m_isItem;
+	int							m_itemPoints;
 	/*
 	0=zertört
 	1=ok, sichtbar
@@ -64,7 +67,6 @@ private:
 	D3DXMATRIX*					m_pFinalMatrix;								//finale Transformation
 	D3DXMATRIX*					m_pFinalTransRotMatrix;
 
-	vector<MyMasterPosition*>	m_pClients;
 	MyMasterPosition*			m_pMaster;
 
 	bool						m_bScale;	

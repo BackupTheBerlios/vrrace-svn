@@ -29,5 +29,6 @@ public:
 	int*		m_pStatus;		//zerstört, unsichbar, initialisiert, ....
 	int*		m_pVectorID;*/
 	MyView*		m_pCamera;
+	int			m_points;
 };
 #endif

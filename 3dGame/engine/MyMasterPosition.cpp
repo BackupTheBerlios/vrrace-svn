@@ -22,6 +22,8 @@ MyMasterPosition::MyMasterPosition(void)
 	m_bIsCam				= false;
 	m_bIsMoveable			= true;
 	m_mustSleep				= false;
+	m_isItem				= false;
+	m_itemPoints			= 0;
 
 	D3DXMatrixRotationYawPitchRoll(
 			m_pRotationMatrix,
@@ -212,8 +214,11 @@ void	MyMasterPosition::addClient(MyMasterPosition* givenClient)
 void	MyMasterPosition::setMaster(MyMasterPosition* givenMaster)
 {
 	m_pMaster	= givenMaster;
-	m_pMaster->addClient(this);
-	m_pFinalMatrix	= new D3DXMATRIX;
+	if(givenMaster != NULL)
+	{
+		m_pMaster->addClient(this);
+		m_pFinalMatrix	= new D3DXMATRIX;
+	}
 }
 
 MyVertex*	MyMasterPosition::getScale()

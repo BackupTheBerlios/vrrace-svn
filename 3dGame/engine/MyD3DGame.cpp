@@ -26,10 +26,11 @@ MyD3DGame::MyD3DGame(void)
 
 MyD3DGame::~MyD3DGame(void)
 {
-	delete	m_pGameControl;
-	delete	m_pUserInput;
-	delete	m_pKoordSys;
-	delete	m_pFont;	
+	SAFE_DELETE(m_pUserInput);
+	SAFE_DELETE(m_pKoordSys);
+	SAFE_DELETE(m_pFont);	
+	SAFE_DELETE(m_pGameControl);
+	
 	//delete	m_pfFramesPerSecond;
 	SAFE_DELETE(m_pfFramesPerSecond);
 	SAFE_RELEASE(m_pD3dDevice);
@@ -183,6 +184,8 @@ void	MyD3DGame::prepareScene()
 
 void	MyD3DGame::showStatus()
 {
+	EnterCriticalSection(&MyDPlay::m_csDP);
+
 	TCHAR* temp = new TCHAR[100];
 
 	//Zeige aktuelle Betrachterposition
@@ -276,7 +279,21 @@ void	MyD3DGame::showStatus()
 			MM_TEXTCOLOR_BLUE),
 		temp);
 
+	//Zeige Anzahl der Punkte
+	sprintf(temp,"Punkte: %d",/**m_pfFramesPerSecond*/m_pGameControl->getPlayer()->m_points);
+
+	m_pFont->DrawText(
+		5,
+		80,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
 	delete temp;
+
+	LeaveCriticalSection(&MyDPlay::m_csDP);
 }
 
 void	MyD3DGame::doScene()
@@ -355,6 +372,8 @@ void	MyD3DGame::runGame()
 
 	if(m_iDPchoice != 2)
 	{
+		EnterCriticalSection(&MyDPlay::m_csDP);
+
 		if(m_iTimeCounter == 10)
 		{
 			g_dFrameTime	= m_dSumTime / m_iTimeCounter;
@@ -362,23 +381,24 @@ void	MyD3DGame::runGame()
 			//	g_dFrameRate	= 1000.0 / g_dFrameTime;
 			if(g_dFrameTime > (1000.0 / (double)m_pDirectPlay->m_iFrameRate))
 			{
-				m_pDirectPlay->m_iFrameRate -= 10;
-				if(m_iDPchoice == 1)
+				if(m_pDirectPlay->m_iFrameRate > 10)
+					m_pDirectPlay->m_iFrameRate -= 10;
+				/*if(m_iDPchoice == 1)
 				{
 					INFO sendingToken;
 					sendingToken.framerate = m_pDirectPlay->m_iFrameRate;
 					m_pDirectPlay->sendMessage(&sendingToken, 2);
-				}
+				}*/
 			} else if(g_dFrameTime < ((1000.0 / (double)m_pDirectPlay->m_iFrameRate) / 1.1))
 			{
 				if((m_pDirectPlay->m_iFrameRate += 10) > 150)
 					m_pDirectPlay->m_iFrameRate = 150;
-				if(m_iDPchoice == 1)
+				/*if(m_iDPchoice == 1)
 				{
 					INFO sendingToken;
 					sendingToken.framerate = m_pDirectPlay->m_iFrameRate;
 					m_pDirectPlay->sendMessage(&sendingToken, 2);
-				}
+				}*/
 			}
 			m_dSumTime		= 0.0;
 			m_iTimeCounter	= 0;
@@ -387,13 +407,22 @@ void	MyD3DGame::runGame()
 			m_dSumTime		+= (double)(dwTime1-dwTime0);
 			m_iTimeCounter++;
 		}
+
+		LeaveCriticalSection(&MyDPlay::m_csDP);
+
+		if(m_iDPchoice == 1)
+		{
+			INFO sendingToken;
+			sendingToken.framerate = m_pDirectPlay->m_iFrameRate;
+			m_pDirectPlay->sendMessage(&sendingToken, 2);
+		}
 	}
 
-	EnterCriticalSection(&m_pDirectPlay->m_csDP);
+	EnterCriticalSection(&MyDPlay::m_csDP);
 
-	double sleeptime = (1000.0 / (double)m_pDirectPlay->m_iFrameRate) - (double)(dwTime1-dwTime0);
+	double sleeptime = (1000.0 / (double)MyDPlay::m_iFrameRate) - (double)(dwTime1-dwTime0);
 	
-	LeaveCriticalSection(&m_pDirectPlay->m_csDP);
+	LeaveCriticalSection(&MyDPlay::m_csDP);
 
 	if(sleeptime > 0.0)
 	{
