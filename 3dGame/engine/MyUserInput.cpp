@@ -102,6 +102,10 @@ void	MyUserInput::inputKB()
 				else
 					_m_pGameControl->m_bShowStatus	= true;
 			}
+			if (KEYDOWN(buffer, DIK_F2))
+			{
+				_m_pGameControl->addObject();
+			}
 			
 		}
 		else

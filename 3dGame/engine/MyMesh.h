@@ -7,7 +7,7 @@
 class MyMesh
 {
 public:
-	bool				init(LPDIRECT3DDEVICE9 givenDevice);
+	void				init(LPDIRECT3DDEVICE9 givenDevice, LPCSTR givenFileName, float posX, float posY, float posZ, float dirX, float dirY, float dirZ);
 	HRESULT				load();
 	void				draw();
 	void				move();

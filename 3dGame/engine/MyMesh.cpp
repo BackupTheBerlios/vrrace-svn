@@ -1,19 +1,24 @@
 #include "MyMesh.h"
 
-bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice)
+void	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
+					 LPCSTR givenFileName,
+					 float posX,
+					 float posY,
+					 float posZ,
+					 float dirX,
+					 float dirY,
+					 float dirZ)
 {
 	_D3DDevice		= givenDevice;
-	m_FileName		= "resources/shusui.x";
+	m_FileName		= givenFileName; //"resources/shusui.x";
 
-	m_Position.x	= 5.0f;
-	m_Position.y	= 2.0f;
-	m_Position.z	= 1.0f;
+	m_Position.x	= posX;
+	m_Position.y	= posY;
+	m_Position.z	= posZ;
 
-	m_Direction.x	= 0.0f;
-	m_Direction.y	= 0.0f;
-	m_Direction.z	= -0.01f;
-
-	return true;
+	m_Direction.x	= dirX;
+	m_Direction.y	= dirY;
+	m_Direction.z	= dirZ;
 }
 
 void	MyMesh::move()

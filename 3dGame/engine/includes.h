@@ -9,6 +9,7 @@
 #include <d3dx9.h>
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 //Namensraum
 using namespace std;
