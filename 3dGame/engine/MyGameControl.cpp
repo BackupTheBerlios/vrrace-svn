@@ -321,7 +321,13 @@ bool	MyGameControl::addLight()
 		MessageBox(NULL, "konnte Licht nicht erstellen", "Achtung", MB_OK);
 		return false;
 	} else {
-		if (tempLight->init(_D3DDevice))
+		if (tempLight->init(_D3DDevice,
+								_matWorld,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.01f, 0.0f,
+								5000.0f))
 		{
 			m_pAllLights.push_back(tempLight);
 		} else {

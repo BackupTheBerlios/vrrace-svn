@@ -1,13 +1,41 @@
 #include "MyLight.h"
 
-bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
+bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice,
+								D3DXMATRIX* givenMatWorld,
+								float posX,
+								float posY,
+								float posZ,
+								float dirX,
+								float dirY,
+								float dirZ,
+								float rotX,
+								float rotY,
+								float rotZ,
+								float rotDirX,
+								float rotDirY,
+								float rotDirZ,
+								float givenRange)
 {
-	if (givenDevice == NULL)
+	if (givenDevice != NULL)
 	{
-		return false;
+		_D3DDevice			= givenDevice;
 	} else {
-		_D3DDevice		= givenDevice;
+		return false;
 	}
+
+	if (givenMatWorld != NULL)
+	{
+		_matWorld			= givenMatWorld;
+	} else {
+		return false;
+	}
+
+	m_fRange = givenRange;
+
+	m_pPosition->setValues(posX, posY, posZ);
+	m_pDirection->setValues(dirX, dirY, dirZ);
+	m_pRotation->setValues(rotX, rotY, rotZ);
+	m_pRotDir->setValues(rotDirX, rotDirY, rotDirZ);
 
 	ZeroMemory(&m_d3dLight, sizeof(m_d3dLight));
 
