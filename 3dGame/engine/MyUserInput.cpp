@@ -17,12 +17,17 @@ bool	MyUserInput::init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC)
 	m_hWnd			= hWnd;
 	_m_pGameControl	= givenGC;
 
-	if FAILED(initDinput())
+	if (FAILED(initDinput()))
 	{
 		return false;
 	}
 
-	if FAILED(initKeyboard())
+	if (FAILED(initKeyboard()))
+	{
+		return false;
+	}
+
+	if (FAILED(initMouse()))
 	{
 		return false;
 	}
@@ -34,10 +39,62 @@ bool	MyUserInput::initDinput()
 {
 	m_hr	= DirectInput8Create(*m_hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_lpDI, NULL);
 
-	if FAILED(m_hr)
+	if (FAILED(m_hr))
 	{
 		return false;
 	}
+	return true;
+}
+
+bool	MyUserInput::initMouse()
+{
+	//Device erstellen
+	m_hr	= m_lpDI->CreateDevice(GUID_SysMouse, &m_pMouse, NULL);
+
+	if (FAILED(m_hr))
+	{
+		return false;
+	}
+
+	//DataFormat setzen
+	m_hr	= m_pMouse->SetDataFormat(&c_dfDIMouse);
+
+	if (FAILED(m_hr))
+	{
+		return false;
+	}
+
+	//Verhalten definieren
+	m_hr	= m_pMouse->SetCooperativeLevel(*m_hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+
+	if (FAILED(m_hr))
+	{
+		return false;
+	}
+
+	//Vorbereitung von gepufferten Input
+	DIPROPDWORD	dipdw;
+	
+	dipdw.diph.dwSize		= sizeof(DIPROPDWORD);
+	dipdw.diph.dwHeaderSize	= sizeof(DIPROPDWORD);
+	dipdw.diph.dwObj		= 0;
+	dipdw.diph.dwHow		= DIPH_DEVICE;
+	dipdw.dwData			= SAMPLE_BUFFER_SIZE;
+
+	m_hr	= m_pMouse->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
+
+	if (FAILED(m_hr))
+	{
+		return false;
+	}
+
+	m_hr	= m_pMouse->Acquire();
+
+	if (FAILED(m_hr))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -46,7 +103,7 @@ bool	MyUserInput::initKeyboard()
 	//Device erstellen
 	m_hr	= m_lpDI->CreateDevice(GUID_SysKeyboard, &m_lpDIDevice, NULL);
 
-	if FAILED(m_hr)
+	if (FAILED(m_hr))
 	{
 		return false;
 	}
@@ -54,7 +111,7 @@ bool	MyUserInput::initKeyboard()
 	//DataFormat setzen
 	m_hr	= m_lpDIDevice->SetDataFormat(&c_dfDIKeyboard);
 
-	if FAILED(m_hr)
+	if (FAILED(m_hr))
 	{
 		return false;
 	}
@@ -62,7 +119,7 @@ bool	MyUserInput::initKeyboard()
 	//Verhalten definieren
 	m_hr	= m_lpDIDevice->SetCooperativeLevel(*m_hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
-	if FAILED(m_hr)
+	if (FAILED(m_hr))
 	{
 		return false;
 	}
@@ -70,7 +127,7 @@ bool	MyUserInput::initKeyboard()
 	//Zugriff
 	m_hr	= m_lpDIDevice->Acquire();
 
-	if FAILED(m_hr)
+	if (FAILED(m_hr))
 	{
 		return false;
 	}

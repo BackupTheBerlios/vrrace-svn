@@ -46,6 +46,9 @@ using namespace std;
 const LPCSTR MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
 const LPCSTR MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
 
+//Defines
+#define	SAMPLE_BUFFER_SIZE	16
+
 typedef struct CUSTOMVERTEX
 {
     float	x;

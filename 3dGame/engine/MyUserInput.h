@@ -18,12 +18,14 @@ private:
 	bool	initDinput();												//Initialisierung des Input-Objektes
 	bool	initKeyboard();												//Initialisierung der Tastatur
 	bool	initJoystick();												//Initialisierung des Joysticks
+	bool	initMouse();												//Initialisierung der Maus
 
 	HINSTANCE*				m_hInst;
 	HWND*					m_hWnd;
 	HRESULT					m_hr;
 	LPDIRECTINPUT8			m_lpDI;
 	LPDIRECTINPUTDEVICE8	m_lpDIDevice;
+	LPDIRECTINPUTDEVICE8	m_pMouse;
 	MyGameControl*			_m_pGameControl;
 };
 #endif
