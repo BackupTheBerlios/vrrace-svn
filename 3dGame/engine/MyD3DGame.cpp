@@ -201,10 +201,18 @@ bool	MyD3DGame::initGame(void)
 	return true;
 }
 
+bool	MyD3DGame::moveScene()
+{
+	m_pGameControl->moveObjects();
+
+	return true;
+}
+
 void	MyD3DGame::runGame()
 {
 	m_pUserInput->inputKB();
 
+	this->moveScene();
 	this->prepareScene();
 	this->doScene();
 	this->presentScene();

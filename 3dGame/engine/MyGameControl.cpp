@@ -35,12 +35,20 @@ bool	MyGameControl::drawObjects(D3DXMATRIX* givenMatWorld)
 		return false;
 	}
 
-	CUSTOMVERTEX*	_tempPosition	= m_pShip->getPosition();	//Pointer zurueckgeben macht keinen sinn, hebelt private wieder aus
-	//---------------------------------------------------------------------------
-	D3DXMatrixTranslation(givenMatWorld, 10, 10, 10);//vermutlich falsche stelle oder matWorld is nich korrekt, funzt ned
-	//---------------------------------------------------------------------------
+	CUSTOMVERTEX*	_tempPosition	= m_pShip->getPosition();
+	
+	D3DXMatrixTranslation(givenMatWorld, _tempPosition->x, _tempPosition->y, _tempPosition->z);
+	_D3DDevice->SetTransform(D3DTS_WORLD, givenMatWorld);
+	
 	m_pShip->draw();
 	
+	return true;
+}
+
+bool	MyGameControl::moveObjects()
+{
+	m_pShip->move();
+
 	return true;
 }
 

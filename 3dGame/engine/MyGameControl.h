@@ -15,6 +15,7 @@ public:
 	bool				init(LPDIRECT3DDEVICE9 givenDevice);
 	bool				loadObjects();
 	bool				drawObjects(D3DXMATRIX* givenMatWorld);
+	bool				moveObjects();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
 
 	MyView*				m_pView;

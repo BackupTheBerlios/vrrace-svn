@@ -9,7 +9,18 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_Position.y	= 2.0f;
 	m_Position.z	= 1.0f;
 
+	m_Direction.x	= 0.0f;
+	m_Direction.y	= 0.0f;
+	m_Direction.z	= -0.01f;
+
 	return true;
+}
+
+void	MyMesh::move()
+{
+	m_Position.x	+= m_Direction.x;
+	m_Position.y	+= m_Direction.y;
+	m_Position.z	+= m_Direction.z;
 }
 
 CUSTOMVERTEX*	MyMesh::getPosition()

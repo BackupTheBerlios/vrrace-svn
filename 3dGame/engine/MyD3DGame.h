@@ -22,6 +22,7 @@ public:
 private:
 	void	prepareScene();									//zeichnen der Objekte, Vorbereitung
 	void	presentScene();									//abschliessen der Szene
+	bool	moveScene();									//alle Bewegungen fuer Objekte, Licht, Kamera
 	bool	init3D();										//Device und so erstellen
 	bool	initFont();										//Initialisierung des Fontobjektes
 	bool	initInput();									//Benutzereingaben initialisieren
