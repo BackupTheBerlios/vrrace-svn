@@ -230,12 +230,10 @@ void	MyUserInput::inputKB()
 		}
 		else
 		{
-			if (m_hr == DIERR_INPUTLOST)
-			{
-				while (FAILED(m_hr = m_lpDIDevice->Acquire()))
-				{
-				}
-			}
+			//if (m_hr == DIERR_INPUTLOST)
+			//{
+				m_hr = m_lpDIDevice->Acquire();			
+			//}
 		}
 	}
 	return;

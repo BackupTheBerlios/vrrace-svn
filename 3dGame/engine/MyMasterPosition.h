@@ -35,6 +35,10 @@ public:
 	MyVertex*					getAbsolutePosition();
 	void						rotate(float givenX, float givenY, float givenZ);
 	D3DXMATRIX*					getRotationMatrix();
+	D3DXMATRIX*					getPositionMatrix();						//Abfragen der Matrix für die aktuelle Position
+	void						setPositionMatrix(D3DXMATRIX* givenMatrix);
+	void						setScale(CUSTOMVERTEX givenScale);
+	bool						m_bToSend;
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen

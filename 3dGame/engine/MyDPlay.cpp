@@ -5,7 +5,8 @@ CRITICAL_SECTION	MyDPlay::m_csDP;
 HOST_NODE*			MyDPlay::m_pServerNode	= NULL;
 bool*				MyDPlay::m_pbHostingApp	= NULL;
 bool*				MyDPlay::m_pbConnected	= NULL;
-
+DPNID				MyDPlay::m_pid			= 0;
+vector<MyMesh*>		MyDPlay::m_pAllMeshes;
 /*Callback-Funktion fuer DirectPlay*/
 HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 									DWORD dwMessageId,
@@ -104,7 +105,8 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			else {
 				if(pdpPlayerInfo->dwInfoFlags & DPNPLAYER_LOCAL)
 				{
-					MessageBox(NULL,"erstellter Spieler","Message",MB_OK | MB_ICONINFORMATION);
+					//MessageBox(NULL,"erstellter Spieler","Message",MB_OK | MB_ICONINFORMATION);
+					m_pid = pCreatePlayerMsg->dpnidPlayer;
 				}
 			}
             SAFE_DELETE_ARRAY(pdpPlayerInfo);
@@ -116,7 +118,15 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 			PDPNMSG_RECEIVE	pMsg;
 
 			pMsg = (PDPNMSG_RECEIVE) pvMsgBuffer;
-			//pMsg->pReceiveData
+			MyToken* recToken = (MyToken*)pMsg->pReceiveData;
+			if(recToken->vectorId < m_pAllMeshes.size())
+			{
+				//char temp[100];
+				//sprintf(temp,"%f %f %f",recToken->scaleFactor.x,recToken->scaleFactor.y,recToken->scaleFactor.z);
+				//MessageBox(NULL,temp,"Message",MB_OK);
+				//m_pAllMeshes[recToken->vectorId]->setScale(recToken->scaleFactor);
+				m_pAllMeshes[recToken->vectorId]->setPositionMatrix(&recToken->positionMatrix);
+			}
 			break;
 		}
 
@@ -504,9 +514,12 @@ bool MyDPlay::connectSession(void)
 }
 
 /*Methode zum Senden der Message*/
-bool MyDPlay::sendMessage(void)
+bool MyDPlay::sendMessage(MyToken* givenToken)
 {
 	DPN_BUFFER_DESC dpnBuffer;
+
+	dpnBuffer.pBufferData	= (BYTE*) givenToken;
+	dpnBuffer.dwBufferSize	= sizeof(MyToken);
 
 	if(FAILED(m_pDP->SendTo(DPNID_ALL_PLAYERS_GROUP, &dpnBuffer, 1, 0, NULL, NULL, DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
 	{

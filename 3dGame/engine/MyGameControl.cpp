@@ -24,11 +24,11 @@ bool	MyGameControl::loadObjects()
 	if (m_initCount > 0)
 	{
 		m_initCount++;
-		for (DWORD count = 0; count < m_pAllMeshes.size(); count++)
+		for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 		{
-			if (m_pAllMeshes[count]->m_pType	== 1)
+			if (_DirectPlay->m_pAllMeshes[count]->m_pType	== 1)
 			{
-				m_pAllMeshes[count]->load();
+				_DirectPlay->m_pAllMeshes[count]->load();
 			}
 		}
 	} else {
@@ -39,14 +39,16 @@ bool	MyGameControl::loadObjects()
 
 bool	MyGameControl::drawObjects()
 {
+
 	for (DWORD count = 0; count < m_pMasterMeshes.size(); count++)
 	{
-		m_pMasterMeshes[count]->calcClients();
+		//if(m_pMasterMeshes[count]->m_bToSend || (m_iDPchoice == 0))
+			m_pMasterMeshes[count]->calcClients();
 	}
 	
-	for (count = 0; count < m_pAllMeshes.size(); count++)
+	for (count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
-		m_pAllMeshes[count]->draw();
+		_DirectPlay->m_pAllMeshes[count]->draw();
 	}
 	
 	return true;
@@ -64,9 +66,10 @@ bool	MyGameControl::drawLights()
 bool	MyGameControl::moveObjects()
 {
 	m_pStarsField->move();
-	for (DWORD count = 0; count < m_pAllMeshes.size(); count++)
+	for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
-		m_pAllMeshes[count]->move();
+		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend || (m_iDPchoice == 0))
+			_DirectPlay->m_pAllMeshes[count]->move();
 	}
 	m_pMainCam->move();
 			
@@ -123,8 +126,9 @@ bool	MyGameControl::addPlayer(string* givenName)
 											false, true))
 		{
 			m_pLocalPlayer->getMesh()->load();
-
-			m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
+			if(m_iDPchoice != 0)
+				m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
 			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
 			m_pMainCam->setMaster(m_pLocalPlayer->getMesh());
 			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
@@ -171,7 +175,9 @@ bool	MyGameControl::buildGame()
 			sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
-			m_pAllMeshes.push_back(sonne);
+			if(m_iDPchoice != 0)
+				sonne->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(sonne);
 			m_pMasterMeshes.push_back(sonne);
 		} else {
 			return false;
@@ -200,7 +206,9 @@ bool	MyGameControl::buildGame()
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
 			erde->setMaster(sonne);
-			m_pAllMeshes.push_back(erde);
+			if(m_iDPchoice != 0)
+				erde->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(erde);
 		} else {
 			return false;
 		}
@@ -226,7 +234,9 @@ bool	MyGameControl::buildGame()
 			mond->load();
 			mond->activateScaling();
 			mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
-			m_pAllMeshes.push_back(mond);
+			if(m_iDPchoice != 0)
+				mond->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(mond);
 			
 			
 		} else {
@@ -250,8 +260,9 @@ bool	MyGameControl::buildGame()
 							false, false))
 		{
 			kreuzer1->load();
-			
-			m_pAllMeshes.push_back(kreuzer1);
+			if(m_iDPchoice != 0)
+				kreuzer1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
 			m_pMasterMeshes.push_back(kreuzer1);
 		} else {
 			return false;
@@ -277,7 +288,9 @@ bool	MyGameControl::buildGame()
 		{
 			jaeger1->load();
 			jaeger1->setMaster(kreuzer1);
-			m_pAllMeshes.push_back(jaeger1);
+			if(m_iDPchoice != 0)
+				jaeger1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+			_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 		} else {
 			return false;
 		}
@@ -308,12 +321,32 @@ bool	MyGameControl::buildGame()
 				sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
-				m_pAllMeshes.push_back(sunLayer1);
+				if(m_iDPchoice != 0)
+					sunLayer1->m_bToSend = *_DirectPlay->m_pbHostingApp;
+				_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
 				sunLayer1->setMaster(sonne);
 				sunLayer1 = NULL;
 			} else {
 				return false;
 			}
+		}
+	}
+	return true;
+}
+
+bool	MyGameControl::sendData()
+{
+	for(DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
+	{
+		if(_DirectPlay->m_pAllMeshes[count]->m_bToSend)
+		{
+			MyToken sendingToken;
+			sendingToken.vectorId = count;
+			sendingToken.positionMatrix = *_DirectPlay->m_pAllMeshes[count]->getPositionMatrix();
+			sendingToken.scaleFactor.x = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getX());
+			sendingToken.scaleFactor.y = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getY());
+			sendingToken.scaleFactor.z = (1.0);//_DirectPlay->m_pAllMeshes[count]->getScale()->getZ());
+			_DirectPlay->sendMessage(&sendingToken);
 		}
 	}
 	return true;
@@ -353,7 +386,7 @@ int	MyGameControl::getNumLights()
 
 int MyGameControl::getNumMeshes()
 {
-	return (int)m_pAllMeshes.size();
+	return (int)_DirectPlay->m_pAllMeshes.size();
 }
 
 bool MyGameControl::initStarsField()

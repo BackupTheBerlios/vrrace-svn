@@ -15,6 +15,8 @@ MyMasterPosition::MyMasterPosition(void)
 	m_pFinalTransRotMatrix	= new D3DXMATRIX;
 	m_pRotationMatrix		= new D3DXMATRIX;
 
+	m_bToSend				= false;
+
 	D3DXMatrixRotationYawPitchRoll(
 			m_pRotationMatrix,
 			0.0f,
@@ -75,6 +77,7 @@ void	MyMasterPosition::calcOwnMatrix()
 	if (m_pMaster == NULL)
 	{
 		//delete m_pFinalMatrix;
+		//m_pFinalMatrix = NULL;
 		m_pFinalMatrix = m_pFinalTransRotMatrix;
 	}
 }
@@ -102,15 +105,15 @@ void	MyMasterPosition::rotate(float givenX, float givenY, float givenZ)
 
 void	MyMasterPosition::move()
 {
-	m_pPosition->addX(m_pDirection->getX());
-	m_pPosition->addY(m_pDirection->getY());
-	m_pPosition->addZ(m_pDirection->getZ());
+		m_pPosition->addX(m_pDirection->getX());
+		m_pPosition->addY(m_pDirection->getY());
+		m_pPosition->addZ(m_pDirection->getZ());
 
-	m_pRotation->addX(m_pRotDir->getX());
-	m_pRotation->addY(m_pRotDir->getY());
-	m_pRotation->addZ(m_pRotDir->getZ());
+		m_pRotation->addX(m_pRotDir->getX());
+		m_pRotation->addY(m_pRotDir->getY());
+		m_pRotation->addZ(m_pRotDir->getZ());
 
-	this->calcOwnMatrix();
+		this->calcOwnMatrix();
 }
 
 void	MyMasterPosition::calcMatrix(D3DXMATRIX* givenMatrix)
@@ -158,7 +161,7 @@ void	MyMasterPosition::transform()
 	}
 }
 
-void	MyMasterPosition::calcClients()
+D3DXMATRIX*	MyMasterPosition::getPositionMatrix()
 {
 	D3DXVECTOR3*	pVector	= new D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR4*	pOut	= new D3DXVECTOR4();
@@ -171,6 +174,13 @@ void	MyMasterPosition::calcClients()
 
 	delete pVector;
 	delete pOut;
+	return m_pFinalMatrix;
+}
+
+
+void	MyMasterPosition::calcClients()
+{
+	getPositionMatrix();
 
 	if (m_pClients.size() > 0)
 	{
@@ -196,6 +206,16 @@ void	MyMasterPosition::setMaster(MyMasterPosition* givenMaster)
 MyVertex*	MyMasterPosition::getScale()
 {
 	return m_pScaleFactor;
+}
+
+void	MyMasterPosition::setScale(CUSTOMVERTEX givenScale)
+{
+	m_pScaleFactor->setValues(givenScale.x, givenScale.y, givenScale.z);
+}
+
+void	MyMasterPosition::setPositionMatrix(D3DXMATRIX* givenMatrix)
+{
+	m_pFinalMatrix = givenMatrix;
 }
 
 MyVertex*	MyMasterPosition::getAbsolutePosition()

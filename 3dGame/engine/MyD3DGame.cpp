@@ -52,8 +52,8 @@ bool	MyD3DGame::init3D()
 	d3dpp.hDeviceWindow					= *m_hWnd;
 	d3dpp.EnableAutoDepthStencil		= TRUE;
 	d3dpp.AutoDepthStencilFormat		= D3DFMT_D16;
-	//d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
-	//d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_IMMEDIATE;
+	d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
+	d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	HRESULT hr = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, *m_hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &m_pD3dDevice);	//3d-Device erstellen
 	char* test =new char[100];
@@ -282,10 +282,15 @@ void	MyD3DGame::runGame()
 	m_pUserInput->inputJS();
 
 	this->moveScene();
+
+	if(m_iDPchoice != 0)
+		m_pGameControl->sendData();
+	
 	this->prepareScene();
 	this->doScene();
 	this->presentScene();
 	
+
 	DWORD dwTime1 = timeGetTime();
 
 	*m_pfFramesPerSecond = 1.0f / ((float)(dwTime1-dwTime0)/1000.0f);

@@ -17,11 +17,13 @@ public:
 //	void	setCamera(MyView* givenCamera);
 //	MyView*	getCamera();
 
-private:
 	string*	m_Name;	//Spielername
 	MyMesh*	m_pPlayerMesh;
 	DPNID*	m_pPlayerID;
 	int*	m_pEnergy;
+	int*	m_pObjectID;	//Objektidentifikator -> welche Textur/Mesh/Objekttyp
+	int*	m_pStatus;		//zerstört, unsichbar, initialisiert, ....
+	int*	m_pVectorID;
 //	MyView*	m_pCamera;
 
 };
