@@ -19,6 +19,9 @@ MyD3DGame::MyD3DGame(void)
 
 	m_pfFramesPerSecond	= new float(0.0);
 	m_dwTmpTime	= timeGetTime();
+
+	m_dSumTime		= 0.0;
+	m_iTimeCounter	= 0;
 }
 
 MyD3DGame::~MyD3DGame(void)
@@ -243,7 +246,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumMeshes());
 
 	//Zeige Anzahl der Frames per Second
-	sprintf(temp,"FPS: %f",*m_pfFramesPerSecond);
+	sprintf(temp,"FPS: %d",/**m_pfFramesPerSecond*/m_pDirectPlay->m_iFrameRate);
 
 	m_pFont->DrawText(
 		5,
@@ -322,9 +325,55 @@ void	MyD3DGame::runGame()
 
 	*m_pfFramesPerSecond = ((float)(dwTime1-dwTime0)/1000.0f);
 
-	float time = 0.0f;
-	if((time = 1000.0f / 20.0f - (float)(dwTime1-dwTime0)) > 0.0f) 
-		Sleep((int)time);
+	if(m_iDPchoice != 2)
+	{
+		if(m_iTimeCounter == 10)
+		{
+			g_dFrameTime	= m_dSumTime / m_iTimeCounter;
+			//if(g_dFrameTime > 0.0)
+			//	g_dFrameRate	= 1000.0 / g_dFrameTime;
+			if(g_dFrameTime > (1000.0 / (double)m_pDirectPlay->m_iFrameRate))
+			{
+				m_pDirectPlay->m_iFrameRate -= 10;
+				if(m_iDPchoice == 1)
+				{
+					INFO sendingToken;
+					sendingToken.framerate = m_pDirectPlay->m_iFrameRate;
+					m_pDirectPlay->sendMessage(&sendingToken, 2);
+				}
+			} else if(g_dFrameTime < ((1000.0 / (double)m_pDirectPlay->m_iFrameRate) / 1.1))
+			{
+				if((m_pDirectPlay->m_iFrameRate += 10) > 150)
+					m_pDirectPlay->m_iFrameRate = 150;
+				if(m_iDPchoice == 1)
+				{
+					INFO sendingToken;
+					sendingToken.framerate = m_pDirectPlay->m_iFrameRate;
+					m_pDirectPlay->sendMessage(&sendingToken, 2);
+				}
+			}
+			m_dSumTime		= 0.0;
+			m_iTimeCounter	= 0;
+		}
+		else {
+			m_dSumTime		+= (double)(dwTime1-dwTime0);
+			m_iTimeCounter++;
+		}
+	}
+
+	EnterCriticalSection(&m_pDirectPlay->m_csDP);
+
+	double sleeptime = (1000.0 / (double)m_pDirectPlay->m_iFrameRate) - (double)(dwTime1-dwTime0);
+	
+	LeaveCriticalSection(&m_pDirectPlay->m_csDP);
+
+	if(sleeptime > 0.0)
+	{
+		Sleep((int)sleeptime);
+	}
+	
+	
+	
 	/*char temp[100];
 	sprintf(temp,"%f",(1000.0f / 60.0f - (float)(dwTime1-dwTime0)));
 	MessageBox(NULL,temp,"Time",MB_OK);*/

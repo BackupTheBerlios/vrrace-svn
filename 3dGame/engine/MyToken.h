@@ -19,4 +19,10 @@ typedef struct PLAYEROBJECTS
 	GAMEOBJECTS	position;
 	D3DXMATRIX	matrix;
 }PLAYEROBJECTS;
+
+typedef struct INFO
+{
+	int			framerate;
+}INFO;
+
 #endif

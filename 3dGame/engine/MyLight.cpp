@@ -53,7 +53,7 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice,
 	return true;
 }
 
-void	MyLight::setMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
+void	MyLight::setMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse,
 									float rAmbient, float gAmbient, float bAmbient,
 									float rSpecular, float gSpecular, float bSpecular)
 {
@@ -84,9 +84,9 @@ void	MyLight::show()
 	
 	//this->transform();
 
-	m_d3dLight.Position.x	= m_pAbsolutePosition->getX();//0.0f;
-	m_d3dLight.Position.y	= m_pAbsolutePosition->getY();//0.0f;
-	m_d3dLight.Position.z	= m_pAbsolutePosition->getZ();//0.0f;
+	m_d3dLight.Position.x	= this->getAbsolutePosition()->getX();//0.0f;
+	m_d3dLight.Position.y	= this->getAbsolutePosition()->getY();//0.0f;
+	m_d3dLight.Position.z	= this->getAbsolutePosition()->getZ();//0.0f;
 
 	m_d3dLight.Direction.x	= m_pDirection->getX();//1.0f;
 	m_d3dLight.Direction.y	= m_pDirection->getY();//1.0f;

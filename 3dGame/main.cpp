@@ -427,7 +427,7 @@ INT WINAPI WinMain(HINSTANCE hInst,
 				   LPSTR,
 				   INT)
 {
-	g_hInst = hInst;
+	g_hInst			= hInst;
 
 	InitCommonControls();
 

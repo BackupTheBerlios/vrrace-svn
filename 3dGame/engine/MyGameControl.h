@@ -32,6 +32,7 @@ public:
 	int					getNumLights();
 	int					getNumMeshes();
 	bool				sendData();
+	MyDPlay*			getDirectPlay();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
 
 	MyView*				m_pMainCam;

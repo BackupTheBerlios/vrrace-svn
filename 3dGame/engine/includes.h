@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
@@ -61,9 +61,13 @@ const BYTE				MM_TEXTCOLOR_ALPHA		= 255;				//Textfarbe Alpha
 
 static const char*		MM_SESSION_NAME			= "vrrace";			//Sessionname fuer DirectPlay
 
+static double			g_dFrameTime			= 0.0;
+//static int				g_iFrameRate;
+
 //Defines
 #define	SAMPLE_BUFFER_SIZE	16
 #define	MAXVAL				1000
+
 
 typedef struct CUSTOMVERTEX
 {

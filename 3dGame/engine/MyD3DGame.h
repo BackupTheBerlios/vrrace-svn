@@ -45,5 +45,7 @@ private:
 	int					m_iDPchoice;						//Verbindungsart
 	float*				m_pfFramesPerSecond;				//Anzahl Frames
 	DWORD				m_dwTmpTime;						//TempZeit für Senden
+	double				m_dSumTime;							//Summe Time
+	int					m_iTimeCounter;
 };
 #endif

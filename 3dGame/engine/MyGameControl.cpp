@@ -42,6 +42,11 @@ bool	MyGameControl::loadObjects()
 	return true;
 }
 
+MyDPlay* MyGameControl::getDirectPlay()
+{
+	return _DirectPlay;
+}
+
 bool	MyGameControl::drawObjects()
 {
 
@@ -49,13 +54,14 @@ bool	MyGameControl::drawObjects()
 
 	for (DWORD count = 0; count < _DirectPlay->m_pMasterMeshes.size(); count++)
 	{
-		//if(m_pMasterMeshes[count]->m_bToSend || (m_iDPchoice == 0))
+		if (_DirectPlay->m_pAllMeshes[count] != NULL)
 			_DirectPlay->m_pMasterMeshes[count]->calcClients();
 	}
 	
 	for (count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
-		_DirectPlay->m_pAllMeshes[count]->draw();
+		if (_DirectPlay->m_pAllMeshes[count] != NULL)
+			_DirectPlay->m_pAllMeshes[count]->draw();
 	}
 
 	LeaveCriticalSection(&_DirectPlay->m_csDP);
@@ -65,10 +71,10 @@ bool	MyGameControl::drawObjects()
 
 bool	MyGameControl::drawLights()
 {
-	/*for (DWORD count = 0; count < m_pAllLights.size(); count++)
+	for (DWORD count = 0; count < m_pAllLights.size(); count++)
 	{
 		m_pAllLights[count]->show();
-	}*/
+	}
 	return true;
 }
 
@@ -78,6 +84,7 @@ bool	MyGameControl::moveObjects()
 	for (DWORD count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
 		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend || (m_iDPchoice == 0))
+		if (_DirectPlay->m_pAllMeshes[count] != NULL)
 			_DirectPlay->m_pAllMeshes[count]->move();
 	}
 	m_pMainCam->move();
@@ -559,8 +566,9 @@ bool	MyGameControl::addLight()
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.01f, 0.0f,
-								5000.0f))
+								10000.0f))
 		{
+			tempLight->setMaterialValues(1.0f, 1.0f, 1.0f, 0.4f, 0.4f, 0.4f, 1.0f, 1.0f, 1.0f);
 			m_pAllLights.push_back(tempLight);
 		} else {
 			MessageBox(NULL, "konnte Licht nicht initialisieren", "Achtung", MB_OK);
@@ -588,7 +596,7 @@ bool MyGameControl::initStarsField()
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.01f, 0.01f, 0.01f,
-								1024))
+								20000))
 	{
 		return false;
 	}

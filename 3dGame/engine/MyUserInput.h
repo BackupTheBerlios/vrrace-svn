@@ -20,6 +20,7 @@ private:
 	bool	initKeyboard();												//Initialisierung der Tastatur
 	bool	initJoystick();												//Initialisierung des Joysticks
 	bool	initMouse();												//Initialisierung der Maus
+	float	inputFactor();
 	static	BOOL	CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext);
 	static	BOOL	CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext);
 

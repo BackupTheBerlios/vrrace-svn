@@ -47,6 +47,7 @@ public:
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
 	TCHAR*							m_pUsername;
 	static CRITICAL_SECTION			m_csDP;
+	static int						m_iFrameRate;
 private:
 	static LPDIRECT3DDEVICE9	_D3DDevice;
 	static D3DXMATRIX*			_matWorld;

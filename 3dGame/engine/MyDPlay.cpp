@@ -14,6 +14,7 @@ vector<MyMesh*>		MyDPlay::m_pLocalMeshes;
 vector<MyMesh*>		MyDPlay::m_pMasterMeshes;
 LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
 D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
+int					MyDPlay::m_iFrameRate	= 100;
 	
 
 /*Callback-Funktion fuer DirectPlay*/
@@ -182,7 +183,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 
 						if (newPlayer->getMesh()->init(_D3DDevice,
 															_matWorld,
-															"resources/x_files/shusui.x",
+															"resources/x_files/star sail.x",
 															NULL,
 															105.0f, 0.0f, 1000.0f,
 															0.0f, 0.0f, 0.0f,
@@ -223,6 +224,20 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 				//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
 				//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
 				//m_pNetworkPlayers[tmpCount]->getMesh()->move();
+			} else if(pMsg->dwReceiveDataSize == sizeof(INFO))
+			{
+				INFO* recToken	= (INFO*)pMsg->pReceiveData;
+				
+				EnterCriticalSection(&m_csDP);
+
+				m_iFrameRate	= recToken->framerate;
+
+				//char temp[100];
+				//sprintf(temp, "%d %d", recToken->framerate, g_iFrameRate);
+				//MessageBox(NULL, temp, "Message", MB_OK);
+				
+				LeaveCriticalSection(&m_csDP);
+
 			}
 			//MyToken* recToken = (MyToken*)pMsg->pReceiveData;
 			//if(recToken->vectorId < m_pAllMeshes.size())
@@ -643,6 +658,11 @@ bool MyDPlay::sendMessage(void* givenToken, int choice)
 	{
 		dpnBuffer.pBufferData	= (BYTE*) (PLAYEROBJECTS*) givenToken;
 		dpnBuffer.dwBufferSize	= sizeof(PLAYEROBJECTS);
+	}
+	else if(choice == 2)
+	{
+		dpnBuffer.pBufferData	= (BYTE*) (INFO*) givenToken;
+		dpnBuffer.dwBufferSize	= sizeof(INFO);
 	}
 
 	if(FAILED(m_pDP->SendTo(DPNID_ALL_PLAYERS_GROUP, &dpnBuffer, 1, 0, NULL, NULL, DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
