@@ -324,6 +324,8 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 		{
 			PDPNMSG_DESTROY_PLAYER pDestroyMsg;
 
+			EnterCriticalSection(&m_csDP);
+
 			pDestroyMsg = (PDPNMSG_DESTROY_PLAYER) pvMsgBuffer;
 
 			if(pDestroyMsg->dpnidPlayer == m_pid) 
@@ -352,14 +354,22 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 					}
 				}
 			}
+
+			LeaveCriticalSection(&m_csDP);
+
 			break;
 		}
 
 	case DPN_MSGID_TERMINATE_SESSION:
 		{
+			//EnterCriticalSection(&m_csDP);
+
 			MessageBox(NULL, "Session terminated", "Message", MB_OK);
 			SendMessage(*m_hWnd, WM_CLOSE, NULL, NULL);
 			*m_pbHostingApp = *m_pbConnected = false;
+
+			//LeaveCriticalSection(&m_csDP);
+
 			break;
 		}
 	}

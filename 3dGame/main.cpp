@@ -152,7 +152,10 @@ void GameManagement(HWND hWnd, bool isCheck, int shipChoice)
 			MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
 		}
 		//MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
-		mydplay->closeConnection();
+
+		//EnterCriticalSection(&mydplay->m_csDP);
+		//mydplay->closeConnection();
+		//LeaveCriticalSection(&mydplay->m_csDP);
 	}
 	else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
 	{
@@ -191,8 +194,10 @@ void GameManagement(HWND hWnd, bool isCheck, int shipChoice)
 		else {
 			MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
 		}
-		//MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
-		mydplay->closeConnection();
+		//EnterCriticalSection(&mydplay->m_csDP);
+		//mydplay->closeConnection();
+		//LeaveCriticalSection(&mydplay->m_csDP);
+		
 		MyTools::deleteArray(tcIPAddr);
 	}
 	MyTools::deleteArray(tcPort);

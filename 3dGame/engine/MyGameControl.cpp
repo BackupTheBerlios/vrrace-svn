@@ -16,8 +16,6 @@ MyGameControl::MyGameControl(void)
 
 MyGameControl::~MyGameControl(void)
 {
-	if(m_iDPchoice != 0)
-		this->sendPlayer(0.0f, 0.0f, 0.0f, 0);
 //	delete m_pView;
 //	delete m_pStarsField;
 	EnterCriticalSection(&MyDPlay::m_csDP);
@@ -56,6 +54,15 @@ MyGameControl::~MyGameControl(void)
 		MyMesh* tmp = MyDPlay::m_pAllMeshes[count];
 		MyDPlay::m_pAllMeshes[count] = NULL;
 		//SAFE_DELETE(tmp);
+	}
+
+	for(DWORD count = 0; count < MyDPlay::m_pMeshSounds.size(); count ++)
+	{
+		if(MyDPlay::m_pMeshSounds[count])
+		{
+			MyDPlay::m_pMeshSounds[count]->stop();
+			SAFE_DELETE(MyDPlay::m_pMeshSounds[count]);
+		}
 	}
 
 	//SAFE_DELETE(m_pShip);

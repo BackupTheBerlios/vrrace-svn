@@ -26,6 +26,13 @@ MyD3DGame::MyD3DGame(void)
 
 MyD3DGame::~MyD3DGame(void)
 {
+	if(m_pDirectPlay)
+	{
+		EnterCriticalSection(&m_pDirectPlay->m_csDP);
+		m_pGameControl->sendPlayer(0.0f, 0.0f, 0.0f, 0);
+		m_pDirectPlay->closeConnection();
+		LeaveCriticalSection(&m_pDirectPlay->m_csDP);
+	}
 	SAFE_DELETE(m_pUserInput);
 	SAFE_DELETE(m_pKoordSys);
 	SAFE_DELETE(m_pFont);	

@@ -211,8 +211,13 @@ void	MyUserInput::inputKB()
 			//muss hier durch switch-block ersetzt werden
 			if (KEYDOWN(buffer, DIK_ESCAPE ))
 			{
-				SendMessage(*m_hWnd,WM_CLOSE,NULL,NULL);
-				//exit(1);
+				if(_m_pGameControl->_DirectPlay->m_bInitialized)
+				{
+					EnterCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
+					SendMessage(*m_hWnd,WM_CLOSE,NULL,NULL);
+					LeaveCriticalSection(&_m_pGameControl->_DirectPlay->m_csDP);
+					//exit(1);
+				}
 			} else 
 			if (KEYDOWN(buffer, DIK_F1 ))
 			{
