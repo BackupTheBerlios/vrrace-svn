@@ -106,7 +106,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 	} else {
 		if (m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
-											"resources/x_files/shusui.x",
+											"resources/x_files/space station 7.x",
 											NULL,
 											1000.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,
@@ -118,7 +118,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 
 			m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
 			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
-			m_pView->getPos()->setValues(1010.0f, 0.0f, 1010.0f);
+			m_pView->getPos()->setValues(1510.0f, 0.0f, 1510.0f);
 			m_pView->getVP()->setPValues(
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPX(),				
 				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPY(),
@@ -138,12 +138,12 @@ MyPlayer*	MyGameControl::getPlayer()
 
 bool	MyGameControl::buildGame()
 {
-	MyMesh*	tempObjd	= new MyMesh();
-	if (tempObjd == NULL)
+	MyMesh*	sonne	= new MyMesh();
+	if (sonne == NULL)
 	{
 		return false;
 	} else {
-		if (tempObjd->init(_D3DDevice,
+		if (sonne->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sun.x",
 							"resources/x_files/Planet0.dds",
@@ -153,25 +153,25 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.01f, 0.0f,
 							true, false))
 		{
-			tempObjd->load();
-			tempObjd->activateScaling();
-			tempObjd->getScale()->setValues(100.0f, 100.0f, 100.0f);
-			tempObjd->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+			sonne->load();
+			sonne->activateScaling();
+			sonne->getScale()->setValues(100.0f, 100.0f, 100.0f);
+			sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
-			m_pAllMeshes.push_back(tempObjd);
-			m_pMasterMeshes.push_back(tempObjd);
+			m_pAllMeshes.push_back(sonne);
+			m_pMasterMeshes.push_back(sonne);
 		} else {
 			return false;
 		}
 	}
 
-	MyMesh*	tempObjb	= new MyMesh();
-	if (tempObjb == NULL)
+	MyMesh*	erde	= new MyMesh();
+	if (erde == NULL)
 	{
 		return false;
 	} else {
-		if (tempObjb->init(_D3DDevice,
+		if (erde->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere.x",
 							NULL,
@@ -181,26 +181,26 @@ bool	MyGameControl::buildGame()
 							0.0f, -0.05f, 0.0f,
 							true, false))
 		{
-			tempObjb->load();
-			tempObjb->activateScaling();
-			tempObjb->getScale()->setValues(10.0f, 10.0f, 10.0f);
-			tempObjb->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+			erde->load();
+			erde->activateScaling();
+			erde->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			erde->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
-			tempObjb->setMaster(m_pMasterMeshes[0]);
-			m_pAllMeshes.push_back(tempObjb);
+			erde->setMaster(sonne);
+			m_pAllMeshes.push_back(erde);
 		} else {
 			return false;
 		}
 	}
 
 	
-	MyMesh*	tempObj	= new MyMesh();
-	if (tempObj == NULL)
+	MyMesh*	mond	= new MyMesh();
+	if (mond == NULL)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice,
+		if (mond->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
 							NULL,
@@ -210,11 +210,11 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			tempObj->setMaster(m_pAllMeshes[1]);
-			tempObj->load();
-			tempObj->activateScaling();
-			tempObj->getScale()->setValues(2.0f, 2.0f, 2.0f);
-			m_pAllMeshes.push_back(tempObj);
+			mond->setMaster(erde);
+			mond->load();
+			mond->activateScaling();
+			mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
+			m_pAllMeshes.push_back(mond);
 			
 			
 		} else {
@@ -222,25 +222,25 @@ bool	MyGameControl::buildGame()
 		}
 	}
 	
-	MyMesh*	tempObjc	= new MyMesh();
-	if (tempObjc == NULL)
+	MyMesh*	kreuzer1	= new MyMesh();
+	if (kreuzer1 == NULL)
 	{
 		return false;
 	} else {
-		if (tempObjc->init(_D3DDevice,
+		if (kreuzer1->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/space station 5.x",
 							NULL,
 							60.0f, 0.0f, -500.0f,
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.01f,
+							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			tempObjc->load();
+			kreuzer1->load();
 			
-			m_pAllMeshes.push_back(tempObjc);
-			m_pMasterMeshes.push_back(tempObjc);
+			m_pAllMeshes.push_back(kreuzer1);
+			m_pMasterMeshes.push_back(kreuzer1);
 		} else {
 			return false;
 		}
@@ -248,12 +248,12 @@ bool	MyGameControl::buildGame()
 
 	
 
-	MyMesh*	tempObje	= new MyMesh();
-	if (tempObje == NULL)
+	MyMesh*	jaeger1	= new MyMesh();
+	if (jaeger1 == NULL)
 	{
 		return false;
 	} else {
-		if (tempObje->init(_D3DDevice,
+		if (jaeger1->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							NULL,
@@ -263,9 +263,9 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			tempObje->load();
-			tempObje->setMaster(m_pMasterMeshes[1]);
-			m_pAllMeshes.push_back(tempObje);
+			jaeger1->load();
+			jaeger1->setMaster(kreuzer1);
+			m_pAllMeshes.push_back(jaeger1);
 		} else {
 			return false;
 		}
@@ -293,14 +293,11 @@ bool	MyGameControl::buildGame()
 											0.0f, 0.0f, 0.0f,
 											1.0f, 1.0f, 1.0f);
 			m_pAllMeshes.push_back(sunLayer1);
-			sunLayer1->setMaster(m_pMasterMeshes[0]);
+			sunLayer1->setMaster(sonne);
 		} else {
 			return false;
 		}
 	}
-
-	//this->addPlayer(NULL);
-
 	return true;
 }
 
