@@ -5,7 +5,6 @@
 //Systemincludes
 #include <windows.h>
 #include <io.h>
-#include <dinput.h>
 #include <dsound.h>
 #include <dshow.h>
 #include <d3dx9.h>
@@ -17,6 +16,9 @@
 #include <string>
 #include <vector>
 #include <commctrl.h>
+
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
 
 //Namensraum
 using namespace std;
