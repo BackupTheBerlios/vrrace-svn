@@ -21,7 +21,7 @@ MyMesh::MyMesh(void)
 	m_pReferencePoint->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
 	m_pReferencePoint->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
 */
-	m_pScaleFactor->setValues(1.0f, 2.0f, 1.0f);
+	m_pScaleFactor->setValues(1.0f, 1.0f, 1.0f);
 }
 
 MyMesh::~MyMesh()
@@ -186,7 +186,9 @@ HRESULT	MyMesh::load()
 
 void	MyMesh::draw()
 {
-	
+	float tmpScaleX = this->getScale()->getX();
+	float tmpScaleY = this->getScale()->getY();
+	float tmpScaleZ = this->getScale()->getZ();
 
 	//Alpha-Blending
 	if(*m_pbAlphaBlending)
@@ -199,32 +201,36 @@ void	MyMesh::draw()
 	for(int pcount = 0; pcount < *m_piLayers; pcount++)
 	{
 		this->transform();
-		//this->getScale()->setValues((this->getScale()->getX())+pcount,(this->getScale()->getY())+pcount,(this->getScale()->getZ())+pcount);
-	for (DWORD count = 0; count < m_dwNumMaterials; count++)
-	{
-		if(*m_pbAlphaBlending)
+		this->getScale()->setValues(tmpScaleX+pcount,tmpScaleY+pcount,tmpScaleZ+pcount);
+		for (DWORD count = 0; count < m_dwNumMaterials; count++)
 		{
-		m_pMaterials[count].Diffuse.r = m_afDiffuse[0];
-		m_pMaterials[count].Diffuse.g = m_afDiffuse[1];
-		m_pMaterials[count].Diffuse.b = m_afDiffuse[2];
-		m_pMaterials[count].Diffuse.a = m_afDiffuse[3];
+			if(*m_pbAlphaBlending)
+			{
+				m_pMaterials[count].Diffuse.r = m_afDiffuse[0];
+				m_pMaterials[count].Diffuse.g = m_afDiffuse[1];
+				m_pMaterials[count].Diffuse.b = m_afDiffuse[2];
+				m_pMaterials[count].Diffuse.a = m_afDiffuse[3]-(float)(pcount)/8.0f;
 
-		m_pMaterials[count].Ambient.r = m_afAmbient[0];
-		m_pMaterials[count].Ambient.g = m_afAmbient[1];
-		m_pMaterials[count].Ambient.b = m_afAmbient[2];
+				m_pMaterials[count].Ambient.r = m_afAmbient[0];
+				m_pMaterials[count].Ambient.g = m_afAmbient[1];
+				m_pMaterials[count].Ambient.b = m_afAmbient[2];
 
-		m_pMaterials[count].Emissive.r = m_afEmissive[0];
-		m_pMaterials[count].Emissive.g = m_afEmissive[1];
-		m_pMaterials[count].Emissive.b = m_afEmissive[2];
+				m_pMaterials[count].Emissive.r = m_afEmissive[0];
+				m_pMaterials[count].Emissive.g = m_afEmissive[1];
+				m_pMaterials[count].Emissive.b = m_afEmissive[2];
+			}
+
+			_D3DDevice->SetMaterial(&m_pMaterials[count]);
+			_D3DDevice->SetTexture(0, m_pTextures[count]);
+			
+			if(*m_pbAlphaBlending)
+			{
+				_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+				m_pMesh->DrawSubset(count);
+				_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+			}
+			m_pMesh->DrawSubset(count);
 		}
-
-		_D3DDevice->SetMaterial(&m_pMaterials[count]);
-		_D3DDevice->SetTexture(0, m_pTextures[count]);
-
-		//_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
-		m_pMesh->DrawSubset(count);
-		//_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		//m_pMesh->DrawSubset(count);
 	}
-	}
+	this->getScale()->setValues(tmpScaleX,tmpScaleY,tmpScaleZ);
 }
