@@ -112,7 +112,7 @@ void	MyMesh::draw()
 		m_pMaterials[count].Diffuse.r	= 1.0f;
 		m_pMaterials[count].Diffuse.g	= 1.0f;
 		m_pMaterials[count].Diffuse.b	= 1.0f;
-		m_pMaterials[count].Ambient.a	= 0.0f;
+		m_pMaterials[count].Ambient.a	= 1.0f;
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
 		_D3DDevice->SetTexture(0, m_pTextures[count]);
 		m_pMesh->DrawSubset(count);

@@ -67,7 +67,7 @@ bool	MyD3DGame::init3D()
 	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pD3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pD3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff111111);
+	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xffaaaaaa);
 
 	return true;
 }

@@ -75,9 +75,9 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
 
 	_D3DDevice				= givenDevice;
 
-	m_pView->m_Position.x	= 3.0f;
-	m_pView->m_Position.y	= 1.0f;
-	m_pView->m_Position.z	= 3.0f;
+	m_pView->m_Position.x	= 23.0f;
+	m_pView->m_Position.y	= 10.0f;
+	m_pView->m_Position.z	= 23.0f;
 
 	m_pView->m_UpVector.x	= 0.0f;
 	m_pView->m_UpVector.y	= 1.0f;
@@ -106,7 +106,7 @@ bool	MyGameControl::addObject(int x)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, x* 2, 0.0f, 0.0f, -0.01f))
+		if (tempObj->init(_D3DDevice, "resources/space station 5.x", 0.0f, 0.0f, x* 2, 0.0f, 0.0f, -0.01f))
 		{
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);

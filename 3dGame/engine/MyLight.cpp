@@ -25,12 +25,12 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_d3dLight.Specular.g	= 1.0f;
 	m_d3dLight.Specular.b	= 1.0f;
 
-	m_d3dLight.Position.x	= 1.0f;
+	m_d3dLight.Position.x	= 0.0f;
 	m_d3dLight.Position.y	= 1.0f;
-	m_d3dLight.Position.z	= 0.0f;
+	m_d3dLight.Position.z	= 100.0f;
 
 	m_d3dLight.Attenuation0	= 1.0f;
-	m_d3dLight.Range		= 2.0f;
+	m_d3dLight.Range		= 100.0f;
 
 	return true;
 }
