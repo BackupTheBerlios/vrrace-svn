@@ -26,7 +26,9 @@ public:
 								float rotZ,
 								float rotDirX,
 								float rotDirY,
-								float rotDirZ);
+								float rotDirZ,
+								bool givenAlphaBlending,
+								int givenLayers);
 	HRESULT				load();
 	void				draw();
 	void				setReference(MyMasterPosition* givenReference);
@@ -41,5 +43,7 @@ private:
 	LPDIRECT3DTEXTURE9*	m_pTextures;	//Texturbuffer
 	D3DXMATRIX*			_matWorld;
 	MyMesh*				m_pMasterObject;
+	bool*				m_pbAlphaBlending;
+	int*				m_piLayers;
 };
 #endif

@@ -110,7 +110,8 @@ bool	MyGameControl::addObject()
 							-1000.0f, -50.0f, -1000.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, -0.005f, 0.0f))
+							0.0f, -0.005f, 0.0f,
+							true, 1))
 		{
 			tempObjb->load();
 			tempObjb->activateScaling();
@@ -134,7 +135,8 @@ bool	MyGameControl::addObject()
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f))
+							0.0f, 0.0f, 0.0f,
+							false, 1))
 		{
 			tempObj->setMaster((MyMasterPosition*)tempObjb);
 			tempObj->load();
@@ -159,7 +161,8 @@ bool	MyGameControl::addObject()
 							60.0f, 0.0f, -500.0f,
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.01f))
+							0.0f, 0.0f, 0.01f,
+							false, 1))
 		{
 			tempObjc->load();
 			/*m_pView->getVP()->setValues(100.0f, 100.0f, 100.0f);/*
@@ -182,11 +185,12 @@ bool	MyGameControl::addObject()
 		if (tempObjd->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sun.x",
-							"resources/x_files/Planet0.bmp",
+							"resources/x_files/Planet0.dds",
 							30.0f, -20.0f, -500.0f,
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.0f))
+							0.0f, 0.0f, 0.0f,
+							true, 8))
 		{
 			tempObjd->load();
 			tempObjd->activateScaling();
@@ -210,7 +214,8 @@ bool	MyGameControl::addObject()
 							90.0f, -30.0f, -510.0f,
 							0.0f, 0.0f, 0.3f,
 							0.0f, 3.142f, 0.0f,
-							0.0f, 0.0f, 0.0f))
+							0.0f, 0.0f, 0.0f,
+							false, 1))
 		{
 			tempObje->load();
 			m_pAllMeshes.push_back(tempObje);

@@ -5,6 +5,8 @@ MyMesh::MyMesh(void)
 	_D3DDevice				= NULL;
 	m_FileName				= NULL;
 	m_TextureFileName		= NULL;
+	m_pbAlphaBlending		= new bool(false);
+	m_piLayers				= new int(0);
 
 	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
@@ -21,6 +23,10 @@ MyMesh::MyMesh(void)
 
 MyMesh::~MyMesh()
 {
+	delete m_TextureFileName;
+	delete m_pbAlphaBlending;
+	delete m_piLayers;
+
 	if (m_pMaterials != NULL)
 		delete[] m_pMaterials;
 	
@@ -53,7 +59,9 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 float rotZ,
 					 float rotDirX,
 					 float rotDirY,
-					 float rotDirZ)
+					 float rotDirZ,
+					 bool givenAlphaBlending,
+					 int givenLayers)
 {
 	if (givenDevice != NULL)
 	{
@@ -81,6 +89,9 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 		m_TextureFileName	= givenTextureFileName;
 	}
 
+	*m_pbAlphaBlending		= givenAlphaBlending;
+	*m_piLayers				= givenLayers;
+	
 	m_pPosition->setValues(posX, posY, posZ);
 	m_pDirection->setValues(dirX, dirY, dirZ);
 	m_pRotation->setValues(rotX, rotY, rotZ);
@@ -152,11 +163,23 @@ HRESULT	MyMesh::load()
 void	MyMesh::draw()
 {
 	this->transform();
+
+	//Alpha-Blending
+	if(*m_pbAlphaBlending)
+	{
+		_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	}
+
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
+		if(*m_pbAlphaBlending)
+		{
 		m_pMaterials[count].Diffuse.r = 0.0f;
 		m_pMaterials[count].Diffuse.g = 0.0f;
 		m_pMaterials[count].Diffuse.b = 0.0f;
+		m_pMaterials[count].Diffuse.a = 1.1f;
 
 		m_pMaterials[count].Ambient.r = 0.0f;
 		m_pMaterials[count].Ambient.g = 0.0f;
@@ -164,10 +187,15 @@ void	MyMesh::draw()
 
 		m_pMaterials[count].Emissive.r = 1.0f;
 		m_pMaterials[count].Emissive.g = 1.0f;
-		m_pMaterials[count].Emissive.b = 0.75f;
+		m_pMaterials[count].Emissive.b = 1.0f;
+		}
 
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
 		_D3DDevice->SetTexture(0, m_pTextures[count]);
+
+		//_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 		m_pMesh->DrawSubset(count);
+		//_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		//m_pMesh->DrawSubset(count);
 	}
 }
