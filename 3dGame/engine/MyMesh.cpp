@@ -16,8 +16,13 @@ MyMesh::MyMesh(void)
 
 MyMesh::~MyMesh()
 {
-	delete		m_TextureFileName;
-	delete		m_pbAlphaBlending;
+	SAFE_DELETE(m_TextureFileName);
+	SAFE_DELETE(m_pbAlphaBlending);
+	SAFE_DELETE(m_pPosition);
+	SAFE_DELETE(m_pDirection);
+	SAFE_DELETE(m_pRotation);
+	SAFE_DELETE(m_pRotDir);
+	SAFE_DELETE(m_pScaleFactor);
 
 	//if (m_pMaterials != NULL)
 		//delete[] m_pMaterials;

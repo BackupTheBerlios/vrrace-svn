@@ -45,7 +45,7 @@ public:
 
 	MyView*				m_pMainCam;
 	bool				m_bShowStatus;
-	void				sendPlayer(float givenX, float givenY, float givenZ);
+	void				sendPlayer(float givenX, float givenY, float givenZ, int status);
 
 private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich

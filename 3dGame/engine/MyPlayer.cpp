@@ -13,9 +13,12 @@ MyPlayer::~MyPlayer()
 	delete m_Name;
 	if(m_pPlayerMesh)
 		delete m_pPlayerMesh;
+	//if(m_pPlayerSound)
+	//	delete m_pPlayerSound;
 
 	m_Name			= NULL;
 	m_pPlayerMesh	= NULL;
+	m_pPlayerSound	= NULL;
 }
 
 void	MyPlayer::setMesh(MyMesh* givenMesh)

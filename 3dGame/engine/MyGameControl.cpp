@@ -16,6 +16,8 @@ MyGameControl::MyGameControl(void)
 
 MyGameControl::~MyGameControl(void)
 {
+	if(m_iDPchoice != 0)
+		this->sendPlayer(0.0f, 0.0f, 0.0f, 0);
 //	delete m_pView;
 //	delete m_pStarsField;
 	delete m_pMusic;
@@ -58,14 +60,16 @@ bool	MyGameControl::drawObjects()
 
 	for (DWORD count = 0; count < _DirectPlay->m_pMasterMeshes.size(); count++)
 	{
-		if (_DirectPlay->m_pAllMeshes[count] != NULL)
+		if (_DirectPlay->m_pMasterMeshes[count] != NULL)
 			_DirectPlay->m_pMasterMeshes[count]->calcClients();
 	}
 	
 	for (count = 0; count < _DirectPlay->m_pAllMeshes.size(); count++)
 	{
 		if (_DirectPlay->m_pAllMeshes[count] != NULL)
+		{
 			_DirectPlay->m_pAllMeshes[count]->draw();
+		}
 	}
 
 	LeaveCriticalSection(&_DirectPlay->m_csDP);
@@ -381,7 +385,7 @@ bool	MyGameControl::buildGame()
 		if (erdkern->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere.x",
-							NULL,
+							"resources/x_files/earth.bmp",//NULL,
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
@@ -427,6 +431,65 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
+	MyMesh*		erdLayer1		= new MyMesh();
+	MySound* 	erdLayer1Sound	= new MySound();
+	if (erdLayer1 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		if (erdLayer1->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere.x",
+							"resources/x_files/Planet5.dds",
+							500.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 3.0f, 0.0f,
+							0.08f, 0.0f, 0.08f,
+							//(float)pow((double)-1.0f,1.0)*1.0f/1000.0f, (float)-pow((double)-1.0f,1.0)*1.0f/1000.0f, (float)pow((double)-1.0f,1.0)*1.0f/1000.0f,
+							true, false))
+		{
+			if(SUCCEEDED(erdLayer1->load()))
+			{
+				erdLayer1->activateScaling();
+				erdLayer1->getScale()->setValues(12.0f, 12.0f, 12.0f);
+				erdLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 0.58f,
+												0.0f, 0.0f, 0.0f,
+												1.0f, 1.0f, 1.0f);
+				if(erdLayer1Sound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+				{
+					erdLayer1Sound->set3DSoundDistance(10.0f, 1000.0f);
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(erdLayer1);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(erdLayer1);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(erdLayer1);
+					_DirectPlay->m_pMeshSounds.push_back(erdLayer1Sound);
+					erdLayer1->setMaster(sonne);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
+				}
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
 	MyMesh*		mond		= new MyMesh();
 	MySound*	mondSound	= new MySound();
 	if (mond == NULL)
@@ -439,7 +502,7 @@ bool	MyGameControl::buildGame()
 		if (mond->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
-							NULL,
+							"resources/x_files/Planet1.bmp",//NULL,
 							50.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
@@ -690,7 +753,7 @@ bool	MyGameControl::sendData()
 	return true;
 }
 
-void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
+void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ, int status)
 {
 	if(m_iDPchoice != 0)
 	{
@@ -699,6 +762,7 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 		PLAYEROBJECTS	sendingToken;
 		sendingToken.dpnid	= _DirectPlay->m_pLocalPlayer->m_pPlayerID;
 		sendingToken.ship   = _DirectPlay->m_pLocalPlayer->m_pShipChoice;
+		sendingToken.status	= status;
 
 		EnterCriticalSection(&_DirectPlay->m_csDP);
 
@@ -748,7 +812,7 @@ bool	MyGameControl::addLight()
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.01f, 0.0f,
-								10000.0f))
+								100000.0f))
 		{
 			tempLight->setMaterialValues(1.0f, 1.0f, 1.0f, 0.4f, 0.4f, 0.4f, 1.0f, 1.0f, 1.0f);
 			m_pAllLights.push_back(tempLight);

@@ -31,7 +31,7 @@ class MyDPlay
 public:
 	MyDPlay(void);
 	~MyDPlay(void);
-	bool init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress, DWORD* givenPort, bool givenServer);
+	bool init(char* givenTCPAddress, DWORD* givenPort, bool givenServer);
 	bool createSession(void);
 	bool connectSession(void);
 	bool openConnection(void);
@@ -55,6 +55,7 @@ public:
 	static TCHAR*					m_pUsername;
 	static CRITICAL_SECTION			m_csDP;
 	static int						m_iFrameRate;
+	static HWND*					m_hWnd;
 private:
 	static LPDIRECT3DDEVICE9	_D3DDevice;
 	static D3DXMATRIX*			_matWorld;
@@ -68,9 +69,9 @@ private:
 	static HOST_NODE*				m_pServerNode;
 	DWORD*							m_pdwPort;
 	//LPDIRECTPLAYLOBBY2A	m_pDPLobby;
-	HWND*							m_hWnd;
+	//HWND*							m_hWnd;
 	bool*							m_pbServer;
-	char*							m_pcPlayerName;
+	//char*							m_pcPlayerName;
 	//char*							m_pcSessionName;
 	char*							m_pcTCPAddress;
 };

@@ -77,6 +77,9 @@ bool GenerateGameWindow(MyDPlay* givenDPlay, int choice, int shipChoice)
 						NULL
 					);
 
+	if(givenDPlay != NULL)
+		givenDPlay->m_hWnd = &hWnd;
+
 	//ShowWindow(hWnd, SW_NORMAL);
 	//UpdateWindow(hWnd);
 
@@ -122,7 +125,7 @@ void GameManagement(HWND hWnd, bool isCheck, int shipChoice)
 	}
 	if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
 	{
-		if(mydplay->init(&hWnd,"test",NULL,&dwPort,true))
+		if(mydplay->init(NULL,&dwPort,true))
 		{
 			if(mydplay->createSession())
 			{
@@ -156,7 +159,7 @@ void GameManagement(HWND hWnd, bool isCheck, int shipChoice)
 		TCHAR* tcIPAddr = new TCHAR[18];
 		GetDlgItemText(hWnd, IDC_IPADDRESS, tcIPAddr, 18);
 		//MessageBox(NULL,tcIPAddr,"Message",MB_OK | MB_ICONINFORMATION);
-		if(mydplay->init(&hWnd,"test",tcIPAddr,&dwPort,false))
+		if(mydplay->init(tcIPAddr,&dwPort,false))
 		{
 			if(mydplay->enumAvailServer())
 			{

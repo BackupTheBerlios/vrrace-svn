@@ -19,6 +19,7 @@ D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
 LPDIRECTSOUND8		MyDPlay::_DSoundDevice	= NULL;
 int					MyDPlay::m_iFrameRate	= 100;
 TCHAR*				MyDPlay::m_pUsername	= NULL;
+HWND*				MyDPlay::m_hWnd			= NULL;
 	
 
 /*Callback-Funktion fuer DirectPlay*/
@@ -159,85 +160,111 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 				PLAYEROBJECTS* recToken	= (PLAYEROBJECTS*)pMsg->pReceiveData;
 				bool isContent = false;
 				DWORD tmpCount;
-
-				EnterCriticalSection(&m_csDP);
-
-				for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
+				
+				if(recToken->status == 1)
 				{
-					if(m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid)
+					EnterCriticalSection(&m_csDP);
+
+					for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
 					{
-						//MessageBox(NULL,"schon da","Message",MB_OK);
-						tmpCount = count;
-						isContent = true;
-						break;
-					}
-				}
-
-				LeaveCriticalSection(&m_csDP);
-
-				if(!isContent)
-				{
-					//MessageBox(NULL,"noch nicht","Message",MB_OK);
-					MyPlayer* newPlayer	= new MyPlayer();
-
-					if (newPlayer && _D3DDevice && _DSoundDevice)
-					{
-			
-						EnterCriticalSection(&m_csDP);
-
-						newPlayer->m_pShipChoice	= recToken->ship;
-						if (newPlayer->getMesh()->init(_D3DDevice,
-															_matWorld,
-															MyDPlay::m_pMeshPaths[newPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
-															NULL,
-															105.0f, 0.0f, 1000.0f,
-															0.0f, 0.0f, 0.0f,
-															0.0f,
-															0.0f, 0.0f, 0.0f,
-															0.0f, 0.0f, 0.0f,
-															false, true))
+						if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
 						{
-							newPlayer->m_pPlayerID		= recToken->dpnid;
-							if(SUCCEEDED(newPlayer->getMesh()->load()))
+							//MessageBox(NULL,"schon da","Message",MB_OK);
+							tmpCount = count;
+							isContent = true;
+							break;
+						}
+					}
+
+					LeaveCriticalSection(&m_csDP);
+
+					if(!isContent)
+					{
+						//MessageBox(NULL,"noch nicht","Message",MB_OK);
+						MyPlayer* newPlayer	= new MyPlayer();
+
+						if (newPlayer && _D3DDevice && _DSoundDevice)
+						{
+				
+							EnterCriticalSection(&m_csDP);
+
+							newPlayer->m_pShipChoice	= recToken->ship;
+							if (newPlayer->getMesh()->init(_D3DDevice,
+																_matWorld,
+																MyDPlay::m_pMeshPaths[newPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
+																NULL,
+																105.0f, 0.0f, 1000.0f,
+																0.0f, 0.0f, 0.0f,
+																0.0f,
+																0.0f, 0.0f, 0.0f,
+																0.0f, 0.0f, 0.0f,
+																false, true))
 							{
-								if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+								newPlayer->m_pPlayerID		= recToken->dpnid;
+								if(SUCCEEDED(newPlayer->getMesh()->load()))
 								{
-									newPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
-									m_pAllMeshes.push_back(newPlayer->getMesh());
-									m_pMasterMeshes.push_back(newPlayer->getMesh());
-									m_pNetworkPlayers.push_back(newPlayer);
-									m_pMeshSounds.push_back(newPlayer->getSound());
-									newPlayer->getSound()->play(true, 0);
-									newPlayer->getMesh()->move();
+									if(newPlayer->getSound()->init(_DSoundDevice, SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+									{
+										newPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
+										m_pAllMeshes.push_back(newPlayer->getMesh());
+										m_pMasterMeshes.push_back(newPlayer->getMesh());
+										m_pNetworkPlayers.push_back(newPlayer);
+										m_pMeshSounds.push_back(newPlayer->getSound());
+										newPlayer->getSound()->play(true, 0);
+										newPlayer->getMesh()->move();
+									}
 								}
 							}
+
+							LeaveCriticalSection(&m_csDP);
+
 						}
-
-						LeaveCriticalSection(&m_csDP);
-
+						tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
 					}
-					tmpCount = (DWORD) m_pNetworkPlayers.size()-1;
+
+					EnterCriticalSection(&m_csDP);
+
+					m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
+						recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
+					m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
+						recToken->position.posinfo.direction.x, recToken->position.posinfo.direction.y, recToken->position.posinfo.direction.z);
+					m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotation->setValues(
+						recToken->position.posinfo.rotation.x, recToken->position.posinfo.rotation.y, recToken->position.posinfo.rotation.z);
+					m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotDir->setValues(
+						recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
+					m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
+						recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
+					*m_pNetworkPlayers[tmpCount]->getMesh()->m_pSpeed = recToken->position.speed;
+
+					LeaveCriticalSection(&m_csDP);
+
+					//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
+					//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
+					//m_pNetworkPlayers[tmpCount]->getMesh()->move();
 				}
+				else if(recToken->status == 0)
+				{
+					EnterCriticalSection(&m_csDP);
 
-				EnterCriticalSection(&m_csDP);
+					for(DWORD count = 0; count < m_pNetworkPlayers.size(); count++)
+					{
+						if((m_pNetworkPlayers[count] != NULL) && (m_pNetworkPlayers[count]->m_pPlayerID == recToken->dpnid))
+						{
+							m_pNetworkPlayers[count]->getMesh()->activateScaling();
+							m_pNetworkPlayers[count]->getMesh()->getScale()->setValues(0.0f, 0.0f, 0.0f);
+							m_pNetworkPlayers[count]->getMesh()->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+							m_pNetworkPlayers[count]->getMesh()->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+							m_pNetworkPlayers[count]->getMesh()->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+							m_pNetworkPlayers[count]->getMesh()->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
+							m_pNetworkPlayers[count]->getMesh()->rotate(0.0f, 0.0f, 0.0f);
+							*m_pNetworkPlayers[count]->getMesh()->m_pSpeed = 0.0f;
+							m_pNetworkPlayers[count]->getSound()->stop();
+							break;
+						}
+					}
 
-				m_pNetworkPlayers[tmpCount]->getMesh()->m_pPosition->setValues(
-					recToken->position.posinfo.position.x, recToken->position.posinfo.position.y, recToken->position.posinfo.position.z);
-				m_pNetworkPlayers[tmpCount]->getMesh()->m_pDirection->setValues(
-					recToken->position.posinfo.direction.x, recToken->position.posinfo.direction.y, recToken->position.posinfo.direction.z);
-				m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotation->setValues(
-					recToken->position.posinfo.rotation.x, recToken->position.posinfo.rotation.y, recToken->position.posinfo.rotation.z);
-				m_pNetworkPlayers[tmpCount]->getMesh()->m_pRotDir->setValues(
-					recToken->position.posinfo.rotdir.x, recToken->position.posinfo.rotdir.y, recToken->position.posinfo.rotdir.z);
-				m_pNetworkPlayers[tmpCount]->getMesh()->rotate(
-					recToken->position.posinfo.rotate.x, recToken->position.posinfo.rotate.y, recToken->position.posinfo.rotate.z);
-				*m_pNetworkPlayers[tmpCount]->getMesh()->m_pSpeed = recToken->position.speed;
-
-				LeaveCriticalSection(&m_csDP);
-
-				//m_pNetworkPlayers[tmpCount]->getMesh()->setPositionMatrix(&recToken->matrix);
-				//m_pNetworkPlayers[tmpCount]->getMesh()->calcClients();
-				//m_pNetworkPlayers[tmpCount]->getMesh()->move();
+					LeaveCriticalSection(&m_csDP);
+				}
 			} else if(pMsg->dwReceiveDataSize == sizeof(INFO))
 			{
 				INFO* recToken	= (INFO*)pMsg->pReceiveData;
@@ -317,6 +344,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 	case DPN_MSGID_TERMINATE_SESSION:
 		{
 			MessageBox(NULL, "Session terminated", "Message", MB_OK);
+			SendMessage(*m_hWnd, WM_CLOSE, NULL, NULL);
 			*m_pbHostingApp = *m_pbConnected = false;
 			break;
 		}
@@ -332,7 +360,7 @@ MyDPlay::MyDPlay(void)
 	m_pServerAddress	= NULL;
 	//m_pServerNode		= NULL;
 	//m_pDPLobby			= NULL;
-	m_pcPlayerName		= NULL;
+	//m_pcPlayerName		= NULL;
 	//m_pcSessionName		= NULL;
 	m_pcTCPAddress		= NULL;
 	m_pbServer			= new bool(false);
@@ -367,19 +395,19 @@ MyDPlay::~MyDPlay(void)
 }
 
 /*Methode zur Initialisierung von DirectPlay*/
-bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress, DWORD* givenPort, bool givenServer)
+bool MyDPlay::init(char* givenTCPAddress, DWORD* givenPort, bool givenServer)
 {
 	HRESULT						hResult;
 	//LPDIRECTPLAYLOBBYA			pDPLobby;	
 
-	if(givenHWnd != NULL)
+	/*if(givenHWnd != NULL)
 	{
 		m_hWnd			= givenHWnd;
 	}
 	if(givenPlayerName != NULL)
 	{
 		m_pcPlayerName	= givenPlayerName;
-	}
+	}*/
 	if(givenTCPAddress != NULL)
 	{
 		m_pcTCPAddress	= givenTCPAddress;
