@@ -35,7 +35,6 @@ private:
 	HINSTANCE*			m_hInst;							//Instance auf Programmhandle ?
 	HWND*				m_hWnd;								//Handler auf das aktuelle Fenster
 	D3DXMATRIX			m_matWorld, m_matView, m_matProj;	//Projektion, Sicht
-	BYTE				m_red, m_green, m_blue, m_FontX;	//Hintergrundfarben und Fontposx ??
 	CD3DFont*			m_pFont;							//Font-Objekt zum schreiben auf Bildschirm
 	TCHAR				m_strFont[100];						//Zeichenkette fuer die Ausgabe
 	DWORD				m_dwFontSize;						//Schriftgroesse

@@ -7,12 +7,6 @@ MyD3DGame::MyD3DGame(void)
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
 
-	m_red			= 255;
-	m_green			= 255;
-	m_blue			= 255;
-
-	m_FontX			= 0;
-
 	lstrcpy( m_strFont, _T("Arial" ) );
 	m_dwFontSize	= 12;
 
@@ -145,7 +139,18 @@ void	MyD3DGame::prepareScene()
 	//projection
 	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 1000.0f);
 	m_pD3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
-	m_pD3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_red,m_green,m_blue), 1.0f, 0L);
+
+	m_pD3dDevice->Clear(
+		0,
+		NULL,
+		D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER,
+		D3DCOLOR_XRGB(
+			MM_BGCOLOR_RED,
+			MM_BGCOLOR_GREEN,
+			MM_BGCOLOR_BLUE),
+		1.0f,
+		0L);
+
 	m_pD3dDevice->BeginScene();
 }
 
@@ -161,7 +166,15 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->getPos()->getY(),
 		m_pGameControl->m_pView->getPos()->getZ());
 
-	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
+	m_pFont->DrawText(
+		5,
+		5,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
 
 	
 	//Zeige den Fluchtpunkt
@@ -172,7 +185,15 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->getVP()->getY(),
 		m_pGameControl->m_pView->getVP()->getZ());
 
-	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
+	m_pFont->DrawText(
+		5,
+		20,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
 
 	//Zeige Menge der Lichter und Meshes
 	sprintf(
@@ -181,7 +202,15 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumLights(),
 		m_pGameControl->getNumMeshes());
 
-	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
+	m_pFont->DrawText(
+		5,
+		35,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
 
 	delete temp;
 }
@@ -208,6 +237,8 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 bool	MyD3DGame::initGame(void)
 {
 	m_pGameControl->init(m_pD3dDevice, &m_matWorld);
+	m_pGameControl->addObject();
+	m_pGameControl->addLight();
 	m_pGameControl->loadObjects();
 	return true;
 }

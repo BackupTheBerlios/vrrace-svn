@@ -43,8 +43,17 @@ using namespace std;
 #pragma comment(lib, "winmm.lib")
 
 //Konstanten
-const LPCSTR MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
-const LPCSTR MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
+const LPCSTR	MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
+const LPCSTR	MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
+
+const BYTE		MM_BGCOLOR_RED			= 0;				//Hintergrund Rot
+const BYTE		MM_BGCOLOR_GREEN		= 0;				//Hintergrund Gruen
+const BYTE		MM_BGCOLOR_BLUE			= 0;				//Hintergrund Blau
+
+const BYTE		MM_TEXTCOLOR_RED		= 255;				//Textfarbe Rot
+const BYTE		MM_TEXTCOLOR_GREEN		= 255;				//Textfarbe Gruen
+const BYTE		MM_TEXTCOLOR_BLUE		= 255;				//Textfarbe Blau
+const BYTE		MM_TEXTCOLOR_ALPHA		= 255;				//Textfarbe Alpha
 
 //Defines
 #define	SAMPLE_BUFFER_SIZE	16
