@@ -70,7 +70,7 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 	_D3DDevice				= givenDevice;
 	_matWorld				= givenMatWorld;
 
-	m_pView->getPos()->setValues(100.0f, 20.0f, 100.0f);
+	m_pView->getPos()->setValues(200.0f, 50.0f, 200.0f);
 	m_pView->getVP()->setValues(0.0f, 0.0f, 0.0f);
 	m_pView->getUV()->setValues(0.0f, 1.0f, 0.0f);
 
@@ -99,9 +99,11 @@ bool	MyGameControl::addObject()
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.01f, 0.0f))
+							0.0f, 0.001f, 0.0f))
 		{
 			tempObjb->load();
+			tempObjb->activateScaling();
+			tempObjb->getScale()->setValues(10.0f, 10.0f, 10.0f);
 			m_pMeshes.push_back(tempObjb);
 		} else {
 			return false;
@@ -115,7 +117,7 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObj->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/spaceship 8.x",
+							"resources/x_files/shusui.x",
 							50.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
@@ -137,18 +139,62 @@ bool	MyGameControl::addObject()
 		if (tempObjc->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/space station 5.x",
-							50.0f, 0.0f, 50.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.001f, 0.01f))
+							60.0f, 0.0f, -500.0f,
+							0.0f, 0.0f, 0.5f,
+							0.0f, 3.142f, 0.0f,
+							0.0f, 0.0f, 0.05f))
 		{
 			tempObjc->load();
+			m_pView->getVP()->setPValues(
+				tempObjc->getPosition()->m_pPosition->getPX(),
+				tempObjc->getPosition()->m_pPosition->getPY(),
+				tempObjc->getPosition()->m_pPosition->getPZ());
+
 			m_pMeshes.push_back(tempObjc);
 		} else {
 			return false;
 		}
 	}
 
+	MyMesh*	tempObjd	= new MyMesh();
+	if (tempObjd == NULL)
+	{
+		return false;
+	} else {
+		if (tempObjd->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/bigship1.x",
+							30.0f, -20.0f, -500.0f,
+							0.0f, 0.0f, 0.5f,
+							0.0f, 3.142f, 0.0f,
+							0.0f, 0.0f, 0.0f))
+		{
+			tempObjd->load();
+			m_pMeshes.push_back(tempObjd);
+		} else {
+			return false;
+		}
+	}
+
+	MyMesh*	tempObje	= new MyMesh();
+	if (tempObje == NULL)
+	{
+		return false;
+	} else {
+		if (tempObje->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/bigship1.x",
+							90.0f, -30.0f, -510.0f,
+							0.0f, 0.0f, 0.5f,
+							0.0f, 3.142f, 0.0f,
+							0.0f, 0.0f, 0.0f))
+		{
+			tempObje->load();
+			m_pMeshes.push_back(tempObje);
+		} else {
+			return false;
+		}
+	}
 	return true;
 }
 

@@ -7,7 +7,7 @@ MyMesh::MyMesh(void)
 	m_pPosition			= new MyMasterPosition();
 	m_pReferencePoint	= new MyMasterPosition();
 	m_pScaleFactor		= new MyVertex();
-	m_bScale			= true;
+	m_bScale			= false;
 
 	m_pPosition->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pPosition->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
