@@ -7,11 +7,13 @@
 class MyMesh
 {
 public:
-	void				init(LPDIRECT3DDEVICE9 givenDevice, LPCSTR givenFileName, float posX, float posY, float posZ, float dirX, float dirY, float dirZ);
+	MyMesh(void);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice, LPCSTR givenFileName, float posX, float posY, float posZ, float dirX, float dirY, float dirZ);
 	HRESULT				load();
 	void				draw();
 	void				move();
 	CUSTOMVERTEX*		getPosition();
+	CUSTOMVERTEX*		getDirection();
 
 private:
 	LPCTSTR				m_FileName;

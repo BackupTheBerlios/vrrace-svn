@@ -47,6 +47,15 @@ const LPCSTR MM_WINDOW_DESCRIPTION	= "VRRACE";			//Beschriftung des Fensters
 
 typedef struct CUSTOMVERTEX
 {
-    float x,y,z;
+    float	x;
+	float	y;
+	float	z;
 }CUSTOMVERTEX;
+
+typedef struct MYVERTEXP
+{
+	float*	x;
+	float*	y;
+	float*	z;
+}MYVERTEXP;
 #endif

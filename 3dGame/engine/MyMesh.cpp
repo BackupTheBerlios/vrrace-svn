@@ -1,6 +1,15 @@
 #include "MyMesh.h"
 
-void	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
+MyMesh::MyMesh(void)
+{
+	_D3DDevice		= NULL;
+	m_FileName		= NULL;
+	m_Position.x	= m_Position.y	= m_Position.z	= 0.0f;
+	m_Direction.x	= m_Direction.y	= m_Direction.z	= 0.0f;
+
+}
+
+bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 LPCSTR givenFileName,
 					 float posX,
 					 float posY,
@@ -9,16 +18,44 @@ void	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 float dirY,
 					 float dirZ)
 {
-	_D3DDevice		= givenDevice;
-	m_FileName		= givenFileName; //"resources/shusui.x";
+	if (givenDevice != NULL)
+	{
+		_D3DDevice		= givenDevice;
+	} else {
+		return false;
+	}
 
-	m_Position.x	= posX;
-	m_Position.y	= posY;
-	m_Position.z	= posZ;
+	if (givenFileName != NULL)
+	{
+		m_FileName		= givenFileName; //"resources/shusui.x";
+	} else {
+		return false;
+	}
 
-	m_Direction.x	= dirX;
-	m_Direction.y	= dirY;
-	m_Direction.z	= dirZ;
+	m_Position.x	+= posX;
+	m_Position.y	+= posY;
+	m_Position.z	+= posZ;
+
+	m_Direction.x	+= dirX;
+	m_Direction.y	+= dirY;
+	m_Direction.z	+= dirZ;
+
+/*	TCHAR* temp = new TCHAR[100];
+
+	//Zeige aktuelle Betrachterposition
+	sprintf(
+		temp,
+		"Position: %2.2f %2.2f %2.2f\nDirection: %2.2f %2.2f %2.2f",
+		posX,
+		posY,
+		posZ,
+		dirX,
+		dirY,
+		dirZ);
+
+	MessageBox(NULL, temp, "letztes Objekt", MB_OK);
+*/
+	return true;
 }
 
 void	MyMesh::move()
@@ -31,6 +68,11 @@ void	MyMesh::move()
 CUSTOMVERTEX*	MyMesh::getPosition()
 {
 	return &m_Position;
+}
+
+CUSTOMVERTEX*	MyMesh::getDirection()
+{
+	return &m_Direction;
 }
 
 HRESULT	MyMesh::load()

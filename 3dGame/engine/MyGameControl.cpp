@@ -5,6 +5,7 @@ MyGameControl::MyGameControl(void)
 	m_initCount		= 0;
 	m_pView			= new MyView();
 	m_bShowStatus	= false;
+	//m_pMeshes		= new vector(new MyMesh());
 }
 
 MyGameControl::~MyGameControl(void)
@@ -113,10 +114,22 @@ bool	MyGameControl::initObjects()
 	return true;
 }
 
-void	MyGameControl::addObject()
+bool	MyGameControl::addObject()
 {
-	m_pMeshes.push_back(new MyMesh());
-	m_pMeshes[m_pMeshes.capacity()-1]->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.05f);
-	m_pMeshes[m_pMeshes.capacity()-1]->load();
+	MyMesh*	tempObj	= new MyMesh();
+	if (tempObj == NULL)
+	{
+		return false;
+	} else {
+		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.05f))
+		{
+			tempObj->load();
+			m_pMeshes.push_back(tempObj);
+		} else {
+			return false;
+		}
+	}
+		
+	return true;
 }
 

@@ -17,10 +17,8 @@ public:
 	bool				loadObjects();
 	bool				drawObjects(D3DXMATRIX* givenMatWorld);
 	bool				moveObjects();
-	void				addObject();
+	bool				addObject();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
-
-	
 
 	MyView*				m_pView;
 	bool				m_bShowStatus;
