@@ -264,10 +264,10 @@ HRESULT	MyUserInput::inputJS()
 	if (js.lY > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f, 0.0f, 0.0f);}
 	if (js.lX < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -0.02f);}
 	if (js.lX > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, 0.02f);}
-	if (js.lZ < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);}
-	if (js.lZ > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);}
-	if (js.rglSlider < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);}
-	if (js.rglSlider > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);}
+	if (js.lRz < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);}
+	if (js.lRz > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);}
+	if (js.rglSlider[0] < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);}
+	if (js.rglSlider[0] > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);}
 
 
 }
