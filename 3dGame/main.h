@@ -2,6 +2,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#define _WIN32_DCOM 
+
 #include "engine/includes.h"
 #include "engine/MyD3DGame.h"
 

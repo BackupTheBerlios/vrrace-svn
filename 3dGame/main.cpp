@@ -60,6 +60,8 @@ bool GenerateGameWindow()
 
 	g_pD3DGame	= new MyD3DGame();
 
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
 	if (g_pD3DGame->init(&g_hInst, &hWnd))
 	{
 	}
@@ -75,6 +77,8 @@ bool GenerateGameWindow()
 			g_pD3DGame->runGame();
 		//}
 	}
+
+	CoUninitialize();
 
 	delete g_pD3DGame;
 	

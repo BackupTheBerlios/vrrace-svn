@@ -30,6 +30,8 @@ MyMusic::~MyMusic(void)
 	MyTools::deleteObject(m_pllTime);
 	MyTools::deleteObject(&m_Filename);
 
+	//CoUninitialize();
+
 	ZeroMemory(this,sizeof(MyMusic));
 }
 
@@ -46,7 +48,7 @@ bool MyMusic::init(LPCTSTR givenFilename,bool givenWantLooping)
 	
 	*m_pbWantLooping = givenWantLooping;
 
-	CoInitialize(NULL);
+	//CoInitialize(NULL);
 	//Generierung des DirectShow-Graphen
 	hResult = CoCreateInstance(	CLSID_FilterGraph,
 								NULL,
@@ -55,6 +57,7 @@ bool MyMusic::init(LPCTSTR givenFilename,bool givenWantLooping)
 								(void**)&m_pDSGraph);
 	if(FAILED(hResult))
 	{
+		//CoUninitialize();
 		MessageBox(NULL,"Fehler bei der Erstellung des Filtergraphen","ERROR",MB_OK | MB_ICONSTOP);
 		return false;
 	}

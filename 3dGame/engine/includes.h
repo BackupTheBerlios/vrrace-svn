@@ -10,7 +10,9 @@
 #include <dshow.h>
 #include <d3dx9.h>
 #include <d3dx9math.h>
+#include <dplay.h>
 #include <dplay8.h>
+#include <dplobby.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
