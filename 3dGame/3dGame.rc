@@ -80,23 +80,27 @@ BEGIN
     DEFPUSHBUTTON   "&OK",IDC_OK,225,232,50,14
     PUSHBUTTON      "&Abbrechen",IDC_CANCEL,281,232,50,14
     PUSHBUTTON      "&Quit",IDC_QUIT,337,232,50,14
-    EDITTEXT        IDC_EDIT1,209,49,40,14,ES_AUTOHSCROLL
-    GROUPBOX        "Statisch",IDC_STATIC,161,118,164,102
-    CONTROL         "Optionsfeld1",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,
-                    167,127,57,10
-    CONTROL         "Optionsfeld1",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,
-                    169,143,57,10
-    CONTROL         "",IDC_IPADDRESS1,"SysIPAddress32",WS_TABSTOP,180,164,
-                    100,15
-    PUSHBUTTON      "Button1",IDC_BUTTON1,202,188,50,14
-    GROUPBOX        "Statisch",IDC_STATIC,21,23,102,210
+    EDITTEXT        IDC_USERNAME,222,18,132,12,ES_AUTOHSCROLL
+    GROUPBOX        "NETWORK",IDC_STATIC,161,42,193,174
+    CONTROL         "&Server",IDC_SERVER,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,168,84,78,18
+    CONTROL         "&Client",IDC_CLIENT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,168,108,78,18
+    CONTROL         "",IDC_IPADDRESS,"SysIPAddress32",WS_TABSTOP,240,138,102,
+                    12
+    GROUPBOX        "Raumschiffe",IDC_STATIC,24,12,120,204
     CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,54,54,20,20
-    CONTROL         "Optionsfeld1",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,33,
-                    38,57,10
-    CONTROL         "Optionsfeld1",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,35,
-                    83,57,10
+    CONTROL         "&3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
+                    33,38,20,10
+    CONTROL         "&4",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,35,83,20,10
     CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,54,103,20,20
-    LTEXT           "Statisch",IDC_STATIC,171,53,26,8
+    LTEXT           "Username",IDC_STATIC,168,18,48,12,SS_CENTERIMAGE
+    LTEXT           "IP-Adresse",IDC_STATIC,186,138,48,12,SS_CENTERIMAGE
+    EDITTEXT        IDC_PORT,240,156,102,12,ES_AUTOHSCROLL
+    LTEXT           "Port",IDC_STATIC,186,156,48,12,SS_CENTERIMAGE
+    CONTROL         "SinglePlayer",IDC_PLAYERMODE,"Button",BS_AUTOCHECKBOX,
+                    168,60,71,12
+    PUSHBUTTON      "C&heck",IDC_CHECKCON,234,186,50,14
 END
 
 #endif    // Deutsch (Deutschland) resources

@@ -231,10 +231,10 @@ void	MyD3DGame::showStatus()
 
 void	MyD3DGame::doScene()
 {
+	m_pGameControl->drawStarsField();
 	m_pGameControl->drawLights();
 	//m_pKoordSys->drawKS(m_pD3dDevice);
 	m_pGameControl->drawObjects();
-	m_pGameControl->drawStarsField();
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 }
 

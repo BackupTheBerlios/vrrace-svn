@@ -84,6 +84,84 @@ bool GenerateGameWindow()
 	return true;
 }
 
+/*Methode zur Verarbeitung*/
+void GameManagement(HWND hWnd, bool isCheck)
+{
+	//MultiPlayer
+	TCHAR*		tcPort	= new TCHAR[10];
+	DWORD		dwPort	= 0;
+	MyDPlay*	mydplay = new MyDPlay();
+	if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED))
+	{
+		GetDlgItemText(hWnd, IDC_PORT, tcPort, 10);
+		dwPort = _ttoi(tcPort);
+	}
+	if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+	{
+		if(mydplay->init(&hWnd,"test",NULL,&dwPort,true))
+		{
+			if(mydplay->createSession())
+			{
+				if(isCheck)
+				{
+					MessageBox(NULL, "Hosten der Session erfolgreich", "Message", MB_OK | MB_ICONINFORMATION);
+				}
+				else {
+					EndDialog(hWnd, 0);
+					//Spielfenster erzeugen
+					GenerateGameWindow();
+				}
+			}
+			else {
+				MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
+			}
+		}
+		else {
+			MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+		}
+		//MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
+		mydplay->closeConnection();
+	}
+	else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+	{
+		TCHAR* tcIPAddr = new TCHAR[18];
+		GetDlgItemText(hWnd, IDC_IPADDRESS, tcIPAddr, 18);
+		//MessageBox(NULL,tcIPAddr,"Message",MB_OK | MB_ICONINFORMATION);
+		if(mydplay->init(&hWnd,"test",tcIPAddr,&dwPort,false))
+		{
+			if(mydplay->enumAvailServer())
+			{
+				if(mydplay->connectSession())
+				{
+					if(isCheck)
+					{
+						MessageBox(NULL, "Verbindungstest erfolgreich", "Message", MB_OK | MB_ICONINFORMATION);
+					}
+					else {
+						EndDialog(hWnd, 0);
+						//Spielfenster erzeugen
+						GenerateGameWindow();
+					}
+				}
+				else {
+					MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
+				}
+			}
+			else {
+				MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
+			}
+		}
+		else {
+			MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+		}
+		//MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
+		mydplay->closeConnection();
+		MyTools::deleteArray(tcIPAddr);
+	}
+	MyTools::deleteArray(tcPort);
+	MyTools::deleteObject(mydplay);	
+}
+
 /*Dialogfunktion*/
 INT_PTR CALLBACK DialogProc(HWND hWnd,
 							unsigned int uiMsg,
@@ -105,6 +183,13 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 		
 		// Timer installieren
 		//SetTimer(hWnd, 0, 25, NULL);
+		CheckDlgButton(hWnd, IDC_PLAYERMODE, BST_CHECKED);
+		//CheckDlgButton(hWnd, IDC_RADIO3, BST_CHECKED);
+		EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
+		EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
+		EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
+		EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
+		EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
 		break;
 
 	case WM_CLOSE:
@@ -125,41 +210,114 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 		switch(LOWORD(WParam))
 		{
 		case IDC_OK:
-			{
 			//falls OK-Button gedrueckt
-				//MessageBox(NULL,"OK-Button pressed","Message",MB_OK | MB_ICONINFORMATION);
-				EndDialog(hWnd, 0);
-
-				/*MyDPlay* mydplay = new MyDPlay();
-				if(mydplay->init(&hWnd,"test","vrrace","127.0.0.1",true))
+			{
+				TCHAR*	tcUsername = new TCHAR[100];
+				GetDlgItemText(hWnd, IDC_USERNAME, tcUsername, 100);
+				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
+					//SinglePlayer
 				{
-					if(mydplay->enumAvailServer())
+					//Spielfenster erzeugen
+					GenerateGameWindow();
+				}
+				else if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)) {
+					//MultiPlayer
+					GameManagement(hWnd, false);
+					/*TCHAR*		tcPort	= new TCHAR[10];
+					DWORD		dwPort	= 0;
+					MyDPlay*	mydplay = new MyDPlay();
+					if((IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED) || (IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED))
 					{
-						if(mydplay->connectSession())
+						GetDlgItemText(hWnd, IDC_PORT, tcPort, 10);
+						dwPort = _ttoi(tcPort);
+					}
+					if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+					{
+						if(mydplay->init(&hWnd,"test",NULL,&dwPort,true))
+						{
+							if(mydplay->createSession())
+							{
+								EndDialog(hWnd, 0);
+								//Spielfenster erzeugen
+								GenerateGameWindow();
+							}
+							else {
+								MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
+							}
+						}
+						else {
+							MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+						}
+						MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
+						mydplay->closeConnection();
+					}
+					else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+					{
+						TCHAR* tcIPAddr = new TCHAR[18];
+						GetDlgItemText(hWnd, IDC_IPADDRESS, tcIPAddr, 18);
+						//MessageBox(NULL,tcIPAddr,"Message",MB_OK | MB_ICONINFORMATION);
+						if(mydplay->init(&hWnd,"test",tcIPAddr,&dwPort,false))
+						{
+							if(mydplay->enumAvailServer())
+							{
+								if(mydplay->connectSession())
+								{
+									EndDialog(hWnd, 0);
+									//Spielfenster erzeugen
+									GenerateGameWindow();
+								}
+								else {
+									MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
+								}
+							}
+							else {
+								MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
+							}
+						}
+						else {
+							MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+						}
+						MessageBox(NULL,"close()","Message",MB_OK | MB_ICONINFORMATION);
+						mydplay->closeConnection();
+						MyTools::deleteArray(tcIPAddr);
+					}*/
+					//MessageBox(NULL,tcPort,"Message",MB_OK | MB_ICONINFORMATION);
+
+					/*MyDPlay* mydplay = new MyDPlay();
+					if(mydplay->init(&hWnd,"test","vrrace","127.0.0.1",true))
+					{
+						if(mydplay->enumAvailServer())
+						{
+							if(mydplay->connectSession())
+							{
+							}
+							else {
+								MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
+							}
+						}
+						else {
+							MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
+						}
+						if(mydplay->createSession())
 						{
 						}
 						else {
-							MessageBox(NULL,"ConnectSession","Message",MB_OK | MB_ICONSTOP);
+							MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
 						}
 					}
 					else {
-						MessageBox(NULL,"EnumHosts","Message",MB_OK | MB_ICONSTOP);
-					}
-					if(mydplay->createSession())
-					{
-					}
-					else {
-						MessageBox(NULL,"createSession","Message",MB_OK | MB_ICONSTOP);
-					}
+						MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
+					}*/
+					
+					/*mydplay->closeConnection();
+					delete mydplay;*/
+						/*MyTools::deleteArray(tcPort);
+						MyTools::deleteObject(mydplay);*/
 				}
 				else {
-					MessageBox(NULL,"Init","Message",MB_OK | MB_ICONSTOP);
-				}*/
-				//Spielfenster erzeugen
-				GenerateGameWindow();
-				
-				/*mydplay->closeConnection();
-				delete mydplay;*/
+					MessageBox(hWnd, "Korrigieren Sie Ihre Eingaben", "Error", MB_OK | MB_ICONSTOP);
+				}
+				MyTools::deleteArray(tcUsername);
 				
 			break;
 			}
@@ -170,9 +328,59 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 			break;
 		case IDC_QUIT:
 			//falls Quit-Button gedrueckt
-				MessageBox(NULL,"QUIT-Button pressed","Message",MB_OK | MB_ICONINFORMATION);
+				//MessageBox(NULL,"QUIT-Button pressed","Message",MB_OK | MB_ICONINFORMATION);
 				EndDialog(hWnd,0);
 			break;
+		case IDC_CHECKCON:
+			GameManagement(hWnd, true);
+			break;
+		case IDC_PLAYERMODE:
+			{
+				if(IsDlgButtonChecked(hWnd, IDC_PLAYERMODE) == BST_CHECKED)
+				{
+					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), FALSE);
+					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), FALSE);
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), FALSE);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), FALSE);
+				}
+				else {
+					EnableWindow(GetDlgItem(hWnd, IDC_SERVER), TRUE);
+					EnableWindow(GetDlgItem(hWnd, IDC_CLIENT), TRUE);
+					if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+					{
+						EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
+						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+					}
+					else if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+					{
+						EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), TRUE);
+						EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
+						EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+					}
+				}
+				break;
+			}
+		case IDC_SERVER:
+			{
+				if(IsDlgButtonChecked(hWnd, IDC_SERVER) == BST_CHECKED)
+				{
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), FALSE);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+				}
+				break;
+			}
+		case IDC_CLIENT:
+			{
+				if(IsDlgButtonChecked(hWnd, IDC_CLIENT) == BST_CHECKED)
+				{
+					EnableWindow(GetDlgItem(hWnd, IDC_IPADDRESS), TRUE);
+					EnableWindow(GetDlgItem(hWnd, IDC_PORT), TRUE);
+					EnableWindow(GetDlgItem(hWnd, IDC_CHECKCON), TRUE);
+				}
+				break;
+			}
 		}
 		break;
 

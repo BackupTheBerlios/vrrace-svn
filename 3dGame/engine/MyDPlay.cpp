@@ -132,12 +132,12 @@ MyDPlay::MyDPlay(void)
 	//m_pServerNode		= NULL;
 	//m_pDPLobby			= NULL;
 	m_pcPlayerName		= NULL;
-	m_pcSessionName		= NULL;
+	//m_pcSessionName		= NULL;
 	m_pcTCPAddress		= NULL;
 	m_pbServer			= new bool(false);
 	m_pbHostingApp		= new bool(false);
 	m_pbConnected		= new bool(false);
-	m_pdwPort			= new DWORD(8888);
+	m_pdwPort			= NULL;
 	InitializeCriticalSection(&m_csDP);
 }
 
@@ -147,6 +147,9 @@ MyDPlay::~MyDPlay(void)
 	MyTools::releaseInterface(m_pOwnAddress);
 	MyTools::releaseInterface(m_pServerAddress);
 	
+	MyTools::releaseInterface(m_pServerNode->pHostAddress);
+	MyTools::deleteObject(m_pServerNode->pAppDesc);
+	MyTools::deleteArray(m_pServerNode->strSessionName);
 	MyTools::deleteObject(m_pServerNode);
 	MyTools::deleteObject(m_pbServer);
 	MyTools::deleteObject(m_pbHostingApp);
@@ -163,7 +166,7 @@ MyDPlay::~MyDPlay(void)
 }
 
 /*Methode zur Initialisierung von DirectPlay*/
-bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenSessionName, char* givenTCPAddress, bool givenServer)
+bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress, DWORD* givenPort, bool givenServer)
 {
 	HRESULT						hResult;
 	//LPDIRECTPLAYLOBBYA			pDPLobby;	
@@ -176,13 +179,13 @@ bool MyDPlay::init(HWND* givenHWnd, char* givenPlayerName, char* givenSessionNam
 	{
 		m_pcPlayerName	= givenPlayerName;
 	}
-	if(givenSessionName != NULL)
-	{
-		m_pcSessionName	= givenSessionName;
-	}
 	if(givenTCPAddress != NULL)
 	{
 		m_pcTCPAddress	= givenTCPAddress;
+	}
+	if(givenPort != NULL)
+	{
+		m_pdwPort		= givenPort;
 	}
 
 	*m_pbServer	= givenServer;
@@ -328,7 +331,7 @@ bool MyDPlay::createServerAddress(void)
 		return false;
 	}
 //Hostname setzen
-	DXUtil_ConvertGenericStringToWideCch(wcHostName, "localhost", 118);
+	DXUtil_ConvertGenericStringToWideCch(wcHostName, m_pcTCPAddress, 118);
 
 	if(wcslen(wcHostName) > 0)
 	{
@@ -357,7 +360,7 @@ bool MyDPlay::createSession(void)
 	WCHAR wcSessionName[118];
 	DPN_APPLICATION_DESC pAppDesc;
 
-	DXUtil_ConvertGenericStringToWideCch(wcSessionName, m_pcSessionName, 118);
+	DXUtil_ConvertGenericStringToWideCch(wcSessionName, MM_SESSION_NAME, 118);
 
 	if(!this->createOwnAddress())
 	{
@@ -448,9 +451,8 @@ bool MyDPlay::connectSession(void)
 			MessageBox(NULL,"Fehler beim Duplizieren der Hostadresse","ERROR",MB_OK | MB_ICONSTOP);
 			return false;
 		}
+		SAFE_RELEASE(pServerAddress);
 	}
-
-	SAFE_RELEASE(pServerAddress);
 	
 	return true;
 }

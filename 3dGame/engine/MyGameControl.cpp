@@ -7,13 +7,13 @@ MyGameControl::MyGameControl(void)
 	m_bShowStatus		= true;
 	m_pLocalPlayer		= new MyPlayer();
 
-//	m_pStarsField		= new MyStarsField();
+	m_pStarsField		= new MyStarsField();
 }
 
 MyGameControl::~MyGameControl(void)
 {
 //	delete m_pView;
-//	delete m_pStarsField;
+	delete m_pStarsField;
 }
 
 bool	MyGameControl::loadObjects()
@@ -60,6 +60,7 @@ bool	MyGameControl::drawLights()
 
 bool	MyGameControl::moveObjects()
 {
+	m_pStarsField->move();
 	for (DWORD count = 0; count < m_pAllMeshes.size(); count++)
 	{
 		m_pAllMeshes[count]->move();
@@ -290,7 +291,7 @@ bool	MyGameControl::buildGame()
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
-								/*0.0f, 0.0f, 0.05f,*/
+								//0.0f, 0.0f, 0.05f,
 								(float)pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)-pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)pow((double)-1.0f,(double)count)*(float)count/1000.0f,
 								true, false))
 			{
@@ -344,18 +345,23 @@ int MyGameControl::getNumMeshes()
 
 bool MyGameControl::initStarsField()
 {
-//	if(!m_pStarsField->init(_D3DDevice, 1024))
-//	{
-//		return false;
-//	}
+	if(!m_pStarsField->init(_D3DDevice, _matWorld, 
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.01f, 0.01f, 0.01f,
+								1024))
+	{
+		return false;
+	}
 	return true;
 }
 
 bool MyGameControl::drawStarsField()
 {
-//	if(!m_pStarsField->draw())
-//	{
-//		return false;
-//	}
+	if(!m_pStarsField->draw())
+	{
+		return false;
+	}
 	return true;
 }

@@ -24,7 +24,7 @@ class MyDPlay
 public:
 	MyDPlay(void);
 	~MyDPlay(void);
-	bool init(HWND* givenHWnd, char* givenPlayerName, char* givenSessionName, char* givenTCPAddress, bool givenServer);
+	bool init(HWND* givenHWnd, char* givenPlayerName, char* givenTCPAddress, DWORD* givenPort, bool givenServer);
 	bool createSession(void);
 	bool connectSession(void);
 	bool openConnection(void);
@@ -47,7 +47,7 @@ private:
 	static bool*					m_pbHostingApp;
 	static bool*					m_pbConnected;
 	char*							m_pcPlayerName;
-	char*							m_pcSessionName;
+	//char*							m_pcSessionName;
 	char*							m_pcTCPAddress;
 };
 
