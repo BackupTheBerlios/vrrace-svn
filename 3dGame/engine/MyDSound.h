@@ -14,11 +14,11 @@ public:
 	// Funktion zum Zugriff auf IDirect8-Schnittstelle
 	LPDIRECTSOUND8 getDSound(void);
 	// Funktion zum Setzen der Position des Hoerers
-	bool setListenerPosition();
+	bool setListenerPosition(float x, float y, float z);
 	// Funktion zum Setzen der Geschwindigkeit des Hoerers
-	bool setListenerVelocity();
+	bool setListenerDirection(float x, float y, float z);
 	// Funktion zum Setzen der Orientierung des Hoerers
-	bool setListenerOrientation();
+	bool setListenerOrientation(float vpX, float vpY, float vpZ, float uvX, float uvY, float uvZ);
 private:
 	// Pointer auf IDirect8-Schnittstelle
 	LPDIRECTSOUND8				m_pDirectSound;

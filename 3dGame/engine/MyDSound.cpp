@@ -57,34 +57,34 @@ LPDIRECTSOUND8 MyDSound::getDSound(void)
 }
 
 /*Methode zum Setzen der Position des Hoerers*/
-bool MyDSound::setListenerPosition()
+bool MyDSound::setListenerPosition(float x, float y, float z)
 {
-	//if(FAILED(m_p3DListener->SetPosition(x,y,z,DS3D_IMMEDIATE)))
-	//{
-	//	MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
-	//	return false;
-	//}
+	if(FAILED(m_p3DListener->SetPosition(x,y,z,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
 	return true;
 }
 
 /*Methode zum Setzen der Geschwindigkeit des Hoerers*/
-bool MyDSound::setListenerVelocity()
+bool MyDSound::setListenerDirection(float x, float y, float z)
 {
-	//if(FAILED(m_p3DListener->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
-	//{
-	//	MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
-	//	return false;
-	//}
+	if(FAILED(m_p3DListener->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Listeners","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
 	return true;
 }
 
 /*Methode zum Setzen der Orientierung des Hoerers*/
-bool MyDSound::setListenerOrientation()
+bool MyDSound::setListenerOrientation(float vpX, float vpY, float vpZ, float uvX, float uvY, float uvZ)
 {
-	//if(FAILED(m_p3DListener->SetOrientation(x,y,z,x,y,z,DS3D_IMMEDIATE)))
-	//{
-	//	MessageBox(NULL,"Fehler beim Setzen der Orientierung des 3D-Listener","ERROR",MB_OK | MB_ICONSTOP);
-	//	return false;
-	//}
+	if(FAILED(m_p3DListener->SetOrientation(vpX, vpY, vpZ, uvX, uvY, uvZ,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Orientierung des 3D-Listener","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
 	return true;
 }

@@ -17,6 +17,7 @@ public:
 	MyVertex*			getLP();
 	MyVertex*			getVP();
 	MyVertex*			getUV();
+	MyVertex*			getDirection();
 	void				setMaster(MyMasterPosition* givenMaster);
 	MyMasterPosition*	getMaster();
 	void				move();
@@ -28,6 +29,7 @@ private:
 	MyVertex*			m_pViewPoint;		//zeiger auf Fluchtpunkt
 	MyVertex*			m_pUpVector;		//zeigt nach oben
 	MyVertex*			m_pLocalPos;		//abstand vom Master
+	MyVertex*			m_pDirection;		//Direction
 	MyMasterPosition*	m_pMaster;
 };
 #endif

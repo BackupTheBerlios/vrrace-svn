@@ -12,6 +12,7 @@ vector<MyPlayer*>	MyDPlay::m_pNetworkPlayers;
 vector<MyMesh*>		MyDPlay::m_pNetworkMeshes;
 vector<MyMesh*>		MyDPlay::m_pLocalMeshes;
 vector<MyMesh*>		MyDPlay::m_pMasterMeshes;
+vector<MySound*>	MyDPlay::m_pMeshSounds;
 LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
 D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
 int					MyDPlay::m_iFrameRate	= 100;

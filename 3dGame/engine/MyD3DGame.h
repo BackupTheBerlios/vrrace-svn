@@ -7,6 +7,7 @@
 #include "MyTest.h"
 #include "MyUserInput.h"
 #include "MyMesh.h"
+#include "MyDSound.h"
 
 class MyD3DGame
 {

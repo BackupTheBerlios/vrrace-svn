@@ -29,7 +29,7 @@ MyD3DGame::~MyD3DGame(void)
 	delete	m_pGameControl;
 	delete	m_pUserInput;
 	delete	m_pKoordSys;
-	delete	m_pFont;
+	delete	m_pFont;	
 	//delete	m_pfFramesPerSecond;
 	SAFE_DELETE(m_pfFramesPerSecond);
 	SAFE_RELEASE(m_pD3dDevice);
@@ -131,7 +131,6 @@ bool	MyD3DGame::initFont()
 
 	return true;
 }
-
 
 void	MyD3DGame::prepareScene()
 {
@@ -267,6 +266,7 @@ void	MyD3DGame::doScene()
 	m_pGameControl->drawLights();
 	//m_pKoordSys->drawKS(m_pD3dDevice);
 	m_pGameControl->drawObjects();
+	m_pGameControl->presentMusic();
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 }
 
@@ -283,8 +283,10 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 
 bool	MyD3DGame::initGame(void)
 {
-	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_pDirectPlay, m_iDPchoice);
+	m_pGameControl->init(m_pD3dDevice, &m_matWorld, m_hWnd, m_pDirectPlay, m_iDPchoice);
 	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
+	m_pGameControl->initMusic();
+	m_pGameControl->initDirectSound();
 	m_pGameControl->buildGame();
 	m_pGameControl->addPlayer(NULL);
 	m_pGameControl->addLight();

@@ -6,6 +6,7 @@
 #include "MyMesh.h"
 #include "MyToken.h"
 #include "MyPlayer.h"
+#include "MySound.h"
 
 // {BF551F1B-956D-4b81-B639-D1105A254F32}
 //DEFINE_GUID(MyDPlayGUID, 0xbf551f1b, 0x956d, 0x4b81, 0xb6, 0x39, 0xd1, 0x10, 0x5a, 0x25, 0x4f, 0x32);
@@ -45,6 +46,7 @@ public:
 	static vector<MyPlayer*>		m_pNetworkPlayers;	//andere Teilnehmer
 	static vector<MyMesh*>			m_pNetworkMeshes;   //Meshes vom Server aktualisiert
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
+	static vector<MySound*>			m_pMeshSounds;		//Sounds der Meshes
 	TCHAR*							m_pUsername;
 	static CRITICAL_SECTION			m_csDP;
 	static int						m_iFrameRate;

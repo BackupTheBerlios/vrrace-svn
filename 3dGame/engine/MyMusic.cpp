@@ -28,7 +28,7 @@ MyMusic::~MyMusic(void)
 	MyTools::deleteObject(m_pbIsPlaying);
 	MyTools::deleteObject(m_pbWantLooping);
 	MyTools::deleteObject(m_pllTime);
-	MyTools::deleteObject(&m_Filename);
+	//MyTools::deleteObject(&m_Filename);
 
 	//CoUninitialize();
 
@@ -159,16 +159,16 @@ bool MyMusic::presentMusic()
 {
 	if(*m_pbIsPlaying)
 	{
-		if(this->getActualPosition() >= *m_pllTime)
+		if(this->getActualPosition() >= (int)*m_pllTime)
 		{
 			if(*m_pbWantLooping)
 			{
 				return this->play();
 			}
-		}
-		else
-		{
-			*m_pbIsPlaying=false;
+			else
+			{
+				*m_pbIsPlaying=false;
+			}
 		}
 	}
 	return true;

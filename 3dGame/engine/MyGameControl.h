@@ -10,6 +10,12 @@
 #include "MyPlayer.h"
 #include "MyStarsField.h"
 #include "MyDPlay.h"
+#include "MyMusic.h"
+#include "MyDSound.h"
+
+static const LPCTSTR	MUSICFILENAME	= "resources\\wav_files\\Music.mp3";
+static char*			PLANETSOUND	= "resources\\wav_files\\Sound1.wav";
+static char*			SHIPSOUND		= "resources\\wav_files\\Sound2.wav";
 
 class MyGameControl
 {
@@ -17,13 +23,16 @@ public:
 	MyGameControl(void);
 	~MyGameControl(void);
 
-	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld, MyDPlay* givenDPlay, int choice);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld, HWND* givenHWnd, MyDPlay* givenDPlay, int choice);
 	bool				initObjects();
 	bool				initStarsField();
+	bool				initMusic();
+	bool				initDirectSound();
 	bool				loadObjects();
 	bool				drawObjects();
 	bool				drawStarsField();
 	bool				drawLights();
+	bool				presentMusic();
 	bool				moveObjects();
 	bool				buildGame();
 	bool				addLight();
@@ -42,6 +51,9 @@ public:
 private:
 	LPDIRECT3DDEVICE9	_D3DDevice;		//Handle auf das D3D-Device, global soll ja nich
 	MyDPlay*			_DirectPlay;	//DirectPlay
+	MyDSound*			m_pDirectSound;	//PrimaryBuffer DirectSound
+	MyMusic*			m_pMusic;		//Music
+	HWND*				m_hWnd;
 	int					m_iDPchoice;	//Verbindungsart
 	int					m_initCount;	//soll sicherstellen, dass die noetigen Funktionen vollstaendig und in richtiger Reihenfolge aufgerufen werden
 	MyMesh*				m_pShip;

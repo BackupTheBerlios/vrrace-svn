@@ -6,6 +6,7 @@ MyView::MyView(void)
 	m_pLocalPos		= new MyVertex();
 	m_pViewPoint	= new MyVertex();
 	m_pUpVector		= new MyVertex();
+	m_pDirection	= new MyVertex();
 	m_pMaster		= NULL;
 }
 
@@ -29,18 +30,25 @@ MyVertex*	MyView::getUV()
 	return m_pUpVector;
 }
 
+MyVertex*	MyView::getDirection()
+{
+	return m_pDirection;
+}
+
 MyView::~MyView(void)
 {
 	delete m_pPosition;
 	delete m_pLocalPos;
 	delete m_pViewPoint;
 	delete m_pUpVector;
+	delete m_pDirection;
 
 	m_pPosition		= NULL;
 	m_pLocalPos		= NULL;
 	m_pViewPoint	= NULL;
 	m_pUpVector		= NULL;
 	m_pMaster		= NULL;
+	m_pDirection	= NULL;
 }
 
 void	MyView::setMaster(MyMasterPosition* givenMaster)
@@ -50,6 +58,10 @@ void	MyView::setMaster(MyMasterPosition* givenMaster)
 		m_pMaster->getAbsolutePosition()->getPX(),
 		m_pMaster->getAbsolutePosition()->getPY(),
 		m_pMaster->getAbsolutePosition()->getPZ());
+	m_pDirection->setPValues(
+		m_pMaster->m_pDirection->getPX(),
+		m_pMaster->m_pDirection->getPY(),
+		m_pMaster->m_pDirection->getPZ());
 }
 
 MyMasterPosition*	MyView::getMaster()

@@ -6,6 +6,8 @@ MyGameControl::MyGameControl(void)
 	m_pMainCam			= new MyView();
 	m_bShowStatus		= true;
 	
+	m_pMusic			= new MyMusic();
+	m_pDirectSound		= new MyDSound();
 	m_pStarsField		= new MyStarsField();
 
 	_DirectPlay		= NULL;
@@ -16,6 +18,8 @@ MyGameControl::~MyGameControl(void)
 {
 //	delete m_pView;
 //	delete m_pStarsField;
+	delete m_pMusic;
+	delete	m_pDirectSound;
 }
 
 bool	MyGameControl::loadObjects()
@@ -88,12 +92,17 @@ bool	MyGameControl::moveObjects()
 			_DirectPlay->m_pAllMeshes[count]->move();
 	}
 	m_pMainCam->move();
+	//_DirectSound->setListenerPosition(m_pMainCam->getPos()->getX(), m_pMainCam->getPos()->getY(), m_pMainCam->getPos()->getZ());
+	//_DirectSound->setListenerDirection(m_pMainCam->getDirection()->getX(), m_pMainCam->getDirection()->getY(), m_pMainCam->getDirection()->getZ());
+	//_DirectSound->setListenerOrientation(m_pMainCam->getVP()->getX(), m_pMainCam->getVP()->getY(), m_pMainCam->getVP()->getZ(),
+	//	m_pMainCam->getUV()->getX(), m_pMainCam->getUV()->getY(), m_pMainCam->getUV()->getZ());
 			
 	return true;
 }
 
 bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 							D3DXMATRIX* givenMatWorld,
+							HWND*	givenHWnd,
 							MyDPlay* givenDPlay,
 							int choice)
 {
@@ -106,6 +115,7 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	_D3DDevice				= givenDevice;
 	_matWorld				= givenMatWorld;
+	m_hWnd					= givenHWnd;
 	_DirectPlay				= givenDPlay;
 	m_iDPchoice				= choice;
 
@@ -122,9 +132,28 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 
 bool	MyGameControl::initObjects()
 {
-		
-
 	return true;
+}
+
+bool	MyGameControl::initMusic()
+{
+	if(m_pMusic->init(MUSICFILENAME, true))
+	{
+		//m_pMusic->play();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool	MyGameControl::initDirectSound()
+{
+	return m_pDirectSound->init(m_hWnd);
+}
+
+bool	MyGameControl::presentMusic()
+{
+	return true;//m_pMusic->presentMusic();
 }
 
 bool	MyGameControl::addPlayer(string* givenName)
@@ -179,7 +208,7 @@ MyPlayer*	MyGameControl::getPlayer()
 
 bool	MyGameControl::buildGame()
 {
-	MyMesh*	sonne	= new MyMesh();
+	MyMesh*		sonne		= new MyMesh();
 	if (sonne == NULL)
 	{
 		return false;
@@ -228,7 +257,8 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
-	MyMesh*	erde	= new MyMesh();
+	MyMesh*		erde		= new MyMesh();
+	MySound*	erdeSound	= new MySound();
 	if (erde == NULL)
 	{
 		return false;
@@ -255,16 +285,24 @@ bool	MyGameControl::buildGame()
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
 				erde->setMaster(sonne);
-				if(m_iDPchoice != 0)
+				if(erdeSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					//erdeSound->set3DSoundDistance(100.0f, 1000.0f);
+					erdeSound->play(true, 0);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(erde);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(erde);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(erde);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(erde);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(erde);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(erde);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
