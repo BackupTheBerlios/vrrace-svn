@@ -24,6 +24,9 @@ public:
 								float rotDirY,
 								float rotDirZ,
 								float givenRange);
+	void	setMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
+									float rAmbient, float gAmbient, float bAmbient,
+									float rSpecular, float gSpecular, float bSpecular);
 	void	show();
 
 private:

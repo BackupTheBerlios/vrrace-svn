@@ -41,26 +41,6 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	m_d3dLight.Type			= D3DLIGHT_POINT;
 
-	m_d3dLight.Diffuse.r	= 1.0f;
-	m_d3dLight.Diffuse.g	= 1.0f;
-	m_d3dLight.Diffuse.b	= 1.0f;
-
-	m_d3dLight.Ambient.r	= 1.0f;
-	m_d3dLight.Ambient.g	= 1.0f;
-	m_d3dLight.Ambient.b	= 1.0f;
-
-	m_d3dLight.Specular.r	= 1.0f;
-	m_d3dLight.Specular.g	= 1.0f;
-	m_d3dLight.Specular.b	= 1.0f;
-
-	m_d3dLight.Position.x	= 0.0f;
-	m_d3dLight.Position.y	= 0.0f;
-	m_d3dLight.Position.z	= 0.0f;
-
-	m_d3dLight.Direction.x	= 1.0f;
-	m_d3dLight.Direction.y	= 1.0f;
-	m_d3dLight.Direction.z	= 1.0f;
-
 	m_d3dLight.Attenuation0	= 1.0f;
 	m_d3dLight.Attenuation1	= 0.0f;
 	m_d3dLight.Attenuation2	= 0.0f;
@@ -68,9 +48,26 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice,
 //	m_d3dLight.Falloff		= 0.0f;
 //	m_d3dLight.Theta		= 0.5f;
 //	m_d3dLight.Phi			= 1.0f;
-	m_d3dLight.Range		= 5000.0f;
+	m_d3dLight.Range		= m_fRange;
 
 	return true;
+}
+
+void	MyLight::setMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
+									float rAmbient, float gAmbient, float bAmbient,
+									float rSpecular, float gSpecular, float bSpecular)
+{
+	m_d3dLight.Diffuse.r	= rDiffuse;//1.0f;
+	m_d3dLight.Diffuse.g	= gDiffuse;//1.0f;
+	m_d3dLight.Diffuse.b	= bDiffuse;//1.0f;
+
+	m_d3dLight.Ambient.r	= rAmbient;//1.0f;
+	m_d3dLight.Ambient.g	= gAmbient;//1.0f;
+	m_d3dLight.Ambient.b	= bAmbient;//1.0f;
+
+	m_d3dLight.Specular.r	= rSpecular;//1.0f;
+	m_d3dLight.Specular.g	= gSpecular;//1.0f;
+	m_d3dLight.Specular.b	= bSpecular;//1.0f;
 }
 
 void	MyLight::show()
@@ -84,6 +81,17 @@ void	MyLight::show()
 //	m_d3dLight.Position.z	+= 0.01f;
 
 	//m_d3dLight.Position.z	+= 0.01f;
+	
+	//this->transform();
+
+	m_d3dLight.Position.x	= m_pAbsolutePosition->getX();//0.0f;
+	m_d3dLight.Position.y	= m_pAbsolutePosition->getY();//0.0f;
+	m_d3dLight.Position.z	= m_pAbsolutePosition->getZ();//0.0f;
+
+	m_d3dLight.Direction.x	= m_pDirection->getX();//1.0f;
+	m_d3dLight.Direction.y	= m_pDirection->getY();//1.0f;
+	m_d3dLight.Direction.z	= m_pDirection->getZ();//1.0f;
+
 	_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	_D3DDevice->SetRenderState(D3DRS_COLORVERTEX, TRUE);
 	_D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
