@@ -25,13 +25,13 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_d3dLight.Specular.g	= 1.0f;
 	m_d3dLight.Specular.b	= 1.0f;
 
-	m_d3dLight.Position.x	= 0.0f;
-	m_d3dLight.Position.y	= 3.0f;
-	m_d3dLight.Position.z	= 0.0f;
+	m_d3dLight.Position.x	= 10.0f;
+	m_d3dLight.Position.y	= 10.0f;
+	m_d3dLight.Position.z	= 10.0f;
 
-	m_d3dLight.Direction.x	= 0.0f;
-	m_d3dLight.Direction.y	= 0.0f;
-	m_d3dLight.Direction.z	= 0.0f;
+	m_d3dLight.Direction.x	= -10.0f;
+	m_d3dLight.Direction.y	= -10.0f;
+	m_d3dLight.Direction.z	= -10.0f;
 
 	m_d3dLight.Attenuation0	= 1.0f;
 	m_d3dLight.Attenuation1	= 0.025f;
@@ -47,12 +47,12 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 
 void	MyLight::show()
 {
-	FLOAT x = cosf(timeGetTime()/100.0f)*20;
+//	FLOAT x = cosf(timeGetTime()/100.0f)*20;
     
-    FLOAT z = sinf(timeGetTime()/100.0f)*20;
+//  FLOAT z = sinf(timeGetTime()/100.0f)*20;
 
-	m_d3dLight.Direction.x	= x;
-	m_d3dLight.Direction.z	= z;
+//	m_d3dLight.Direction.x	= x;
+//	m_d3dLight.Direction.z	= z;
 
 	//m_d3dLight.Position.z	+= 0.01f;
 	_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

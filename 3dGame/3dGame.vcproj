@@ -156,6 +156,12 @@
 				RelativePath=".\engine\MyLight.h">
 			</File>
 			<File
+				RelativePath=".\engine\MyMasterPosition.cpp">
+			</File>
+			<File
+				RelativePath=".\engine\MyMasterPosition.h">
+			</File>
+			<File
 				RelativePath=".\engine\MyMesh.cpp">
 			</File>
 			<File

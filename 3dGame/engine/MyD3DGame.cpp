@@ -7,9 +7,9 @@ MyD3DGame::MyD3DGame(void)
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
 
-	m_red			= 0;
-	m_green			= 0;
-	m_blue			= 0;
+	m_red			= 255;
+	m_green			= 255;
+	m_blue			= 255;
 
 	m_FontX			= 0;
 
@@ -67,7 +67,7 @@ bool	MyD3DGame::init3D()
 	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pD3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pD3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff0a0a0a);
+	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xffaaaaaa);
 
 	return true;
 }
@@ -161,7 +161,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->m_Position.y,
 		m_pGameControl->m_pView->m_Position.z);
 
-	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
+	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
 
 	
 	//Zeige den Fluchtpunkt
@@ -172,7 +172,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->m_ViewPoint.y,
 		m_pGameControl->m_pView->m_ViewPoint.z);
 
-	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
+	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
 
 	//Zeige Menge der Lichter und Meshes
 	sprintf(
@@ -181,7 +181,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumLights(),
 		m_pGameControl->getNumMeshes());
 
-	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
+	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
 
 	delete temp;
 }
@@ -189,8 +189,8 @@ void	MyD3DGame::showStatus()
 void	MyD3DGame::doScene()
 {
 	m_pGameControl->drawLights();
-	//m_pKoordSys->drawKS(m_pD3dDevice);
-	m_pGameControl->drawObjects(&m_matWorld);
+	m_pKoordSys->drawKS(m_pD3dDevice);
+	m_pGameControl->drawObjects();
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 }
 
@@ -207,7 +207,7 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 
 bool	MyD3DGame::initGame(void)
 {
-	m_pGameControl->init(m_pD3dDevice);
+	m_pGameControl->init(m_pD3dDevice, &m_matWorld);
 	m_pGameControl->loadObjects();
 	return true;
 }

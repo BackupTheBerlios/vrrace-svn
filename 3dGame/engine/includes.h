@@ -7,6 +7,7 @@
 #include <io.h>
 #include <dinput.h>
 #include <d3dx9.h>
+#include <d3dx9math.h>
 #include <stdio.h>
 #include <string>
 #include <vector>

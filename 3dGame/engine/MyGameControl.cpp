@@ -28,18 +28,11 @@ bool	MyGameControl::loadObjects()
 	return true;
 }
 
-bool	MyGameControl::drawObjects(D3DXMATRIX* givenMatWorld)
+bool	MyGameControl::drawObjects()
 {
 	for (int count = 0; count < m_pMeshes.size(); count++)
 	{
-           D3DXMatrixTranslation(
-			givenMatWorld,
-			m_pMeshes[count]->getPosition()->getX(),
-			m_pMeshes[count]->getPosition()->getY(),
-			m_pMeshes[count]->getPosition()->getZ()
-			);
-			_D3DDevice->SetTransform(D3DTS_WORLD, givenMatWorld);
-			m_pMeshes[count]->draw();
+		m_pMeshes[count]->draw();
 	}
 
 	return true;
@@ -64,7 +57,8 @@ bool	MyGameControl::moveObjects()
 	return true;
 }
 
-bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
+bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
+							D3DXMATRIX* givenMatWorld)
 {
 	if (m_initCount == 0)
 	{
@@ -74,13 +68,14 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
 	}
 
 	_D3DDevice				= givenDevice;
+	_matWorld				= givenMatWorld;
 
-	m_pView->m_Position.x	= 60.0f;
-	m_pView->m_Position.y	= 10.0f;
-	m_pView->m_Position.z	= 60.0f;
+	m_pView->m_Position.x	= 0.0f;
+	m_pView->m_Position.y	= 20.0f;
+	m_pView->m_Position.z	= 0.0f;
 
-	m_pView->m_UpVector.x	= 0.0f;
-	m_pView->m_UpVector.y	= 1.0f;
+	m_pView->m_UpVector.x	= 1.0f;
+	m_pView->m_UpVector.y	= 0.0f;
 	m_pView->m_UpVector.z	= 0.0f;
 
 	m_pView->m_ViewPoint.x	= 0.0f;
@@ -101,20 +96,47 @@ bool	MyGameControl::initObjects()
 
 bool	MyGameControl::addObject()
 {
+	MyMesh*	tempObjb	= new MyMesh();
+	if (tempObjb == NULL)
+	{
+		return false;
+	} else {
+		if (tempObjb->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere4.x",
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.01f, 0.0f))
+		{
+			tempObjb->load();
+			m_pMeshes.push_back(tempObjb);
+		} else {
+			return false;
+		}
+	}
+
 	MyMesh*	tempObj	= new MyMesh();
 	if (tempObj == NULL)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/x_files/space station 5.x", -20.0f, 0.0f, 60.0f, 0.0f, 0.0f, -0.05f))
+		if (tempObj->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/shusui.x",
+							5.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.1f))
 		{
+			tempObj->setReference(tempObjb->getPosition());
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);
 		} else {
 			return false;
 		}
 	}
-		
+	
 	return true;
 }
 

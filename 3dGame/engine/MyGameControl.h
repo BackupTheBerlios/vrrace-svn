@@ -14,10 +14,10 @@ public:
 	MyGameControl(void);
 	~MyGameControl(void);
 
-	bool				init(LPDIRECT3DDEVICE9 givenDevice);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice, D3DXMATRIX* givenMatWorld);
 	bool				initObjects();
 	bool				loadObjects();
-	bool				drawObjects(D3DXMATRIX* givenMatWorld);
+	bool				drawObjects();
 	bool				drawLights();
 	bool				moveObjects();
 	bool				addObject();
@@ -35,5 +35,6 @@ private:
 	MyMesh*				m_pShip;
 	vector<MyMesh*>		m_pMeshes;
 	vector<MyLight*>	m_pLights;
+	D3DXMATRIX*			_matWorld;
 };
 #endif

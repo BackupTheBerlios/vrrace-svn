@@ -2,27 +2,48 @@
 
 MyMesh::MyMesh(void)
 {
-	_D3DDevice		= NULL;
-	m_FileName		= NULL;
-	m_pPosition		= new MyVertex();
-	m_pDirection	= new MyVertex();
+	_D3DDevice			= NULL;
+	m_FileName			= NULL;
+	m_pPosition			= new MyMasterPosition();
+	m_pReferencePoint	= new MyMasterPosition();
 
-	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
-	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	m_pPosition->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pPosition->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	m_pPosition->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+	m_pPosition->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
+
+	m_pReferencePoint->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pReferencePoint->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	m_pReferencePoint->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+	m_pReferencePoint->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
 }
 
 bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
+					 D3DXMATRIX* givenMatWorld,
 					 LPCTSTR givenFileName,
 					 float posX,
 					 float posY,
 					 float posZ,
 					 float dirX,
 					 float dirY,
-					 float dirZ)
+					 float dirZ,
+					 float rotX,
+					 float rotY,
+					 float rotZ,
+					 float rotDirX,
+					 float rotDirY,
+					 float rotDirZ)
 {
 	if (givenDevice != NULL)
 	{
 		_D3DDevice		= givenDevice;
+	} else {
+		return false;
+	}
+
+	if (givenMatWorld != NULL)
+	{
+		_matWorld		= givenMatWorld;
 	} else {
 		return false;
 	}
@@ -34,27 +55,53 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 		return false;
 	}
 
-	m_pPosition->setValues(posX, posY, posZ);
-	m_pDirection->setValues(dirX, dirY, dirZ);
+	m_pPosition->m_pPosition->setValues(posX, posY, posZ);
+	m_pPosition->m_pDirection->setValues(dirX, dirY, dirZ);
+	m_pPosition->m_pRotation->setValues(rotX, rotY, rotZ);
+	m_pPosition->m_pRotDir->setValues(rotDirX, rotDirY, rotDirZ);
 
 	return true;
 }
 
 void	MyMesh::move()
 {
-	m_pPosition->addX(m_pDirection->getX());
-	m_pPosition->addY(m_pDirection->getY());
-	m_pPosition->addZ(m_pDirection->getZ());
+	m_pPosition->m_pPosition->addX(m_pPosition->m_pDirection->getX());
+	m_pPosition->m_pPosition->addY(m_pPosition->m_pDirection->getY());
+	m_pPosition->m_pPosition->addZ(m_pPosition->m_pDirection->getZ());
+
+	m_pPosition->m_pRotation->addX(m_pPosition->m_pRotDir->getX());
+	m_pPosition->m_pRotation->addY(m_pPosition->m_pRotDir->getY());
+	m_pPosition->m_pRotation->addZ(m_pPosition->m_pRotDir->getZ());
 }
 
-MyVertex*	MyMesh::getPosition()
+MyMasterPosition*	MyMesh::getPosition()
 {
 	return m_pPosition;
 }
 
-MyVertex*	MyMesh::getDirection()
+MyMasterPosition*	MyMesh::getReference()
 {
-	return m_pDirection;
+	return m_pReferencePoint;
+}
+
+void	MyMesh::setReference(MyMasterPosition* givenReference)
+{
+	m_pReferencePoint->m_pPosition->setPValues(
+		givenReference->m_pPosition->getPX(),
+		givenReference->m_pPosition->getPY(),
+		givenReference->m_pPosition->getPZ());
+	m_pReferencePoint->m_pDirection->setPValues(
+		givenReference->m_pDirection->getPX(),
+		givenReference->m_pDirection->getPY(),
+		givenReference->m_pDirection->getPZ());
+	m_pReferencePoint->m_pRotation->setPValues(
+		givenReference->m_pRotation->getPX(),
+		givenReference->m_pRotation->getPY(),
+		givenReference->m_pRotation->getPZ());
+	m_pReferencePoint->m_pRotDir->setPValues(
+		givenReference->m_pRotDir->getPX(),
+		givenReference->m_pRotDir->getPY(),
+		givenReference->m_pRotDir->getPZ());
 }
 
 HRESULT	MyMesh::load()
@@ -114,6 +161,55 @@ HRESULT	MyMesh::load()
 
 void	MyMesh::draw()
 {
+	D3DXMATRIX tmpMatRot;
+	D3DXMATRIX tmpMatTrans;
+	D3DXMATRIX tmpMatOwn;
+	D3DXMATRIX tmpMatRefRot;
+	D3DXMATRIX tmpMatRefTrans;
+	D3DXMATRIX tmpMatRef;
+
+	D3DXMatrixRotationYawPitchRoll(
+			&tmpMatRot,
+			m_pPosition->m_pRotation->getY(),
+			m_pPosition->m_pRotation->getX(),
+			m_pPosition->m_pRotation->getZ());
+
+	D3DXMatrixTranslation(
+			&tmpMatTrans,
+			m_pPosition->m_pPosition->getX(),
+			m_pPosition->m_pPosition->getY(),
+			m_pPosition->m_pPosition->getZ()
+			);
+
+	D3DXMatrixRotationYawPitchRoll(
+			&tmpMatRefRot,
+			m_pReferencePoint->m_pRotation->getY(),
+			m_pReferencePoint->m_pRotation->getX(),
+			m_pReferencePoint->m_pRotation->getZ());
+
+	D3DXMatrixTranslation(
+			&tmpMatRefTrans,
+			m_pReferencePoint->m_pPosition->getX(),
+			m_pReferencePoint->m_pPosition->getY(),
+			m_pReferencePoint->m_pPosition->getZ());
+
+	D3DXMatrixMultiply(
+			&tmpMatOwn,
+			&tmpMatRot,
+			&tmpMatTrans);
+
+	D3DXMatrixMultiply(
+			&tmpMatRef,
+			&tmpMatRefRot,
+			&tmpMatRefTrans);
+
+	D3DXMatrixMultiply(
+			_matWorld,
+			&tmpMatOwn,
+			&tmpMatRef);
+
+	_D3DDevice->SetTransform(D3DTS_WORLD, _matWorld);
+
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
