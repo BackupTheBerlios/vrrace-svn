@@ -67,7 +67,7 @@ bool	MyD3DGame::init3D()
 	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pD3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pD3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xffaaaaaa);
+	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff010101);
 
 	return true;
 }
@@ -124,19 +124,19 @@ void	MyD3DGame::prepareScene()
 	D3DXMatrixLookAtLH(
 		&m_matView,
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->m_Position.x,
-			m_pGameControl->m_pView->m_Position.y,
-			m_pGameControl->m_pView->m_Position.z
+			m_pGameControl->m_pView->getPos()->getX(),
+			m_pGameControl->m_pView->getPos()->getY(),
+			m_pGameControl->m_pView->getPos()->getZ()
 			),
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->m_ViewPoint.x,
-			m_pGameControl->m_pView->m_ViewPoint.y,
-			m_pGameControl->m_pView->m_ViewPoint.z
+			m_pGameControl->m_pView->getVP()->getX(),
+			m_pGameControl->m_pView->getVP()->getY(),
+			m_pGameControl->m_pView->getVP()->getZ()
 			),
 		&D3DXVECTOR3(
-			m_pGameControl->m_pView->m_UpVector.x,
-			m_pGameControl->m_pView->m_UpVector.y,
-			m_pGameControl->m_pView->m_UpVector.z
+			m_pGameControl->m_pView->getUV()->getX(),
+			m_pGameControl->m_pView->getUV()->getY(),
+			m_pGameControl->m_pView->getUV()->getZ()
 			)
 		);
 		
@@ -157,9 +157,9 @@ void	MyD3DGame::showStatus()
 	sprintf(
 		temp,
 		"Position: %2.2f %2.2f %2.2f",
-		m_pGameControl->m_pView->m_Position.x,
-		m_pGameControl->m_pView->m_Position.y,
-		m_pGameControl->m_pView->m_Position.z);
+		m_pGameControl->m_pView->getPos()->getX(),
+		m_pGameControl->m_pView->getPos()->getY(),
+		m_pGameControl->m_pView->getPos()->getZ());
 
 	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
 
@@ -168,9 +168,9 @@ void	MyD3DGame::showStatus()
 	sprintf(
 		temp,
 		"Fluchtpunkt: %2.2f %2.2f %2.2f",
-		m_pGameControl->m_pView->m_ViewPoint.x,
-		m_pGameControl->m_pView->m_ViewPoint.y,
-		m_pGameControl->m_pView->m_ViewPoint.z);
+		m_pGameControl->m_pView->getVP()->getX(),
+		m_pGameControl->m_pView->getVP()->getY(),
+		m_pGameControl->m_pView->getVP()->getZ());
 
 	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 2, 2, 2), temp);
 
@@ -189,7 +189,7 @@ void	MyD3DGame::showStatus()
 void	MyD3DGame::doScene()
 {
 	m_pGameControl->drawLights();
-	m_pKoordSys->drawKS(m_pD3dDevice);
+	//m_pKoordSys->drawKS(m_pD3dDevice);
 	m_pGameControl->drawObjects();
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 }

@@ -70,17 +70,9 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice,
 	_D3DDevice				= givenDevice;
 	_matWorld				= givenMatWorld;
 
-	m_pView->m_Position.x	= 0.0f;
-	m_pView->m_Position.y	= 20.0f;
-	m_pView->m_Position.z	= 0.0f;
-
-	m_pView->m_UpVector.x	= 1.0f;
-	m_pView->m_UpVector.y	= 0.0f;
-	m_pView->m_UpVector.z	= 0.0f;
-
-	m_pView->m_ViewPoint.x	= 0.0f;
-	m_pView->m_ViewPoint.y	= 0.0f;
-	m_pView->m_ViewPoint.z	= 0.0f;
+	m_pView->getPos()->setValues(100.0f, 20.0f, 100.0f);
+	m_pView->getVP()->setValues(0.0f, 0.0f, 0.0f);
+	m_pView->getUV()->setValues(0.0f, 1.0f, 0.0f);
 
 	this->initObjects();
 
@@ -123,11 +115,11 @@ bool	MyGameControl::addObject()
 	} else {
 		if (tempObj->init(_D3DDevice,
 							_matWorld,
-							"resources/x_files/shusui.x",
-							5.0f, 0.0f, 0.0f,
+							"resources/x_files/spaceship 8.x",
+							50.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.1f))
+							0.0f, 0.0f, 0.0f))
 		{
 			tempObj->setReference(tempObjb->getPosition());
 			tempObj->load();
@@ -137,6 +129,26 @@ bool	MyGameControl::addObject()
 		}
 	}
 	
+	MyMesh*	tempObjc	= new MyMesh();
+	if (tempObjc == NULL)
+	{
+		return false;
+	} else {
+		if (tempObjc->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/space station 5.x",
+							50.0f, 0.0f, 50.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.001f, 0.01f))
+		{
+			tempObjc->load();
+			m_pMeshes.push_back(tempObjc);
+		} else {
+			return false;
+		}
+	}
+
 	return true;
 }
 
