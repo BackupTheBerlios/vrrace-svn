@@ -25,24 +25,19 @@ bool	MyLight::init(LPDIRECT3DDEVICE9 givenDevice)
 	m_d3dLight.Specular.g	= 1.0f;
 	m_d3dLight.Specular.b	= 1.0f;
 
-	m_d3dLight.Position.x	= 5.0f;
-	m_d3dLight.Position.y	= 5.0f;
-	m_d3dLight.Position.z	= 5.0f;
+	m_d3dLight.Position.x	= 1.0f;
+	m_d3dLight.Position.y	= 1.0f;
+	m_d3dLight.Position.z	= 0.0f;
 
 	m_d3dLight.Attenuation0	= 1.0f;
-	m_d3dLight.Range		= 1000.f;
+	m_d3dLight.Range		= 2.0f;
 
 	return true;
 }
 
-bool	MyLight::show()
+void	MyLight::show()
 {
-	if (_D3DDevice->SetLight(0, &m_d3dLight))
-	{
-		_D3DDevice->LightEnable(0, TRUE);
-		_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	} else {
-		return true;
-	}
-	return true;
+	_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	_D3DDevice->SetLight(0, &m_d3dLight);
+	_D3DDevice->LightEnable(0, TRUE);
 }

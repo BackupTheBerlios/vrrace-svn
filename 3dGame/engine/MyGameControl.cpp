@@ -94,31 +94,7 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
 
 bool	MyGameControl::initObjects()
 {
-		/*MyMesh*	temp	= new MyMesh();
-
-		temp->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.01f);
-*/
-/*		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.01f, 0.0f, -0.05f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/star sail.x", 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, -0.051f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 2.x", 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, -0.01f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 5.x", 0.0f, 0.0f, 1.0f, 0.0f, 0.01f, -0.01f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 8.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 13.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 8.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 13.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 8.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 13.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 8.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 13.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 8.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
-		m_pMeshes.push_back(new MyMesh(_D3DDevice, "resources/spaceship 13.x", 1.0f, 1.0f, 1.0f, 0.0f, 0.05f, 0.0f));
 		
-		/*
-		MyMesh*	temp2	= new MyMesh();
-		temp2->init(_D3DDevice, "resources/shusui.x", 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, -0.01f);
-
-		m_pMeshes.push_back(temp2);
-*/
 
 	return true;
 }

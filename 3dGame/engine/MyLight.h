@@ -8,7 +8,7 @@ class	MyLight
 {
 public:
 	bool	init(LPDIRECT3DDEVICE9 givenDevice);
-	bool	show();
+	void	show();
 
 private:
 	D3DLIGHT9			m_d3dLight;

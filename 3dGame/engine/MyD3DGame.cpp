@@ -7,9 +7,9 @@ MyD3DGame::MyD3DGame(void)
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
 
-	m_red			= 255;
-	m_green			= 255;
-	m_blue			= 255;
+	m_red			= 0;
+	m_green			= 0;
+	m_blue			= 0;
 
 	m_FontX			= 0;
 
@@ -161,7 +161,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->m_Position.y,
 		m_pGameControl->m_pView->m_Position.z);
 
-	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
+	m_pFont->DrawText(5, 5, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
 
 	
 	//Zeige den Fluchtpunkt
@@ -172,7 +172,7 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->m_pView->m_ViewPoint.y,
 		m_pGameControl->m_pView->m_ViewPoint.z);
 
-	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
+	m_pFont->DrawText(5, 20, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
 
 	//Zeige Menge der Lichter und Meshes
 	sprintf(
@@ -181,15 +181,14 @@ void	MyD3DGame::showStatus()
 		m_pGameControl->getNumLights(),
 		m_pGameControl->getNumMeshes());
 
-	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 0, 0, 0), temp);
+	m_pFont->DrawText(5, 35, D3DCOLOR_ARGB(255, 255, 255, 255), temp);
 
 	delete temp;
 }
 
 void	MyD3DGame::doScene()
 {
-//	m_pGameControl->m_pView->m_Position.z	+= 0.01f;
-//	m_pGameControl->m_pView->m_Position.x	+= 0.01f;
+	m_pGameControl->drawLights();
 	m_pKoordSys->drawKS(m_pD3dDevice);
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
 	m_pGameControl->drawObjects(&m_matWorld);

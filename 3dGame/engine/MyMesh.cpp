@@ -82,14 +82,8 @@ HRESULT	MyMesh::load()
 
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
-		m_pMaterials[count]				= d3dxMaterials[count].MatD3D;
-		
-		m_pMaterials[count].Ambient		= m_pMaterials[count].Diffuse;
-		m_pMaterials[count].Diffuse.r	= 1.0f;
-		m_pMaterials[count].Diffuse.g	= 1.0f;
-		m_pMaterials[count].Diffuse.b	= 1.0f;
-
-
+		m_pMaterials[count]			= d3dxMaterials[count].MatD3D;
+		m_pMaterials[count].Ambient	= m_pMaterials[count].Diffuse;
 		m_pTextures[count]			= NULL;
 
 		if (d3dxMaterials[count].pTextureFilename != NULL
@@ -118,6 +112,7 @@ void	MyMesh::draw()
 		m_pMaterials[count].Diffuse.r	= 1.0f;
 		m_pMaterials[count].Diffuse.g	= 1.0f;
 		m_pMaterials[count].Diffuse.b	= 1.0f;
+		m_pMaterials[count].Ambient.a	= 0.0f;
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
 		_D3DDevice->SetTexture(0, m_pTextures[count]);
 		m_pMesh->DrawSubset(count);
