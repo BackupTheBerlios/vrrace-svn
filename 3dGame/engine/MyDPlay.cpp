@@ -1,3 +1,5 @@
+/* Anlagen uebernommen aus dem DirectPlay-Tutorial 6*/
+
 #include "MyDPlay.h"
 
 IDirectPlay8Peer*	MyDPlay::m_pDP			= NULL;

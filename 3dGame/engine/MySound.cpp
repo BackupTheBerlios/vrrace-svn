@@ -32,7 +32,9 @@ bool MySound::init(LPDIRECTSOUND8 givenPDirectSound,char* filename,DWORD soundFl
 	return true;
 }
 
-/*Methode zum Laden eines WAV-Files*/
+/*	Methode zum Laden eines WAV-Files
+	Anlagen uebernommen von David Scherfgen "3D-Spieleprogrammierung mit DirectX 9 und C++"
+*/
 bool MySound::loadWAVFile(char* filename)
 {
 	FILE*				pFile			= NULL;
