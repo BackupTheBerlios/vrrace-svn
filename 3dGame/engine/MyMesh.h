@@ -7,9 +7,10 @@
 class MyMesh
 {
 public:
-	bool	init();
-	HRESULT	load(LPDIRECT3DDEVICE9 givenDevice);
-	void	draw(LPDIRECT3DDEVICE9 givenDevice);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice);
+	HRESULT				load();
+	void				draw();
+	CUSTOMVERTEX*		getPosition();
 
 private:
 	LPCTSTR				m_FileName;
@@ -18,5 +19,6 @@ private:
 	D3DMATERIAL9*		m_pMaterials;
 	LPDIRECT3DTEXTURE9*	m_pTextures;
 	CUSTOMVERTEX		m_Position;
+	LPDIRECT3DDEVICE9	_D3DDevice;
 };
 #endif

@@ -16,8 +16,7 @@ MyD3DGame::MyD3DGame(void)
 	lstrcpy( m_strFont, _T("Arial" ) );
 	m_dwFontSize	= 12;
 
-	m_pFont	= new CD3DFont( m_strFont, m_dwFontSize);
-
+	m_pFont			= new CD3DFont( m_strFont, m_dwFontSize);
 	m_pGameControl	= new MyGameControl();
 	m_pUserInput	= new MyUserInput();
 	m_pKoordSys		= new MyTest();
@@ -141,7 +140,7 @@ void	MyD3DGame::prepareScene()
 	m_pD3dDevice->SetTransform(D3DTS_VIEW, &m_matView);
 
 	//projection
-	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 100.0f);
+	D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI/4, 1.0f, 1.0f, 1000.0f);
 	m_pD3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 	m_pD3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(m_red,m_green,m_blue), 1.0f, 0L);
 	m_pD3dDevice->BeginScene();
@@ -177,11 +176,11 @@ void	MyD3DGame::showStatus()
 
 void	MyD3DGame::doScene()
 {
-	m_pGameControl->m_pView->m_Position.z	+= 0.001f;
-	m_pGameControl->m_pView->m_Position.x	+= 0.01f;
+	m_pGameControl->m_pView->m_Position.z	+= 0.01f;
+	m_pGameControl->m_pView->m_Position.x	+= 0.1f;
 	m_pKoordSys->drawKS(m_pD3dDevice);
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
-	m_pGameControl->m_pShip->draw(m_pD3dDevice);
+	m_pGameControl->drawObjects(&m_matWorld);
 }
 
 void	MyD3DGame::presentScene()
@@ -197,8 +196,8 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 
 bool	MyD3DGame::initGame(void)
 {
-	m_pGameControl->init();
-	m_pGameControl->m_pShip->load(m_pD3dDevice);
+	m_pGameControl->init(m_pD3dDevice);
+	m_pGameControl->loadObjects();
 	return true;
 }
 

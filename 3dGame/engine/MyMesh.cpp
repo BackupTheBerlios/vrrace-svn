@@ -1,8 +1,10 @@
 #include "MyMesh.h"
 
-bool	MyMesh::init()
+bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice)
 {
-	m_FileName		= "resources/orbiter.x";
+	_D3DDevice		= givenDevice;
+	m_FileName		= "resources/shusui.x";
+
 	m_Position.x	= 5.0f;
 	m_Position.y	= 2.0f;
 	m_Position.z	= 1.0f;
@@ -10,14 +12,19 @@ bool	MyMesh::init()
 	return true;
 }
 
-HRESULT	MyMesh::load(LPDIRECT3DDEVICE9 givenDevice)
+CUSTOMVERTEX*	MyMesh::getPosition()
+{
+	return &m_Position;
+}
+
+HRESULT	MyMesh::load()
 {
 	LPD3DXBUFFER	pD3DXMtrlBuffer;
 
 	if (FAILED(D3DXLoadMeshFromX(
 							m_FileName,
 							D3DXMESH_SYSTEMMEM,
-							givenDevice,
+							_D3DDevice,
 							NULL,
 							&pD3DXMtrlBuffer,
 							NULL,
@@ -44,7 +51,7 @@ HRESULT	MyMesh::load(LPDIRECT3DDEVICE9 givenDevice)
 			&& lstrlen(d3dxMaterials[count].pTextureFilename) > 0)
 		{
 			if (FAILED(D3DXCreateTextureFromFile(
-							givenDevice,
+							_D3DDevice,
 							d3dxMaterials[count].pTextureFilename,
 							&m_pTextures[count]
 							)))
@@ -59,12 +66,12 @@ HRESULT	MyMesh::load(LPDIRECT3DDEVICE9 givenDevice)
 	return S_OK;				
 }
 
-void	MyMesh::draw(LPDIRECT3DDEVICE9 givenDevice)
+void	MyMesh::draw()
 {
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
-		givenDevice->SetMaterial(&m_pMaterials[count]);
-		givenDevice->SetTexture(0, m_pTextures[count]);
+		_D3DDevice->SetMaterial(&m_pMaterials[count]);
+		_D3DDevice->SetTexture(0, m_pTextures[count]);
 		m_pMesh->DrawSubset(count);
 	}
 }
