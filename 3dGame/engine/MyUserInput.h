@@ -13,6 +13,7 @@ public:
 
 	bool	init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC);	//alles Initialisieren
 	void	inputKB();													//Tastatureingaben verarbeiten
+	HRESULT	inputJS();
 
 private:
 	bool	initDinput();												//Initialisierung des Input-Objektes
@@ -31,5 +32,6 @@ private:
 	LPDIRECTINPUTDEVICE8		m_pMouse;
 	static LPDIRECTINPUTDEVICE8	m_pJoystick;
 	MyGameControl*				_m_pGameControl;
+	bool						m_JoystickAvailable;
 };
 #endif

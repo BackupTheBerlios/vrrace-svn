@@ -272,6 +272,7 @@ void	MyD3DGame::runGame()
 	DWORD dwTime0 = timeGetTime();
 
 	m_pUserInput->inputKB();
+	m_pUserInput->inputJS();
 
 	this->moveScene();
 	this->prepareScene();
