@@ -225,7 +225,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 3.0f, 0.0f,
-							0.0f, -0.05f, 0.0f,
+							0.0f, -0.3f, 0.0f,
 							true, false))
 		{
 			erde->load();
@@ -253,7 +253,50 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
-	
+	MyMesh*	erdkern	= new MyMesh();
+	if (erdkern == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		if (erdkern->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere.x",
+							NULL,
+							500.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 3.0f, 0.0f,
+							0.0f, 0.02f, 0.0f,
+							true, false))
+		{
+			erdkern->load();
+			erdkern->deactivateScaling();
+			//erdkern->getScale()->setValues(1.0f, 1.0f, 1.0f);
+			erdkern->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+											0.0f, 0.0f, 0.0f,
+											1.0f, 1.0f, 1.0f);
+			erdkern->setMaster(sonne);
+			if(m_iDPchoice != 0)
+			{
+				if(*_DirectPlay->m_pbHostingApp)
+				{
+					_DirectPlay->m_pLocalMeshes.push_back(erdkern);
+				} else {
+					_DirectPlay->m_pNetworkMeshes.push_back(erdkern);
+				}
+			}
+			_DirectPlay->m_pAllMeshes.push_back(erdkern);
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
 	MyMesh*	mond	= new MyMesh();
 	if (mond == NULL)
 	{
@@ -273,7 +316,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							false, false))
 		{
-			mond->setMaster(erde);
+			mond->setMaster(erdkern);
 			mond->load();
 			mond->activateScaling();
 			mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
