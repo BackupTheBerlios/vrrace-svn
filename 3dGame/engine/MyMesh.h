@@ -31,9 +31,13 @@ public:
 	void				move();
 	MyMasterPosition*	getPosition();
 	MyMasterPosition*	getReference();
+	MyVertex*			getScale();
+	void				activateScaling();
+	void				deactivateScaling();
 	void				setReference(MyMasterPosition* givenReference);
 	
 private:
+	void				matrixOperations();
 	LPCTSTR				m_FileName;
 	DWORD				m_dwNumMaterials;
 	LPD3DXMESH			m_pMesh;
@@ -44,6 +48,6 @@ private:
 	LPDIRECT3DDEVICE9	_D3DDevice;
 	D3DXMATRIX*			_matWorld;
 	bool				m_bScale;
-	float*				m_pScaleFactor;
+	MyVertex*			m_pScaleFactor;
 };
 #endif
