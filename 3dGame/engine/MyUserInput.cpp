@@ -239,14 +239,14 @@ void	MyUserInput::inputKB()
 			{
 				//TODO andere Funktion aufrufen, der Betrag von Direction muss verändert werden!
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed -= this->inputFactor(0.8);
-				_m_pGameControl->getPlayer()->getMesh()->move();
+				//_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_S))
 			{
 				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(0.8);
-				_m_pGameControl->getPlayer()->getMesh()->move();
+				//_m_pGameControl->getPlayer()->getMesh()->move();
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
@@ -325,13 +325,13 @@ HRESULT	MyUserInput::inputJS()
 		if (js.rglSlider[0] < 0)
 		{
 			*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(js.rglSlider[0]/(float)MAXVAL);
-			_m_pGameControl->getPlayer()->getMesh()->move();
+			//_m_pGameControl->getPlayer()->getMesh()->move();
 			_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 		}
 		if (js.rglSlider[0] > 0)
 		{
 			*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += this->inputFactor(js.rglSlider[0]/(float)MAXVAL);
-			_m_pGameControl->getPlayer()->getMesh()->move();
+			//_m_pGameControl->getPlayer()->getMesh()->move();
 			_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f, 1);
 		}
 	}

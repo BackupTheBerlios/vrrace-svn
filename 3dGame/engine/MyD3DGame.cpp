@@ -222,7 +222,7 @@ void	MyD3DGame::showStatus()
 			MM_TEXTCOLOR_BLUE),
 		temp);
 
-	//Zeige den Fluchtpunkt
+	//Zeige den UpVector
 	sprintf(
 		temp,
 		"UpVector: %2.2f %2.2f %2.2f",
@@ -233,6 +233,22 @@ void	MyD3DGame::showStatus()
 	m_pFont->DrawText(
 		5,
 		35,
+		D3DCOLOR_ARGB(
+			MM_TEXTCOLOR_ALPHA,
+			MM_TEXTCOLOR_RED,
+			MM_TEXTCOLOR_GREEN,
+			MM_TEXTCOLOR_BLUE),
+		temp);
+
+	//Zeige den Speed
+	sprintf(
+		temp,
+		"Speed: %2.2f",
+		*m_pGameControl->getPlayer()->getMesh()->m_pSpeed);
+
+	m_pFont->DrawText(
+		5,
+		50,
 		D3DCOLOR_ARGB(
 			MM_TEXTCOLOR_ALPHA,
 			MM_TEXTCOLOR_RED,
@@ -252,7 +268,7 @@ void	MyD3DGame::showStatus()
 
 	m_pFont->DrawText(
 		5,
-		50,
+		65,
 		D3DCOLOR_ARGB(
 			MM_TEXTCOLOR_ALPHA,
 			MM_TEXTCOLOR_RED,
