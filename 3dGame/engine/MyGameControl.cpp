@@ -15,7 +15,7 @@ MyGameControl::MyGameControl(void)
 MyGameControl::~MyGameControl(void)
 {
 //	delete m_pView;
-	delete m_pStarsField;
+//	delete m_pStarsField;
 }
 
 bool	MyGameControl::loadObjects()

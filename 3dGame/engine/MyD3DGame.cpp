@@ -27,7 +27,10 @@ MyD3DGame::~MyD3DGame(void)
 	delete	m_pUserInput;
 	delete	m_pKoordSys;
 	delete	m_pFont;
-	delete	m_pfFramesPerSecond;
+	//delete	m_pfFramesPerSecond;
+	SAFE_DELETE(m_pfFramesPerSecond);
+	SAFE_RELEASE(m_pD3dDevice);
+	SAFE_RELEASE(m_d3d);
 }
 
 bool	MyD3DGame::init3D()

@@ -26,7 +26,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 			DestroyWindow(hWnd);
 			PostQuitMessage(0);
-			exit(0);
+			//exit(0);
 		break;
 	}
 	return DefWindowProc(hWnd, msg,	wParam,	lParam);
@@ -432,6 +432,6 @@ INT WINAPI WinMain(HINSTANCE hInst,
 	}
 
 	CoUninitialize();
-
+	
 	return 0;
 }
