@@ -4,6 +4,7 @@ MyPlayer::MyPlayer()
 {
 	m_Name			= new string();
 	m_pPlayerMesh	= new MyMesh();
+	m_pPlayerSound	= new MySound();
 	m_pCamera		= NULL;//new MyView();
 }
 
@@ -26,6 +27,11 @@ void	MyPlayer::setMesh(MyMesh* givenMesh)
 MyMesh*	MyPlayer::getMesh()
 {
 	return m_pPlayerMesh;
+}
+
+MySound* MyPlayer::getSound()
+{
+	return m_pPlayerSound;
 }
 
 MyView*	MyPlayer::getCamera()

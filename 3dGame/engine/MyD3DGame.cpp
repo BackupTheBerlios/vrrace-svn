@@ -116,6 +116,8 @@ bool	MyD3DGame::init(HINSTANCE* givenHInst, HWND* givenHWnd, MyDPlay* givenDPlay
 		return false;
 	}
 
+	m_pGameControl->startSound();
+
 	return true;
 }
 

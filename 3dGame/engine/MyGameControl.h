@@ -28,6 +28,7 @@ public:
 	bool				initStarsField();
 	bool				initMusic();
 	bool				initDirectSound();
+	bool				startSound();
 	bool				loadObjects();
 	bool				drawObjects();
 	bool				drawStarsField();

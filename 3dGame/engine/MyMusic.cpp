@@ -173,3 +173,14 @@ bool MyMusic::presentMusic()
 	}
 	return true;
 }
+
+/*Methode zum Setzen der Lautstärke*/
+bool MyMusic::setVolume(long givenVolume)
+{
+	if(FAILED(m_pDSBasicAudio->put_Volume(givenVolume)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Lautstaerke der Music","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	return true;
+}

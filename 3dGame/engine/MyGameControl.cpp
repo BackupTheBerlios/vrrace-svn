@@ -89,13 +89,24 @@ bool	MyGameControl::moveObjects()
 	{
 		//if(_DirectPlay->m_pAllMeshes[count]->m_bToSend || (m_iDPchoice == 0))
 		if (_DirectPlay->m_pAllMeshes[count] != NULL)
+		{
 			_DirectPlay->m_pAllMeshes[count]->move();
+			if(_DirectPlay->m_pMeshSounds[count] != NULL)
+			{
+				_DirectPlay->m_pMeshSounds[count]->set3DSoundPosition(_DirectPlay->m_pAllMeshes[count]->getAbsolutePosition()->getX(),
+					_DirectPlay->m_pAllMeshes[count]->getAbsolutePosition()->getY(),
+					_DirectPlay->m_pAllMeshes[count]->getAbsolutePosition()->getZ());
+				_DirectPlay->m_pMeshSounds[count]->set3DSoundDirection(_DirectPlay->m_pAllMeshes[count]->m_pDirection->getX(),
+					_DirectPlay->m_pAllMeshes[count]->m_pDirection->getY(),
+					_DirectPlay->m_pAllMeshes[count]->m_pDirection->getZ());
+			}
+		}
 	}
 	m_pMainCam->move();
-	//_DirectSound->setListenerPosition(m_pMainCam->getPos()->getX(), m_pMainCam->getPos()->getY(), m_pMainCam->getPos()->getZ());
-	//_DirectSound->setListenerDirection(m_pMainCam->getDirection()->getX(), m_pMainCam->getDirection()->getY(), m_pMainCam->getDirection()->getZ());
-	//_DirectSound->setListenerOrientation(m_pMainCam->getVP()->getX(), m_pMainCam->getVP()->getY(), m_pMainCam->getVP()->getZ(),
-	//	m_pMainCam->getUV()->getX(), m_pMainCam->getUV()->getY(), m_pMainCam->getUV()->getZ());
+	m_pDirectSound->setListenerPosition(m_pMainCam->getPos()->getX(), m_pMainCam->getPos()->getY(), m_pMainCam->getPos()->getZ());
+	m_pDirectSound->setListenerDirection(m_pMainCam->getDirection()->getX(), m_pMainCam->getDirection()->getY(), m_pMainCam->getDirection()->getZ());
+	m_pDirectSound->setListenerOrientation(m_pMainCam->getVP()->getX(), m_pMainCam->getVP()->getY(), m_pMainCam->getVP()->getZ(),
+		m_pMainCam->getUV()->getX(), m_pMainCam->getUV()->getY(), m_pMainCam->getUV()->getZ());
 			
 	return true;
 }
@@ -139,7 +150,10 @@ bool	MyGameControl::initMusic()
 {
 	if(m_pMusic->init(MUSICFILENAME, true))
 	{
-		//m_pMusic->play();
+		if(m_pMusic->setVolume(-1800))
+		{
+			m_pMusic->play();
+		}
 		return true;
 	} else {
 		return false;
@@ -151,9 +165,19 @@ bool	MyGameControl::initDirectSound()
 	return m_pDirectSound->init(m_hWnd);
 }
 
+bool	MyGameControl::startSound()
+{
+	for (DWORD count = 0; count < _DirectPlay->m_pMeshSounds.size(); count++)
+	{
+		if(_DirectPlay->m_pMeshSounds[count])
+			_DirectPlay->m_pMeshSounds[count]->play(true, 0);
+	}
+	return true;
+}
+
 bool	MyGameControl::presentMusic()
 {
-	return true;//m_pMusic->presentMusic();
+	return m_pMusic->presentMusic();
 }
 
 bool	MyGameControl::addPlayer(string* givenName)
@@ -179,14 +203,22 @@ bool	MyGameControl::addPlayer(string* givenName)
 			_DirectPlay->m_pLocalPlayer->m_pPlayerID = _DirectPlay->m_pid;
 			if(SUCCEEDED(_DirectPlay->m_pLocalPlayer->getMesh()->load()))
 			{
-				_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
-				_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+				if(_DirectPlay->m_pLocalPlayer->getSound()->init(m_pDirectSound->getDSound(), SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
+				{
+					_DirectPlay->m_pLocalPlayer->getSound()->set3DSoundDistance(100.0f, 1000.0f);
+					_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+					_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
+					_DirectPlay->m_pMeshSounds.push_back(/*_DirectPlay->m_pLocalPlayer->getSound()*/NULL);
 
-				LeaveCriticalSection(&_DirectPlay->m_csDP);
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
 
-				m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
-				m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
-				m_pMainCam->move();
+					m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
+					m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
+					m_pMainCam->move();
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
+				}
 			} else {
 				SAFE_DELETE(_DirectPlay->m_pLocalPlayer);
 				_DirectPlay->m_pLocalPlayer = NULL;
@@ -209,6 +241,7 @@ MyPlayer*	MyGameControl::getPlayer()
 bool	MyGameControl::buildGame()
 {
 	MyMesh*		sonne		= new MyMesh();
+	MySound*	sonneSound	= new MySound();
 	if (sonne == NULL)
 	{
 		return false;
@@ -234,17 +267,25 @@ bool	MyGameControl::buildGame()
 				sonne->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
-				if(m_iDPchoice != 0)
+				if(sonneSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					sonneSound->set3DSoundDistance(1.0f, 1000.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(sonne);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(sonne);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(sonne);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(sonne);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(sonne);
+					_DirectPlay->m_pMasterMeshes.push_back(sonne);
+					_DirectPlay->m_pMeshSounds.push_back(sonneSound);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(sonne);
-				_DirectPlay->m_pMasterMeshes.push_back(sonne);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -287,8 +328,8 @@ bool	MyGameControl::buildGame()
 				erde->setMaster(sonne);
 				if(erdeSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					//erdeSound->set3DSoundDistance(100.0f, 1000.0f);
-					erdeSound->play(true, 0);
+					erdeSound->set3DSoundDistance(10.0f, 1000.0f);
+					//erdeSound->play(true, 0);
 					if(m_iDPchoice != 0)
 					{
 						if(*_DirectPlay->m_pbHostingApp)
@@ -299,6 +340,7 @@ bool	MyGameControl::buildGame()
 						}
 					}
 					_DirectPlay->m_pAllMeshes.push_back(erde);
+					_DirectPlay->m_pMeshSounds.push_back(erdeSound);
 				} else {
 					LeaveCriticalSection(&_DirectPlay->m_csDP);
 					return false;
@@ -315,7 +357,8 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
-	MyMesh*	erdkern	= new MyMesh();
+	MyMesh*		erdkern			= new MyMesh();
+	MySound*	erdkernSound	= new MySound();
 	if (erdkern == NULL)
 	{
 		return false;
@@ -342,16 +385,24 @@ bool	MyGameControl::buildGame()
 												0.0f, 0.0f, 0.0f,
 												1.0f, 1.0f, 1.0f);
 				erdkern->setMaster(sonne);
-				if(m_iDPchoice != 0)
+				if(erdkernSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					erdkernSound->set3DSoundDistance(10.0f, 1000.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(erdkern);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(erdkern);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(erdkern);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(erdkern);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(erdkern);
+					_DirectPlay->m_pMeshSounds.push_back(erdkernSound);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(erdkern);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -364,7 +415,8 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 
-	MyMesh*	mond	= new MyMesh();
+	MyMesh*		mond		= new MyMesh();
+	MySound*	mondSound	= new MySound();
 	if (mond == NULL)
 	{
 		return false;
@@ -388,16 +440,24 @@ bool	MyGameControl::buildGame()
 			{
 				mond->activateScaling();
 				mond->getScale()->setValues(2.0f, 2.0f, 2.0f);
-				if(m_iDPchoice != 0)
+				if(mondSound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					mondSound->set3DSoundDistance(10.0f, 1000.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(mond);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(mond);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(mond);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(mond);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(mond);
+					_DirectPlay->m_pMeshSounds.push_back(mondSound);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(mond);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -410,7 +470,8 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 	
-	MyMesh*	kreuzer1	= new MyMesh();
+	MyMesh*		kreuzer1		= new MyMesh();
+	MySound*	kreuzer1Sound	= new MySound();
 	if (kreuzer1 == NULL)
 	{
 		return false;
@@ -431,17 +492,25 @@ bool	MyGameControl::buildGame()
 		{
 			if(SUCCEEDED(kreuzer1->load()))
 			{
-				if(m_iDPchoice != 0)
+				if(kreuzer1Sound->init(m_pDirectSound->getDSound(), SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					kreuzer1Sound->set3DSoundDistance(10.0f, 1000.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(kreuzer1);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(kreuzer1);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(kreuzer1);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
+					_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
+					_DirectPlay->m_pMeshSounds.push_back(kreuzer1Sound);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
-				_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -456,7 +525,8 @@ bool	MyGameControl::buildGame()
 
 	
 
-	MyMesh*	jaeger1	= new MyMesh();
+	MyMesh*		jaeger1			= new MyMesh();
+	MySound*	jaeger1Sound	= new MySound();
 	if (jaeger1 == NULL)
 	{
 		return false;
@@ -478,16 +548,24 @@ bool	MyGameControl::buildGame()
 			if(SUCCEEDED(jaeger1->load()))
 			{
 				jaeger1->setMaster(kreuzer1);
-				if(m_iDPchoice != 0)
+				if(jaeger1Sound->init(m_pDirectSound->getDSound(), SHIPSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 				{
-					if(*_DirectPlay->m_pbHostingApp)
+					jaeger1Sound->set3DSoundDistance(10.0f, 1000.0f);
+					if(m_iDPchoice != 0)
 					{
-						_DirectPlay->m_pLocalMeshes.push_back(jaeger1);
-					} else {
-						_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(jaeger1);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(jaeger1);
+						}
 					}
+					_DirectPlay->m_pAllMeshes.push_back(jaeger1);
+					_DirectPlay->m_pMeshSounds.push_back(jaeger1Sound);
+				} else {
+					LeaveCriticalSection(&_DirectPlay->m_csDP);
+					return false;
 				}
-				_DirectPlay->m_pAllMeshes.push_back(jaeger1);
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -500,10 +578,12 @@ bool	MyGameControl::buildGame()
 		LeaveCriticalSection(&_DirectPlay->m_csDP);
 	}
 	
-	MyMesh*	sunLayer1	= NULL;
+	MyMesh*		sunLayer1		= NULL;
+	MySound*	sunLayer1Sound	= NULL;
 	for(int count = 0; count < 8; count++)
 	{
-		sunLayer1 = new MyMesh();
+		sunLayer1		= new MyMesh();
+		sunLayer1Sound	= new MySound();
 		if (sunLayer1 == NULL)
 		{
 			return false;
@@ -530,18 +610,27 @@ bool	MyGameControl::buildGame()
 					sunLayer1->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
 													0.0f, 0.0f, 0.0f,
 													1.0f, 1.0f, 1.0f);
-					if(m_iDPchoice != 0)
+					if(sunLayer1Sound->init(m_pDirectSound->getDSound(), PLANETSOUND, DSBCAPS_CTRL3D | DSBCAPS_LOCDEFER))
 					{
-						if(*_DirectPlay->m_pbHostingApp)
+						sunLayer1Sound->set3DSoundDistance(1.0f, 1000.0f);
+						if(m_iDPchoice != 0)
 						{
-							_DirectPlay->m_pLocalMeshes.push_back(sunLayer1);
-						} else {
-							_DirectPlay->m_pNetworkMeshes.push_back(sunLayer1);
+							if(*_DirectPlay->m_pbHostingApp)
+							{
+								_DirectPlay->m_pLocalMeshes.push_back(sunLayer1);
+							} else {
+								_DirectPlay->m_pNetworkMeshes.push_back(sunLayer1);
+							}
 						}
+						_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
+						_DirectPlay->m_pMeshSounds.push_back(sunLayer1Sound);
+						sunLayer1->setMaster(sonne);
+						sunLayer1		= NULL;
+						sunLayer1Sound	= NULL;
+					} else {
+						LeaveCriticalSection(&_DirectPlay->m_csDP);
+						return false;
 					}
-					_DirectPlay->m_pAllMeshes.push_back(sunLayer1);
-					sunLayer1->setMaster(sonne);
-					sunLayer1 = NULL;
 				} else {
 					LeaveCriticalSection(&_DirectPlay->m_csDP);
 					return false;

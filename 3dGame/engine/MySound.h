@@ -14,8 +14,8 @@ public:
 	bool play(bool givenLoop,DWORD givenPosition);
 	bool stop();
 	bool set3DSoundDistance(float givenMinDistance,float givenMaxDistance);
-	bool set3DSoundPosition();
-	bool set3DSoundVelocity();
+	bool set3DSoundPosition(float x, float y, float z);
+	bool set3DSoundDirection(float x, float y, float z);
 private:	
 	//Pointer auf sekundaeren SoundBuffer
 	LPDIRECTSOUNDBUFFER8	m_pSecondarySoundBuffer;

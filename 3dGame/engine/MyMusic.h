@@ -18,6 +18,7 @@ public:
 	LONGLONG getActualPosition();
 	bool setActualPosition(LONGLONG llPosition);
 	bool presentMusic();
+	bool setVolume(long givenVolume);
 private:
 	// Variable zur Speicherung Pointer auf Graph von DirectShow
 	IGraphBuilder*	m_pDSGraph;

@@ -196,23 +196,23 @@ bool MySound::set3DSoundDistance(float givenMinDistance,float givenMaxDistance)
 }
 
 /*Methode zum Setzen der aktuellen 3D-Soundposition*/
-bool MySound::set3DSoundPosition()
+bool MySound::set3DSoundPosition(float x, float y, float z)
 {
-	//if(FAILED(m_p3DSoundBuffer->SetPosition(x,y,z,DS3D_IMMEDIATE)))
-	//{
-	//	MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
-	//	return false;
-	//}
+	if(FAILED(m_p3DSoundBuffer->SetPosition(x,y,z,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Position des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
 	return true;
 }
 
 /*Methode zum Setzen der aktuellen Geschwindigkeit des 3D-Sounds*/
-bool MySound::set3DSoundVelocity()
+bool MySound::set3DSoundDirection(float x, float y, float z)
 {
-	//if(FAILED(m_p3DSoundBuffer->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
-	//{
-	//	MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
-	//	return false;
-	//}
+	if(FAILED(m_p3DSoundBuffer->SetVelocity(x,y,z,DS3D_IMMEDIATE)))
+	{
+		MessageBox(NULL,"Fehler beim Setzen der Geschwindigkeit des 3D-Sounds","ERROR",MB_OK | MB_ICONSTOP);
+		return false;
+	}
 	return true;
 }
