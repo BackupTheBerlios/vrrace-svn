@@ -6,5 +6,6 @@
 #include "engine/MyD3DGame.h"
 
 MyD3DGame*	g_pD3DGame;
+HINSTANCE	g_hInst;
 
 #endif

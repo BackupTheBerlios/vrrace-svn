@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <commctrl.h>
 
 //Namensraum
 using namespace std;
@@ -46,6 +47,7 @@ using namespace std;
 #pragma comment(lib, "d3dx9dt.lib")
 #pragma comment(lib, "strmiids.lib")
 #pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "comctl32.lib")
 
 //Konstanten
 const LPCSTR	MM_WINDOW_CLASS_NAME	= "vrrace_main";	//Name des Programmfensters
