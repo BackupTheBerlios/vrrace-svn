@@ -7,6 +7,7 @@
 #include "MyMesh.h"
 #include "MyLight.h"
 #include "MyVertex.h"
+#include "MyPlayer.h"
 //#include "MyStarsField.h"
 
 class MyGameControl
@@ -23,8 +24,9 @@ public:
 	bool				drawStarsField();
 	bool				drawLights();
 	bool				moveObjects();
-	bool				addObject();
+	bool				buildGame();
 	bool				addLight();
+	bool				addPlayer(string* givenName);
 	int					getNumLights();
 	int					getNumMeshes();
 	//bool	setObjectPosition(D3DXMATRIX* givenMatWorld);
@@ -40,6 +42,8 @@ private:
 //	vector<MyMesh*>		m_pMeshes;
 //	vector<MyLight*>	m_pLights;
 	D3DXMATRIX*			_matWorld;
+	MyPlayer*			m_pLocalPlayer;		//eigener Spieler
+	vector<MyPlayer*>	m_pNetworkPlayers;	//andere Teilnehmer
 	vector<MyMesh*>		m_pAllMeshes;		//Alle Meshes
 	vector<MyMesh*>		m_pMasterMeshes;	//Alle ohne Master
 	vector<MyLight*>	m_pAllLights;		//Alle Lichter

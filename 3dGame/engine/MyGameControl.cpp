@@ -5,6 +5,8 @@ MyGameControl::MyGameControl(void)
 	m_initCount			= 0;
 	m_pView				= new MyView();
 	m_bShowStatus		= true;
+	m_pLocalPlayer		= new MyPlayer();
+
 //	m_pStarsField		= new MyStarsField();
 }
 
@@ -96,7 +98,40 @@ bool	MyGameControl::initObjects()
 	return true;
 }
 
-bool	MyGameControl::addObject()
+bool	MyGameControl::addPlayer(string* givenName)
+{
+	if (m_pLocalPlayer == NULL)
+	{
+		return false;
+	} else {
+		if (m_pLocalPlayer->getMesh()->init(_D3DDevice,
+											_matWorld,
+											"resources/x_files/space station 5.x",
+											NULL,
+											1000.0f, 0.0f, 1000.0f,
+											0.01f, 0.10f, 0.0f,
+											0.0f, 3.1412f, 0.0f,
+											0.0f, 0.0f, 0.0f,
+											false))
+		{
+			m_pLocalPlayer->getMesh()->load();
+
+			m_pAllMeshes.push_back(m_pLocalPlayer->getMesh());
+			m_pMasterMeshes.push_back(m_pLocalPlayer->getMesh());
+			m_pView->getPos()->setValues(1500.0f, 0.0f, 1500.0f);
+			m_pView->getVP()->setPValues(
+				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPX(),				
+				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPY(),
+				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPZ());
+		} else {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool	MyGameControl::buildGame()
 {
 	MyMesh*	tempObjd	= new MyMesh();
 	if (tempObjd == NULL)
@@ -176,10 +211,7 @@ bool	MyGameControl::addObject()
 			tempObj->getScale()->setValues(2.0f, 2.0f, 2.0f);
 			m_pAllMeshes.push_back(tempObj);
 			
-			m_pView->getVP()->setPValues(
-				m_pAllMeshes[2]->getAbsolutePosition()->getPX(),				
-				m_pAllMeshes[2]->getAbsolutePosition()->getPY(),
-				m_pAllMeshes[2]->getAbsolutePosition()->getPZ());
+			
 		} else {
 			return false;
 		}
@@ -201,7 +233,7 @@ bool	MyGameControl::addObject()
 							false))
 		{
 			tempObjc->load();
-			m_pView->getPos()->setValues(500.0f, 500.0f, 500.0f);
+			
 			m_pAllMeshes.push_back(tempObjc);
 			m_pMasterMeshes.push_back(tempObjc);
 		} else {
@@ -261,6 +293,8 @@ bool	MyGameControl::addObject()
 			return false;
 		}
 	}
+
+	//this->addPlayer(NULL);
 
 	return true;
 }

@@ -252,7 +252,8 @@ LPDIRECT3DDEVICE9	MyD3DGame::getDevice()
 bool	MyD3DGame::initGame(void)
 {
 	m_pGameControl->init(m_pD3dDevice, &m_matWorld);
-	m_pGameControl->addObject();
+	m_pGameControl->buildGame();
+	m_pGameControl->addPlayer(NULL);
 	m_pGameControl->addLight();
 	m_pGameControl->loadObjects();
 	m_pGameControl->initStarsField();

@@ -65,14 +65,14 @@ bool	MyUserInput::initMouse()
 
 	return true;
 }
-
+/*
 bool	MyUserInput::initJoystick()
 {
 	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
 	return true;
 }
-
-BOOL CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext)
+/*
+BOOL static CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, VOID* pContext)
 {
 	if (FAILED(m_hr = m_lpDI->CreateDevice(pdidInstance->guidInstance, &m_pJoystick, NULL)))
 	{
@@ -81,7 +81,7 @@ BOOL CALLBACK MyUserInput::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIns
 		return DIENUM_STOP;
 	}
 }
-
+*/
 bool	MyUserInput::initKeyboard()
 {
 	//Device erstellen
@@ -129,7 +129,7 @@ void	MyUserInput::inputKB()
 			}
 			if (KEYDOWN(buffer, DIK_F2))
 			{
-				_m_pGameControl->addObject();
+//				_m_pGameControl->buildGame();
 			}
 			if (KEYDOWN(buffer, DIK_F3))
 			{
