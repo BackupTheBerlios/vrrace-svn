@@ -52,10 +52,4 @@ typedef struct CUSTOMVERTEX
 	float	z;
 }CUSTOMVERTEX;
 
-typedef struct MYVERTEXP
-{
-	float*	x;
-	float*	y;
-	float*	z;
-}MYVERTEXP;
 #endif

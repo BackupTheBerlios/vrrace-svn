@@ -4,7 +4,7 @@ MyGameControl::MyGameControl(void)
 {
 	m_initCount		= 0;
 	m_pView			= new MyView();
-	m_bShowStatus	= false;
+	m_bShowStatus	= true;
 	//m_pMeshes		= new vector(new MyMesh());
 }
 
@@ -18,7 +18,7 @@ bool	MyGameControl::loadObjects()
 	if (m_initCount > 0)
 	{
 		m_initCount++;
-		for (int count = 0; count < m_pMeshes.capacity(); count++)
+		for (int count = 0; count < m_pMeshes.size(); count++)
 		{
 			m_pMeshes[count]->load();
 		}
@@ -30,13 +30,13 @@ bool	MyGameControl::loadObjects()
 
 bool	MyGameControl::drawObjects(D3DXMATRIX* givenMatWorld)
 {
-	for (int count = 0; count < m_pMeshes.capacity(); count++)
+	for (int count = 0; count < m_pMeshes.size(); count++)
 	{
            D3DXMatrixTranslation(
 			givenMatWorld,
-			m_pMeshes[count]->getPosition()->x,
-			m_pMeshes[count]->getPosition()->y,
-			m_pMeshes[count]->getPosition()->z
+			m_pMeshes[count]->getPosition()->getX(),
+			m_pMeshes[count]->getPosition()->getY(),
+			m_pMeshes[count]->getPosition()->getZ()
 			);
 			_D3DDevice->SetTransform(D3DTS_WORLD, givenMatWorld);
 			m_pMeshes[count]->draw();
@@ -47,7 +47,7 @@ bool	MyGameControl::drawObjects(D3DXMATRIX* givenMatWorld)
 
 bool	MyGameControl::drawLights()
 {
-	for (int count = 0; count < m_pLights.capacity(); count++)
+	for (int count = 0; count < m_pLights.size(); count++)
 	{
 		m_pLights[count]->show();
 	}
@@ -56,7 +56,7 @@ bool	MyGameControl::drawLights()
 
 bool	MyGameControl::moveObjects()
 {
-	for (int count = 0; count < m_pMeshes.capacity(); count++)
+	for (int count = 0; count < m_pMeshes.size(); count++)
 	{
 		m_pMeshes[count]->move();
 	}
@@ -123,14 +123,14 @@ bool	MyGameControl::initObjects()
 	return true;
 }
 
-bool	MyGameControl::addObject()
+bool	MyGameControl::addObject(int x)
 {
 	MyMesh*	tempObj	= new MyMesh();
 	if (tempObj == NULL)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.001f))
+		if (tempObj->init(_D3DDevice, "resources/shusui.x", 0.0f, 0.0f, x* 2, 0.0f, 0.0f, -0.01f))
 		{
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);
@@ -165,10 +165,10 @@ bool	MyGameControl::addLight()
 
 int	MyGameControl::getNumLights()
 {
-	return m_pLights.capacity();
+	return m_pLights.size();
 }
 
 int MyGameControl::getNumMeshes()
 {
-	return m_pMeshes.capacity();
+	return m_pMeshes.size();
 }

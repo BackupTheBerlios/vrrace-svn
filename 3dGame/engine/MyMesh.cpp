@@ -4,13 +4,15 @@ MyMesh::MyMesh(void)
 {
 	_D3DDevice		= NULL;
 	m_FileName		= NULL;
-	m_Position.x	= m_Position.y	= m_Position.z	= 0.0f;
-	m_Direction.x	= m_Direction.y	= m_Direction.z	= 0.0f;
+	m_pPosition		= new MyVertex();
+	m_pDirection	= new MyVertex();
 
+	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
 }
 
 bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
-					 LPCSTR givenFileName,
+					 LPCTSTR givenFileName,
 					 float posX,
 					 float posY,
 					 float posZ,
@@ -27,52 +29,32 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	if (givenFileName != NULL)
 	{
-		m_FileName		= givenFileName; //"resources/shusui.x";
+		m_FileName		= givenFileName;
 	} else {
 		return false;
 	}
 
-	m_Position.x	+= posX;
-	m_Position.y	+= posY;
-	m_Position.z	+= posZ;
+	m_pPosition->setValues(posX, posY, posZ);
+	m_pDirection->setValues(dirX, dirY, dirZ);
 
-	m_Direction.x	+= dirX;
-	m_Direction.y	+= dirY;
-	m_Direction.z	+= dirZ;
-
-/*	TCHAR* temp = new TCHAR[100];
-
-	//Zeige aktuelle Betrachterposition
-	sprintf(
-		temp,
-		"Position: %2.2f %2.2f %2.2f\nDirection: %2.2f %2.2f %2.2f",
-		posX,
-		posY,
-		posZ,
-		dirX,
-		dirY,
-		dirZ);
-
-	MessageBox(NULL, temp, "letztes Objekt", MB_OK);
-*/
 	return true;
 }
 
 void	MyMesh::move()
 {
-	m_Position.x	+= m_Direction.x;
-	m_Position.y	+= m_Direction.y;
-	m_Position.z	+= m_Direction.z;
+	m_pPosition->addX(m_pDirection->getX());
+	m_pPosition->addY(m_pDirection->getY());
+	m_pPosition->addZ(m_pDirection->getZ());
 }
 
-CUSTOMVERTEX*	MyMesh::getPosition()
+MyVertex*	MyMesh::getPosition()
 {
-	return &m_Position;
+	return m_pPosition;
 }
 
-CUSTOMVERTEX*	MyMesh::getDirection()
+MyVertex*	MyMesh::getDirection()
 {
-	return &m_Direction;
+	return m_pDirection;
 }
 
 HRESULT	MyMesh::load()
@@ -100,8 +82,13 @@ HRESULT	MyMesh::load()
 
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
-		m_pMaterials[count]			= d3dxMaterials[count].MatD3D;
-		m_pMaterials[count].Ambient	= m_pMaterials[count].Diffuse;
+		m_pMaterials[count]				= d3dxMaterials[count].MatD3D;
+		
+		m_pMaterials[count].Ambient		= m_pMaterials[count].Diffuse;
+		m_pMaterials[count].Diffuse.r	= 1.0f;
+		m_pMaterials[count].Diffuse.g	= 1.0f;
+		m_pMaterials[count].Diffuse.b	= 1.0f;
+
 
 		m_pTextures[count]			= NULL;
 
@@ -128,6 +115,9 @@ void	MyMesh::draw()
 {
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
+		m_pMaterials[count].Diffuse.r	= 1.0f;
+		m_pMaterials[count].Diffuse.g	= 1.0f;
+		m_pMaterials[count].Diffuse.b	= 1.0f;
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
 		_D3DDevice->SetTexture(0, m_pTextures[count]);
 		m_pMesh->DrawSubset(count);

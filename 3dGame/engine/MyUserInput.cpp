@@ -104,7 +104,7 @@ void	MyUserInput::inputKB()
 			}
 			if (KEYDOWN(buffer, DIK_F2))
 			{
-				_m_pGameControl->addObject();
+				_m_pGameControl->addObject(1);
 			}
 			if (KEYDOWN(buffer, DIK_F3))
 			{

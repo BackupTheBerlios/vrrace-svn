@@ -3,17 +3,18 @@
 #define MYMESH_H
 
 #include "includes.h"
+#include "MyVertex.h"
 
 class MyMesh
 {
 public:
 	MyMesh(void);
-	bool				init(LPDIRECT3DDEVICE9 givenDevice, LPCSTR givenFileName, float posX, float posY, float posZ, float dirX, float dirY, float dirZ);
+	bool				init(LPDIRECT3DDEVICE9 givenDevice, LPCTSTR givenFileName, float posX, float posY, float posZ, float dirX, float dirY, float dirZ);
 	HRESULT				load();
 	void				draw();
 	void				move();
-	CUSTOMVERTEX*		getPosition();
-	CUSTOMVERTEX*		getDirection();
+	MyVertex*			getPosition();
+	MyVertex*			getDirection();
 
 private:
 	LPCTSTR				m_FileName;
@@ -21,8 +22,8 @@ private:
 	LPD3DXMESH			m_pMesh;
 	D3DMATERIAL9*		m_pMaterials;
 	LPDIRECT3DTEXTURE9*	m_pTextures;
-	CUSTOMVERTEX		m_Position;
-	CUSTOMVERTEX		m_Direction;
+	MyVertex*			m_pPosition;
+	MyVertex*			m_pDirection;
 	LPDIRECT3DDEVICE9	_D3DDevice;
 };
 #endif

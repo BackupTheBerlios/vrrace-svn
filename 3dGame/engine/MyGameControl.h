@@ -6,6 +6,7 @@
 #include "MyView.h"
 #include "MyMesh.h"
 #include "MyLight.h"
+#include "MyVertex.h"
 
 class MyGameControl
 {
@@ -19,7 +20,7 @@ public:
 	bool				drawObjects(D3DXMATRIX* givenMatWorld);
 	bool				drawLights();
 	bool				moveObjects();
-	bool				addObject();
+	bool				addObject(int x);
 	bool				addLight();
 	int					getNumLights();
 	int					getNumMeshes();
