@@ -67,7 +67,7 @@ bool	MyD3DGame::init3D()
 	m_pD3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pD3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pD3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff010101);
+	m_pD3dDevice->SetRenderState(D3DRS_AMBIENT, 0xff0a0a0a);
 
 	return true;
 }
@@ -189,11 +189,9 @@ void	MyD3DGame::showStatus()
 void	MyD3DGame::doScene()
 {
 	m_pGameControl->drawLights();
-	
+	//m_pKoordSys->drawKS(m_pD3dDevice);
 	m_pGameControl->drawObjects(&m_matWorld);
 	if (m_pGameControl->m_bShowStatus) this->showStatus();
-	m_pKoordSys->drawKS(m_pD3dDevice);
-	
 }
 
 void	MyD3DGame::presentScene()

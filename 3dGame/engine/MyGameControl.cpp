@@ -75,9 +75,9 @@ bool	MyGameControl::init(LPDIRECT3DDEVICE9 givenDevice)
 
 	_D3DDevice				= givenDevice;
 
-	m_pView->m_Position.x	= 23.0f;
+	m_pView->m_Position.x	= 60.0f;
 	m_pView->m_Position.y	= 10.0f;
-	m_pView->m_Position.z	= 23.0f;
+	m_pView->m_Position.z	= 60.0f;
 
 	m_pView->m_UpVector.x	= 0.0f;
 	m_pView->m_UpVector.y	= 1.0f;
@@ -99,14 +99,14 @@ bool	MyGameControl::initObjects()
 	return true;
 }
 
-bool	MyGameControl::addObject(int x)
+bool	MyGameControl::addObject()
 {
 	MyMesh*	tempObj	= new MyMesh();
 	if (tempObj == NULL)
 	{
 		return false;
 	} else {
-		if (tempObj->init(_D3DDevice, "resources/orbiter.x", 0.0f, 0.0f, x* 2+5, 0.0f, 0.0f, -0.01f))
+		if (tempObj->init(_D3DDevice, "resources/space station 5.x", -20.0f, 0.0f, 60.0f, 0.0f, 0.0f, -0.05f))
 		{
 			tempObj->load();
 			m_pMeshes.push_back(tempObj);

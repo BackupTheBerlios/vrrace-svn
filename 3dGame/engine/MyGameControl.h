@@ -20,7 +20,7 @@ public:
 	bool				drawObjects(D3DXMATRIX* givenMatWorld);
 	bool				drawLights();
 	bool				moveObjects();
-	bool				addObject(int x);
+	bool				addObject();
 	bool				addLight();
 	int					getNumLights();
 	int					getNumMeshes();
