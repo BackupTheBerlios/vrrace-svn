@@ -10,6 +10,7 @@ typedef struct GAMEOBJECTS
 	DWORD		vectorId;
 	MYPOS		posinfo;
 	bool		scale;
+	float		speed;
 }MYGAMEOBJECTS;
 
 typedef struct PLAYEROBJECTS
