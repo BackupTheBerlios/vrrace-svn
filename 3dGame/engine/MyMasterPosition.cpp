@@ -146,3 +146,16 @@ MyVertex*	MyMasterPosition::getScale()
 {
 	return m_pScaleFactor;
 }
+
+MyVertex*	MyMasterPosition::getAbsolutePosition()
+{
+	MyVertex*	tempVertex	= new MyVertex();
+
+	if (m_pMaster != NULL)
+	{
+		tempVertex->addX(m_pMaster->getAbsolutePosition()->getX());
+		//nur ein ansatz hier!
+	}
+
+	return tempVertex;
+}

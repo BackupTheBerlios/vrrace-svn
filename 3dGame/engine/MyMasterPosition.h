@@ -28,6 +28,7 @@ public:
 	MyVertex*					m_pScaleFactor;								//Skalierungsfaktor
 	LPDIRECT3DDEVICE9			_D3DDevice;
 	int							m_pType;
+	MyVertex*					getAbsolutePosition();
 
 private:
 	void						calcOwnMatrix();							//eigene Matrix berechnen
