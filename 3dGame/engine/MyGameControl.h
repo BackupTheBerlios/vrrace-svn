@@ -13,7 +13,7 @@
 #include "MyMusic.h"
 #include "MyDSound.h"
 
-static const LPCTSTR	MUSICFILENAME	= "resources\\wav_files\\Music.mp3";
+static const LPCTSTR	MUSICFILENAME	= "resources/wav_files/Music.mp3";
 
 class MyGameControl
 {

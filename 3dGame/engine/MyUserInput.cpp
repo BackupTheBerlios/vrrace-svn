@@ -175,7 +175,8 @@ void	MyUserInput::inputKB()
 			//muss hier durch switch-block ersetzt werden
 			if (KEYDOWN(buffer, DIK_ESCAPE ))
 			{
-				exit(1);
+				SendMessage(*m_hWnd,WM_CLOSE,NULL,NULL);
+				//exit(1);
 			} else 
 			if (KEYDOWN(buffer, DIK_F1 ))
 			{

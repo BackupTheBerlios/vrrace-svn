@@ -197,7 +197,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 	} else {
 		if (_DirectPlay->m_pLocalPlayer->getMesh()->init(_D3DDevice,
 											_matWorld,
-											"resources/x_files/star sail.x",
+											MyDPlay::m_pMeshPaths[0],//"resources/x_files/star sail.x",
 											NULL,
 											100.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,

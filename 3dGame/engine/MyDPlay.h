@@ -14,8 +14,8 @@
 static const GUID MyDPlayGUID = 
 	{ 0x336c8c64, 0x1a5, 0x489a, { 0x99, 0x98, 0x13, 0x19, 0xef, 0xcf, 0xc4, 0xb1 } };
 
-static char*			PLANETSOUND	= "resources\\wav_files\\Sound1.wav";
-static char*			SHIPSOUND		= "resources\\wav_files\\Sound2.wav";
+static char*			PLANETSOUND	= "resources/wav_files/Sound1.wav";
+static char*			SHIPSOUND		= "resources/wav_files/Sound2.wav";
 
 typedef struct HOST_NODE
 {
@@ -51,6 +51,7 @@ public:
 	static vector<MyMesh*>			m_pNetworkMeshes;   //Meshes vom Server aktualisiert
 	static vector<MyMesh*>			m_pLocalMeshes;		//verantwortliche Meshes
 	static vector<MySound*>			m_pMeshSounds;		//Sounds der Meshes
+	static vector<LPCTSTR>			m_pMeshPaths;		//Path der Meshes
 	TCHAR*							m_pUsername;
 	static CRITICAL_SECTION			m_csDP;
 	static int						m_iFrameRate;

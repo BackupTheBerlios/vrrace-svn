@@ -13,6 +13,7 @@ vector<MyMesh*>		MyDPlay::m_pNetworkMeshes;
 vector<MyMesh*>		MyDPlay::m_pLocalMeshes;
 vector<MyMesh*>		MyDPlay::m_pMasterMeshes;
 vector<MySound*>	MyDPlay::m_pMeshSounds;
+vector<LPCTSTR>		MyDPlay::m_pMeshPaths;
 LPDIRECT3DDEVICE9	MyDPlay::_D3DDevice		= NULL;
 D3DXMATRIX*			MyDPlay::_matWorld		= NULL;
 LPDIRECTSOUND8		MyDPlay::_DSoundDevice	= NULL;

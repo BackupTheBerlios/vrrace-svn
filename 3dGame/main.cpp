@@ -223,24 +223,24 @@ INT_PTR CALLBACK DialogProc(HWND hWnd,
 
 	HDC				hdc;
 	HDC				hdcMem;
-	PAINTSTRUCT		ps;
+	//PAINTSTRUCT		ps;
 	
 	// Nachricht verarbeiten
 	switch(uiMsg)
 	{
 	case WM_INITDIALOG:
 		{
-			hBitmapBigship			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\bigship1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapBigship			= (HBITMAP) LoadImage(g_hInst,"resources/ships/bigship1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapBigship,sizeof(BITMAP),(LPVOID) &bitmapBigship);
-			hBitmapShusui			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\shusui.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapShusui			= (HBITMAP) LoadImage(g_hInst,"resources/ships/shusui.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapShusui,sizeof(BITMAP),(LPVOID) &bitmapShusui);
-			hBitmapSpaceship2		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 2.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapSpaceship2		= (HBITMAP) LoadImage(g_hInst,"resources/ships/spaceship 2.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapSpaceship2,sizeof(BITMAP),(LPVOID) &bitmapSpaceship2);
-			hBitmapSpaceship5		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 5.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapSpaceship5		= (HBITMAP) LoadImage(g_hInst,"resources/ships/spaceship 5.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapSpaceship5,sizeof(BITMAP),(LPVOID) &bitmapSpaceship5);
-			hBitmapSpaceship13		= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\spaceship 13.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapSpaceship13		= (HBITMAP) LoadImage(g_hInst,"resources/ships/spaceship 13.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapSpaceship13,sizeof(BITMAP),(LPVOID) &bitmapSpaceship13);
-			hBitmapStarsail			= (HBITMAP) LoadImage(g_hInst,"resources\\ships\\star sail.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+			hBitmapStarsail			= (HBITMAP) LoadImage(g_hInst,"resources/ships/star sail.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 			GetObject(hBitmapStarsail,sizeof(BITMAP),(LPVOID) &bitmapStarsail);
 			if((hBitmapBigship == NULL) || (hBitmapShusui == NULL) || (hBitmapSpaceship2 == NULL) ||
 				(hBitmapSpaceship5 == NULL) || (hBitmapSpaceship13 == NULL) || (hBitmapStarsail == NULL))
@@ -488,6 +488,13 @@ INT WINAPI WinMain(HINSTANCE hInst,
 {
 	g_hInst			= hInst;
 
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/bigship1.x");
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/shusui.x");
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/spaceship 2.x");
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/spaceship 5.x");
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/spaceship 13.x");
+	MyDPlay::m_pMeshPaths.push_back("resources/x_files/star sail.x");
+
 	InitCommonControls();
 
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -500,6 +507,6 @@ INT WINAPI WinMain(HINSTANCE hInst,
 	}
 
 	CoUninitialize();
-	
+
 	return 0;
 }
