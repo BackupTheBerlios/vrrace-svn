@@ -116,6 +116,9 @@ bool	MyGameControl::addObject()
 			tempObjb->load();
 			tempObjb->activateScaling();
 			tempObjb->getScale()->setValues(300.0f, 300.0f, 300.0f);
+			tempObjb->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+											0.0f, 0.0f, 0.0f,
+											1.0f, 1.0f, 1.0f);
 			m_pAllMeshes.push_back(tempObjb);
 			m_pMasterMeshes.push_back(tempObjb);
 		} else {
@@ -195,6 +198,9 @@ bool	MyGameControl::addObject()
 			tempObjd->load();
 			tempObjd->activateScaling();
 			tempObjd->getScale()->setValues(20.0f, 20.0f, 20.0f);
+			tempObjd->initMaterialValues(0.0f, 0.0f, 0.0f, 1.1f,
+											0.0f, 0.0f, 0.0f,
+											1.0f, 1.0f, 1.0f);
 			m_pAllMeshes.push_back(tempObjd);
 			m_pMasterMeshes[1]->addClient(tempObjd);
 		} else {

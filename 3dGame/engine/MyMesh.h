@@ -29,6 +29,9 @@ public:
 								float rotDirZ,
 								bool givenAlphaBlending,
 								int givenLayers);
+	void				initMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
+											float rAmbient, float gAmbient, float bAmbient,
+											float rEmissive, float gEmissive, float bEmissive);
 	HRESULT				load();
 	void				draw();
 	void				setReference(MyMasterPosition* givenReference);
@@ -45,5 +48,8 @@ private:
 	MyMesh*				m_pMasterObject;
 	bool*				m_pbAlphaBlending;
 	int*				m_piLayers;
+	float*				m_afDiffuse;
+	float*				m_afAmbient;
+	float*				m_afEmissive;
 };
 #endif

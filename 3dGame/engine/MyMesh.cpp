@@ -7,6 +7,9 @@ MyMesh::MyMesh(void)
 	m_TextureFileName		= NULL;
 	m_pbAlphaBlending		= new bool(false);
 	m_piLayers				= new int(0);
+	m_afDiffuse				= new float[4];
+	m_afAmbient				= new float[3];
+	m_afEmissive			= new float[3];
 
 	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
@@ -23,9 +26,12 @@ MyMesh::MyMesh(void)
 
 MyMesh::~MyMesh()
 {
-	delete m_TextureFileName;
-	delete m_pbAlphaBlending;
-	delete m_piLayers;
+	delete		m_TextureFileName;
+	delete		m_pbAlphaBlending;
+	delete		m_piLayers;
+	delete[]	m_afDiffuse;
+	delete[]	m_afAmbient;
+	delete[]	m_afEmissive;
 
 	if (m_pMaterials != NULL)
 		delete[] m_pMaterials;
@@ -100,6 +106,24 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 	return true;
 }
 
+void MyMesh::initMaterialValues(float rDiffuse, float gDiffuse, float bDiffuse, float aDiffuse,
+											float rAmbient, float gAmbient, float bAmbient,
+											float rEmissive, float gEmissive, float bEmissive)
+{
+	m_afDiffuse[0]	= rDiffuse;
+	m_afDiffuse[1]	= gDiffuse;
+	m_afDiffuse[2]	= bDiffuse;
+	m_afDiffuse[3]	= aDiffuse;
+
+	m_afAmbient[0]	= rAmbient;
+	m_afAmbient[1]	= gAmbient;
+	m_afAmbient[2]	= bAmbient;
+
+	m_afEmissive[0]	= rEmissive;
+	m_afEmissive[1]	= gEmissive;
+	m_afEmissive[2]	= bEmissive;
+}
+
 HRESULT	MyMesh::load()
 {
 	LPD3DXBUFFER	pD3DXMtrlBuffer;
@@ -162,7 +186,7 @@ HRESULT	MyMesh::load()
 
 void	MyMesh::draw()
 {
-	this->transform();
+	
 
 	//Alpha-Blending
 	if(*m_pbAlphaBlending)
@@ -172,22 +196,26 @@ void	MyMesh::draw()
 		_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	}
 
+	for(int pcount = 0; pcount < *m_piLayers; pcount++)
+	{
+		this->transform();
+		//this->getScale()->setValues((this->getScale()->getX())+pcount,(this->getScale()->getY())+pcount,(this->getScale()->getZ())+pcount);
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
 		if(*m_pbAlphaBlending)
 		{
-		m_pMaterials[count].Diffuse.r = 0.0f;
-		m_pMaterials[count].Diffuse.g = 0.0f;
-		m_pMaterials[count].Diffuse.b = 0.0f;
-		m_pMaterials[count].Diffuse.a = 1.1f;
+		m_pMaterials[count].Diffuse.r = m_afDiffuse[0];
+		m_pMaterials[count].Diffuse.g = m_afDiffuse[1];
+		m_pMaterials[count].Diffuse.b = m_afDiffuse[2];
+		m_pMaterials[count].Diffuse.a = m_afDiffuse[3];
 
-		m_pMaterials[count].Ambient.r = 0.0f;
-		m_pMaterials[count].Ambient.g = 0.0f;
-		m_pMaterials[count].Ambient.b = 0.0f;
+		m_pMaterials[count].Ambient.r = m_afAmbient[0];
+		m_pMaterials[count].Ambient.g = m_afAmbient[1];
+		m_pMaterials[count].Ambient.b = m_afAmbient[2];
 
-		m_pMaterials[count].Emissive.r = 1.0f;
-		m_pMaterials[count].Emissive.g = 1.0f;
-		m_pMaterials[count].Emissive.b = 1.0f;
+		m_pMaterials[count].Emissive.r = m_afEmissive[0];
+		m_pMaterials[count].Emissive.g = m_afEmissive[1];
+		m_pMaterials[count].Emissive.b = m_afEmissive[2];
 		}
 
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
@@ -197,5 +225,6 @@ void	MyMesh::draw()
 		m_pMesh->DrawSubset(count);
 		//_D3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 		//m_pMesh->DrawSubset(count);
+	}
 	}
 }
