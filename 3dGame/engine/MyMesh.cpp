@@ -2,32 +2,24 @@
 
 MyMesh::MyMesh(void)
 {
-	_D3DDevice			= NULL;
-	m_FileName			= NULL;
-	m_pPosition			= new MyMasterPosition();
-	m_pReferencePoint	= new MyMasterPosition();
-	m_pScaleFactor		= new MyVertex();
-	m_bScale			= false;
+	_D3DDevice				= NULL;
+	m_FileName				= NULL;
 
-	m_pPosition->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
-	m_pPosition->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
-	m_pPosition->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
-	m_pPosition->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
+	m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+	m_pDirection->setValues(0.0f, 0.0f, 0.0f);
+	m_pRotation->setValues(0.0f, 0.0f, 0.0f);
+	m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
 
-	m_pReferencePoint->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
+/*	m_pReferencePoint->m_pPosition->setValues(0.0f, 0.0f, 0.0f);
 	m_pReferencePoint->m_pDirection->setValues(0.0f, 0.0f, 0.0f);
 	m_pReferencePoint->m_pRotation->setValues(0.0f, 0.0f, 0.0f);
 	m_pReferencePoint->m_pRotDir->setValues(0.0f, 0.0f, 0.0f);
-
+*/
 	m_pScaleFactor->setValues(1.0f, 2.0f, 1.0f);
 }
 
 MyMesh::~MyMesh()
 {
-	delete m_pPosition;
-	delete m_pScaleFactor;
-	m_pReferencePoint	= NULL;
-
 	if (m_pMaterials != NULL)
 		delete[] m_pMaterials;
 	
@@ -82,68 +74,12 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 		return false;
 	}
 
-	m_pPosition->m_pPosition->setValues(posX, posY, posZ);
-	m_pPosition->m_pDirection->setValues(dirX, dirY, dirZ);
-	m_pPosition->m_pRotation->setValues(rotX, rotY, rotZ);
-	m_pPosition->m_pRotDir->setValues(rotDirX, rotDirY, rotDirZ);
+	m_pPosition->setValues(posX, posY, posZ);
+	m_pDirection->setValues(dirX, dirY, dirZ);
+	m_pRotation->setValues(rotX, rotY, rotZ);
+	m_pRotDir->setValues(rotDirX, rotDirY, rotDirZ);
 
 	return true;
-}
-
-void	MyMesh::move()
-{
-	m_pPosition->m_pPosition->addX(m_pPosition->m_pDirection->getX());
-	m_pPosition->m_pPosition->addY(m_pPosition->m_pDirection->getY());
-	m_pPosition->m_pPosition->addZ(m_pPosition->m_pDirection->getZ());
-
-	m_pPosition->m_pRotation->addX(m_pPosition->m_pRotDir->getX());
-	m_pPosition->m_pRotation->addY(m_pPosition->m_pRotDir->getY());
-	m_pPosition->m_pRotation->addZ(m_pPosition->m_pRotDir->getZ());
-}
-
-MyMasterPosition*	MyMesh::getPosition()
-{
-	return m_pPosition;
-}
-
-MyMasterPosition*	MyMesh::getReference()
-{
-	return m_pReferencePoint;
-}
-
-MyVertex*	MyMesh::getScale()
-{
-	return m_pScaleFactor;
-}
-
-void	MyMesh::activateScaling()
-{
-	m_bScale	= true;
-}
-
-void	MyMesh::deactivateScaling()
-{
-	m_bScale	= false;
-}
-
-void	MyMesh::setReference(MyMasterPosition* givenReference)
-{
-	m_pReferencePoint->m_pPosition->setPValues(
-		givenReference->m_pPosition->getPX(),
-		givenReference->m_pPosition->getPY(),
-		givenReference->m_pPosition->getPZ());
-	m_pReferencePoint->m_pDirection->setPValues(
-		givenReference->m_pDirection->getPX(),
-		givenReference->m_pDirection->getPY(),
-		givenReference->m_pDirection->getPZ());
-	m_pReferencePoint->m_pRotation->setPValues(
-		givenReference->m_pRotation->getPX(),
-		givenReference->m_pRotation->getPY(),
-		givenReference->m_pRotation->getPZ());
-	m_pReferencePoint->m_pRotDir->setPValues(
-		givenReference->m_pRotDir->getPX(),
-		givenReference->m_pRotDir->getPY(),
-		givenReference->m_pRotDir->getPZ());
 }
 
 HRESULT	MyMesh::load()
@@ -201,97 +137,9 @@ HRESULT	MyMesh::load()
 	return S_OK;				
 }
 
-void	MyMesh::matrixOperations()
-{
-	D3DXMATRIX	tmpMatRot;			//Rotationsmatrix
-	D3DXMATRIX	tmpMatTrans;		//Translationsmatrix
-	D3DXMATRIX	tmpMatOwn;			//Transformation lokal
-
-	D3DXMATRIX	tmpMatRefRot;		//Rotationsmatrix der Referenz
-	D3DXMATRIX	tmpMatRefTrans;		//Translationsmatrix der Referenz
-	D3DXMATRIX	tmpMatRef;			//TransformationsMatrix der Referenz
-
-	D3DXMATRIX	tmpMatRotTrans;		//end-Transformationsmatrix
-	D3DXMATRIX	tmpMatScale;		//Skalierungsmatrix
-
-	//rotiere lokal
-	D3DXMatrixRotationYawPitchRoll(
-			&tmpMatRot,
-			m_pPosition->m_pRotation->getY(),
-			m_pPosition->m_pRotation->getX(),
-			m_pPosition->m_pRotation->getZ());
-
-	//transliere lokal
-	D3DXMatrixTranslation(
-			&tmpMatTrans,
-			m_pPosition->m_pPosition->getX(),
-			m_pPosition->m_pPosition->getY(),
-			m_pPosition->m_pPosition->getZ()
-			);
-
-	//rotiere nach Referenz
-	D3DXMatrixRotationYawPitchRoll(
-			&tmpMatRefRot,
-			m_pReferencePoint->m_pRotation->getY(),
-			m_pReferencePoint->m_pRotation->getX(),
-			m_pReferencePoint->m_pRotation->getZ());
-
-	//transliere nach Referenz
-	D3DXMatrixTranslation(
-			&tmpMatRefTrans,
-			m_pReferencePoint->m_pPosition->getX(),
-			m_pReferencePoint->m_pPosition->getY(),
-			m_pReferencePoint->m_pPosition->getZ());
-
-	//fasse lokale Matrizen zusammen
-	D3DXMatrixMultiply(
-			&tmpMatOwn,
-			&tmpMatRot,
-			&tmpMatTrans);
-
-	//fasse Referenz-Matrizen zusammen
-	D3DXMatrixMultiply(
-			&tmpMatRef,
-			&tmpMatRefRot,
-			&tmpMatRefTrans);
-
-	//wenn Skalierung verlangt
-	if (m_bScale) {
-		//Skaliere
-		D3DXMatrixScaling(
-			&tmpMatScale,
-			m_pScaleFactor->getX(),
-			m_pScaleFactor->getY(),
-			m_pScaleFactor->getZ());
-
-		//fasse lokal und Referenzmatrix zusammen
-		D3DXMatrixMultiply(
-			&tmpMatRotTrans,
-			&tmpMatOwn,
-			&tmpMatRef);
-
-		//fasse Transformation und Skalierung zusammen
-		D3DXMatrixMultiply(
-			_matWorld,
-			&tmpMatScale,
-			&tmpMatRotTrans);
-
-	} else {
-		//fassee nur lokale und referentielle Transformation zusammen
-		D3DXMatrixMultiply(
-			_matWorld,
-			&tmpMatOwn,
-			&tmpMatRef);
-	}
-
-	//fuehre Transformationen durch
-	_D3DDevice->SetTransform(D3DTS_WORLD, _matWorld);
-}
-
 void	MyMesh::draw()
 {
-	this->matrixOperations();
-
+	this->transform();
 	for (DWORD count = 0; count < m_dwNumMaterials; count++)
 	{
 		_D3DDevice->SetMaterial(&m_pMaterials[count]);
