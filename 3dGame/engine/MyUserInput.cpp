@@ -190,48 +190,55 @@ void	MyUserInput::inputKB()
 			if (KEYDOWN(buffer, DIK_LEFT))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f,-0.01f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(0.0f, 0.0f,-0.01f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_RIGHT))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f,0.01f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(0.0f, 0.0f,0.01f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_UP))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f,0.0f,0.0f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(-0.01f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_DOWN))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f,0.0f,0.0f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(0.01f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_A))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,-0.01f,0.0f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(0.0f,-0.01f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_D))
 			{
 				_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f,0.01f,0.0f);
+				_m_pGameControl->m_pMainCam->rotate();
 				_m_pGameControl->sendPlayer(0.0f,0.01f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
 			if (KEYDOWN(buffer, DIK_W))
 			{
-				_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);
+				//TODO andere Funktion aufrufen, der Betrag von Direction muss verändert werden!
+				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed -= 0.01f;
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			} else
 			if (KEYDOWN(buffer, DIK_S))
 			{
-				_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);
+				*_m_pGameControl->getPlayer()->getMesh()->m_pSpeed += 0.01f;
 				_m_pGameControl->sendPlayer(0.0f,0.0f,0.0f);
 				//_m_pGameControl->m_pMainCam->calcPosition();
 			}
@@ -271,12 +278,42 @@ HRESULT	MyUserInput::inputJS()
 		m_hr	= m_pJoystick->GetDeviceState(sizeof(DIJOYSTATE2), &js);
 		if (FAILED(m_hr))	{return m_hr;}
 
-		if (js.lY < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f, 0.0f, 0.0f);_m_pGameControl->sendPlayer(-0.01f, 0.0f, 0.0f);}
-		if (js.lY > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f, 0.0f, 0.0f);_m_pGameControl->sendPlayer(0.01f, 0.0f, 0.0f);}
-		if (js.lX < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -0.02f);_m_pGameControl->sendPlayer(0.0f, 0.0f, -0.02f);}
-		if (js.lX > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, 0.02f);_m_pGameControl->sendPlayer(0.0f, 0.0f, 0.02f);}
-		if (js.lRz < 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);_m_pGameControl->sendPlayer(0.0f, -0.01f, 0.0f);}
-		if (js.lRz > 0)	{_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);_m_pGameControl->sendPlayer(0.0f, 0.01f, 0.0f);}
+		if (js.lY < 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(-0.01f, 0.0f, 0.0f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(-0.01f, 0.0f, 0.0f);
+		}
+		if (js.lY > 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(0.01f, 0.0f, 0.0f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(0.01f, 0.0f, 0.0f);
+		}
+		if (js.lX < 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, -0.02f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(0.0f, 0.0f, -0.02f);
+		}
+		if (js.lX > 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.0f, 0.02f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(0.0f, 0.0f, 0.02f);
+		}
+		if (js.lRz < 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, -0.01f, 0.0f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(0.0f, -0.01f, 0.0f);
+		}
+		if (js.lRz > 0)
+		{
+			_m_pGameControl->getPlayer()->getMesh()->rotate(0.0f, 0.01f, 0.0f);
+			_m_pGameControl->m_pMainCam->rotate();
+			_m_pGameControl->sendPlayer(0.0f, 0.01f, 0.0f);
+		}
 		if (js.rglSlider[0] < 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(-0.01f);_m_pGameControl->sendPlayer(0.0f, 0.0f, 0.0f);}
 		if (js.rglSlider[0] > 0)	{_m_pGameControl->getPlayer()->getMesh()->m_pDirection->addZ(0.01f);_m_pGameControl->sendPlayer(0.0f, 0.0f, 0.0f);}
 	}

@@ -59,62 +59,37 @@ MyMasterPosition*	MyView::getMaster()
 
 void	MyView::move()
 {
-	D3DXMATRIX	tempTransLP;
-	D3DXMATRIX	tempTransUV;
-	D3DXMATRIX	tempTransb;
-	MyVertex	tempMesh;
-	D3DXVECTOR4*	pOut	= new D3DXVECTOR4();
+//	D3DXMATRIX	tempTransLP;
+//	D3DXMATRIX	tempTransb;
+	D3DXVECTOR4	pOut;
 
 	if (m_pMaster != NULL)
 	{
-
-	//wenn sich das schiff in eine richtung bewegt, muss die camera hinterherfliegen
-
-		//eigendlich sollte der localplayer die position anpassen
-		D3DXMatrixTranslation(
+/*		D3DXMatrixTranslation(
 			&tempTransLP,
 			m_pLocalPos->getX(),
 			m_pLocalPos->getY(),
 			m_pLocalPos->getZ()
 			);
 
-		D3DXMatrixTranslation(
-			&tempTransUV,
-			m_pUpVector->getX(),
-			m_pUpVector->getY(),
-			m_pUpVector->getZ()
-			);
-
 		D3DXMatrixMultiply(
 			&tempTransb,
 			&tempTransLP,
 			m_pMaster->getRotationMatrix());
-
-		D3DXVec3Transform(pOut, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &tempTransb);
-		tempMesh.setX(pOut->x);
-		tempMesh.setY(pOut->y);
-		tempMesh.setZ(pOut->z);
+*/
+		//D3DXVec3Transform(&pOut, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &tempTransb);
+		D3DXVec3Transform(&pOut, &D3DXVECTOR3(m_pLocalPos->getX(), m_pLocalPos->getY(), m_pLocalPos->getZ()), m_pMaster->getRotationMatrix());
 
 		m_pPosition->setValues(
-			m_pMaster->getAbsolutePosition()->getX() + tempMesh.getX(), 
-			m_pMaster->getAbsolutePosition()->getY() + tempMesh.getY(), 
-			m_pMaster->getAbsolutePosition()->getZ() + tempMesh.getZ());
-//UPVECTORBERECHNUNG
-//wird hier jedesmal ausgeführt, was dazu führt, dass der upvector nicht fest bleibt		
-/*		D3DXMatrixMultiply(
-			&tempTransb,
-			&tempTransUV,
-			m_pMaster->getRotationMatrix());
+			m_pMaster->getAbsolutePosition()->getX() + pOut.x, 
+			m_pMaster->getAbsolutePosition()->getY() + pOut.y, 
+			m_pMaster->getAbsolutePosition()->getZ() + pOut.z);
+	}
+}
 
-		D3DXVec3Transform(pOut, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &tempTransb);
-		tempMesh.setX(pOut->x);
-		tempMesh.setY(pOut->y);
-		tempMesh.setZ(pOut->z);
-
-		m_pUpVector->setValues(tempMesh.getX(), tempMesh.getY(), tempMesh.getZ());*/
-	} 
-
-
-	delete pOut;
-	
+void	MyView::rotate()
+{
+	D3DXVECTOR4	pOut;
+	D3DXVec3Transform(&pOut, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_pMaster->getRotationMatrix());
+	m_pUpVector->setValues(pOut.x, pOut.y, pOut.z);
 }

@@ -20,7 +20,7 @@ public:
 	void				setMaster(MyMasterPosition* givenMaster);
 	MyMasterPosition*	getMaster();
 	void				move();
-//	void				calcPosition();		//absolute Position berechnen
+	void				rotate();
 
 private:
 

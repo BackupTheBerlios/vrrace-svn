@@ -46,6 +46,7 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 					 float dirX,
 					 float dirY,
 					 float dirZ,
+					 float speed,
 					 float rotX,
 					 float rotY,
 					 float rotZ,
@@ -88,6 +89,7 @@ bool	MyMesh::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	m_pPosition->setValues(posX, posY, posZ);
 	m_pDirection->setValues(dirX, dirY, dirZ);
+	*m_pSpeed = speed;
 	m_pRotation->setValues(rotX, rotY, rotZ);
 	m_pRotDir->setValues(rotDirX, rotDirY, rotDirZ);
 

@@ -21,6 +21,7 @@ public:
 								float dirX,
 								float dirY,
 								float dirZ,
+								float speed,
 								float rotX,
 								float rotY,
 								float rotZ,

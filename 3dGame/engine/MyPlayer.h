@@ -14,8 +14,8 @@ public:
 	void	setMesh(MyMesh* givenMesh);
 	MyMesh*	getMesh();
 	DPNID*	getID();
-//	void	setCamera(MyView* givenCamera);
-//	MyView*	getCamera();
+	void	setCamera(MyView* givenCamera);
+	MyView*	getCamera();
 
 	string*	m_Name;	//Spielername
 	MyMesh*	m_pPlayerMesh;
@@ -23,8 +23,7 @@ public:
 /*	int*	m_pEnergy;
 	int*	m_pObjectID;	//Objektidentifikator -> welche Textur/Mesh/Objekttyp
 	int*	m_pStatus;		//zerstört, unsichbar, initialisiert, ....
-	int*	m_pVectorID;
-//	MyView*	m_pCamera;
-*/
+	int*	m_pVectorID;*/
+	MyView*	m_pCamera;
 };
 #endif

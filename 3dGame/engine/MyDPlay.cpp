@@ -186,6 +186,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 															NULL,
 															105.0f, 0.0f, 1000.0f,
 															0.0f, 0.0f, 0.0f,
+															0.0f,
 															0.0f, 0.0f, 0.0f,
 															0.0f, 0.0f, 0.0f,
 															false, true))

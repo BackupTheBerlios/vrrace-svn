@@ -132,6 +132,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 											NULL,
 											100.0f, 0.0f, 1000.0f,
 											0.0f, 0.0f, 0.0f,
+											0.0f,
 											0.0f, 0.0f, 0.0f,
 											0.0f, 0.0f, 0.0f,
 											false, true))
@@ -141,8 +142,6 @@ bool	MyGameControl::addPlayer(string* givenName)
 
 			_DirectPlay->m_pLocalPlayer->m_pPlayerID = _DirectPlay->m_pid;
 			_DirectPlay->m_pLocalPlayer->getMesh()->load();
-			//if(m_iDPchoice != 0)
-				//m_pLocalPlayer->getMesh()->m_bToSend = *_DirectPlay->m_pbHostingApp;
 			_DirectPlay->m_pAllMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
 			_DirectPlay->m_pMasterMeshes.push_back(_DirectPlay->m_pLocalPlayer->getMesh());
 
@@ -150,13 +149,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 
 			m_pMainCam->setMaster(_DirectPlay->m_pLocalPlayer->getMesh());
 			m_pMainCam->getLP()->setValues(0.0f, 0.0f, 100.0f);
-//			m_pMainCam->calcPosition();
 			m_pMainCam->move();
-			/*m_pView->getVP()->setPValues(
-				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPX(),				
-				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPY(),
-				m_pLocalPlayer->getMesh()->getAbsolutePosition()->getPZ());*/
-//			m_pMainCam = m_pLocalPlayer->getCamera();
 		} else {
 			return false;
 		}
@@ -186,6 +179,7 @@ bool	MyGameControl::buildGame()
 							"resources/x_files/Planet0.dds",
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
+							0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.01f, 0.0f,
 							true, false))
@@ -229,6 +223,7 @@ bool	MyGameControl::buildGame()
 							NULL,
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
+							0.0f,
 							0.0f, 3.0f, 0.0f,
 							0.0f, -0.05f, 0.0f,
 							true, false))
@@ -273,6 +268,7 @@ bool	MyGameControl::buildGame()
 							NULL,
 							50.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
+							0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							false, false))
@@ -315,6 +311,7 @@ bool	MyGameControl::buildGame()
 							NULL,
 							60.0f, 0.0f, -500.0f,
 							0.0f, 0.0f, 0.3f,
+							-10.0f,
 							0.0f, 3.142f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							false, false))
@@ -355,6 +352,7 @@ bool	MyGameControl::buildGame()
 							NULL,
 							90.0f, -30.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
+							0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							false, false))
@@ -396,6 +394,7 @@ bool	MyGameControl::buildGame()
 								"resources/x_files/Planet0.dds",
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
+								0.0f,
 								0.0f, 0.0f, 0.0f,
 								//0.0f, 0.0f, 0.05f,
 								(float)pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)-pow((double)-1.0f,(double)count)*(float)count/1000.0f, (float)pow((double)-1.0f,(double)count)*(float)count/1000.0f,
@@ -467,6 +466,7 @@ void	MyGameControl::sendPlayer(float givenX, float givenY, float givenZ)
 	if(m_iDPchoice != 0)
 	{
 		_DirectPlay->m_pLocalPlayer->getMesh()->move();
+
 		PLAYEROBJECTS	sendingToken;
 		sendingToken.dpnid	= _DirectPlay->m_pLocalPlayer->m_pPlayerID;
 
