@@ -12,6 +12,7 @@ typedef struct GAMEOBJECTS
 	bool		scale;
 	float		speed;
 	int			status;
+	bool		item;
 }MYGAMEOBJECTS;
 
 typedef struct PLAYEROBJECTS

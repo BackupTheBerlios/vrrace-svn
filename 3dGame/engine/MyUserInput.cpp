@@ -26,11 +26,11 @@ bool	MyUserInput::init(HINSTANCE* hInst, HWND* hWnd, MyGameControl* givenGC)
 	m_hWnd			= hWnd;
 	_m_pGameControl	= givenGC;
 
-	if (FAILED(initDinput()))	{return false;}
-	if (FAILED(initKeyboard()))	{return false;}
-	if (FAILED(initMouse()))	{return false;}
+	if (!initDinput())	{return false;}
+	if (!initKeyboard())	{return false;}
+	//if (!initMouse())	{return false;}
 
-	if (SUCCEEDED(initJoystick())) {m_JoystickAvailable = true;}
+	if (initJoystick()) {m_JoystickAvailable = true;}
 
 	return true;
 }
@@ -78,6 +78,7 @@ bool	MyUserInput::initMouse()
 
 bool	MyUserInput::initJoystick()
 {
+	m_JoystickAvailable = false;
 	m_lpDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_FORCEFEEDBACK | DIEDFL_ATTACHEDONLY);
 
 	if (m_pJoystick == NULL)	{return false;}
@@ -149,8 +150,8 @@ BOOL CALLBACK MyUserInput::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdi
 		diprg.lMin				= -MAXVAL;
 		diprg.lMax				= +MAXVAL;
 		
-/*
-		DWORD*	pdwNumForceFeedbackAxis = (DWORD*)pContext;
+
+	/*	DWORD*	pdwNumForceFeedbackAxis = (DWORD*)pContext;
 		if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0)
 		{
 			(*pdwNumForceFeedbackAxis)++;
@@ -195,55 +196,47 @@ void	MyUserInput::doFF()
 {
 	if (m_JoystickAvailable)
 	{
-	if (_m_pGameControl->ff_g > 0)
-	{/*
-		DIPERIODIC diPeriodic;
-		LPDIEFFECT temp;
-		pEff[0]->GetParameters(&temp, 0);
-		//diPeriodic = temp->lpvTypeSpecificParams;
-		diPeriodic.dwMagnitude = _m_pGameControl->ff_g;
-		temp->cbTypeSpecificParams = sizeof(diPeriodic);
-		temp->lpvTypeSpecificParams = &diPeriodic;
-		pEff[0]->SetParameters(&temp, 0);*/
-		pEff[0]->Start(1,0);
-	} else {
-		pEff[0]->Stop();
-	}
-	if (_m_pGameControl->ff_f)
-	{
-		pEff[1]->Start(1,0);
-		_m_pGameControl->ff_f = false;
-	}/* else {
-		pEff[1]->Stop();
-	}*/
-	if (_m_pGameControl->ff_r)
-	{
-		pEff[2]->Start(1,0);
-		_m_pGameControl->ff_r = false;
-	}/* else {
-		pEff[2]->Stop();
-	}*/
-	if (_m_pGameControl->ff_b)
-	{
-		pEff[3]->Start(1,0);
-		_m_pGameControl->ff_b = false;
-	}/* else {
-		pEff[3]->Stop();
-	}*/
-	if (_m_pGameControl->ff_l)
-	{
-		pEff[4]->Start(1,0);
-		_m_pGameControl->ff_l = false;
-	}/* else {
-		pEff[4]->Stop();
-	}*/
-	if (_m_pGameControl->ff_e)
-	{
-		pEff[5]->Start(1,0);
-		_m_pGameControl->ff_e = false;
-	}/* else {
-		pEff[5]->Stop();
-	}*/
+		if (_m_pGameControl->ff_g > 0)
+		{
+			pEff[0]->Start(1,0);
+		} else {
+			pEff[0]->Stop();
+		}
+		if (_m_pGameControl->ff_f)
+		{
+			pEff[1]->Start(1,0);
+			_m_pGameControl->ff_f = false;
+		}/* else {
+			pEff[1]->Stop();
+		}*/
+		if (_m_pGameControl->ff_r)
+		{
+			pEff[2]->Start(1,0);
+			_m_pGameControl->ff_r = false;
+		}/* else {
+			pEff[2]->Stop();
+		}*/
+		if (_m_pGameControl->ff_b)
+		{
+			pEff[3]->Start(1,0);
+			_m_pGameControl->ff_b = false;
+		}/* else {
+			pEff[3]->Stop();
+		}*/
+		if (_m_pGameControl->ff_l)
+		{
+			pEff[4]->Start(1,0);
+			_m_pGameControl->ff_l = false;
+		}/* else {
+			pEff[4]->Stop();
+		}*/
+		if (_m_pGameControl->ff_e)
+		{
+			pEff[5]->Start(1,0);
+			_m_pGameControl->ff_e = false;
+		}/* else {
+			pEff[5]->Stop();
+		}*/
 	}
 }
 
@@ -386,7 +379,7 @@ void	MyUserInput::inputKB()
 
 HRESULT	MyUserInput::inputJS()
 {
-	if (m_JoystickAvailable)
+	if ((m_JoystickAvailable) && (_m_pGameControl->_DirectPlay->m_bInitialized))
 	{
 		DIJOYSTATE2	js;
 

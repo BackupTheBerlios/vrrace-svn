@@ -208,17 +208,13 @@ void	MyGameControl::moveObjects()
 							{//wenn das gegenstueck ein item ist
 								_DirectPlay->m_pLocalPlayer->m_points += _DirectPlay->m_pAllMeshes[cCount]->m_itemPoints;
 								_DirectPlay->m_pAllMeshes[cCount]->m_itemPoints = 0;
+								m_pCollectSound->play(false, 0);
 							} else {//wenn das gegenstück kein item ist
+								
 								_DirectPlay->m_pAllMeshes[count]->collided();
 								if (_DirectPlay->m_pMeshSounds[count])
 									_DirectPlay->m_pMeshSounds[count]->stop();
-								if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
-								{
-								}
-								else
-								{
-									//m_pCollisionSound->play(false, 0);
-								}
+								m_pCollisionSound->play(false, 0);
 								if (_DirectPlay->m_pAllMeshes[count]->m_bIsCam)
 								{//anzunehmen, dass es der spieler ist
 									ff_e = true;
@@ -228,20 +224,23 @@ void	MyGameControl::moveObjects()
 							{//wenn das gegenstueck zerstörbar ist (schiff)
 								if (_DirectPlay->m_pAllMeshes[count]->m_isItem)
 								{//wenn das aktuelle ein item ist
+									//m_pCollectSound->play(false, 0);
 									_DirectPlay->m_pLocalPlayer->m_points += _DirectPlay->m_pAllMeshes[count]->m_itemPoints;
 									_DirectPlay->m_pAllMeshes[count]->m_itemPoints = 0;
 								} else {
 									_DirectPlay->m_pAllMeshes[cCount]->collided();
 									if (_DirectPlay->m_pMeshSounds[cCount])
 										_DirectPlay->m_pMeshSounds[cCount]->stop();
-									if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
+									//m_pCollisionSound->play(false, 0);
+									/*if (_DirectPlay->m_pAllMeshes[cCount]->m_isItem)
 									{
 										m_pCollectSound->play(false, 0);
 									}
 									else
 									{
-										m_pCollisionSound->play(false, 0);
-									}
+										m_pCollectSound->play(false, 0);
+										//m_pCollisionSound->play(false, 0);
+									}*/
 									if (_DirectPlay->m_pAllMeshes[count]->m_bIsCam)
 									{//anzunehmen, dass es der spieler ist
 										ff_e = true;
@@ -375,7 +374,7 @@ bool	MyGameControl::addPlayer(string* givenName)
 											_matWorld,
 											MyDPlay::m_pMeshPaths[_DirectPlay->m_pLocalPlayer->m_pShipChoice],//"resources/x_files/star sail.x",
 											NULL,
-											100.0f, 0.0f, 1000.0f + rand()%10001,
+											100.0f, 0.0f, 3000.0f + rand()%10001,
 											0.0f, 0.0f, 0.0f,
 											0.0f,
 											0.0f, 0.0f, 0.0f,
@@ -421,7 +420,7 @@ MyPlayer*	MyGameControl::getPlayer()
 {
 	return _DirectPlay->m_pLocalPlayer;
 }
-
+//-----------------------------------------------------------------
 bool	MyGameControl::buildGame()
 {
 	MyMesh*		sonne		= new MyMesh();
@@ -441,7 +440,7 @@ bool	MyGameControl::buildGame()
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f/*005f*/, 0.0f,
+							0.0f, 0.0005f, 0.0f,
 							true, false))
 		{
 			if(SUCCEEDED(sonne->load()))
@@ -498,13 +497,13 @@ bool	MyGameControl::buildGame()
 
 		EnterCriticalSection(&_DirectPlay->m_csDP);
 
-		item1->m_bDestroyable = true;
+		item1->m_bDestroyable = false;
 		if (item1->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
 							//"resources/x_files/Planet0.bmp",
 							NULL,
-							100.0f, 100.0f, 100.0f,
+							3500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
@@ -512,10 +511,13 @@ bool	MyGameControl::buildGame()
 							false, false))
 		{
 			item1->m_isItem = true;
+			item1->activateScaling();
+			item1->m_colRadius = 10;
+			item1->getScale()->setValues(10.0f, 10.0f, 10.0f);
 			if(SUCCEEDED(item1->load()))
 			{
 				
-				item1->m_itemPoints = 100;
+				item1->m_itemPoints = 10;
 					if(m_iDPchoice != 0)
 					{
 						if(*_DirectPlay->m_pbHostingApp)
@@ -527,6 +529,61 @@ bool	MyGameControl::buildGame()
 					}
 					_DirectPlay->m_pAllMeshes.push_back(item1);
 					_DirectPlay->m_pMasterMeshes.push_back(item1);
+					_DirectPlay->m_pMeshSounds.push_back(NULL);
+				
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
+	MyMesh*		item5		= new MyMesh();
+	
+	if (item5 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		item5->m_bDestroyable = false;
+		if (item5->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere0.x",
+							//"resources/x_files/Planet0.bmp",
+							NULL,
+							3500.0f, 3500.0f, 3500.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							false, false))
+		{
+			item5->m_isItem = true;
+			item5->activateScaling();
+			item5->m_colRadius = 10;
+			item5->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			if(SUCCEEDED(item5->load()))
+			{
+				
+				item5->m_itemPoints = 10;
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(item5);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(item5);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(item5);
+					_DirectPlay->m_pMasterMeshes.push_back(item5);
 					_DirectPlay->m_pMeshSounds.push_back(NULL);
 				
 			} else {
@@ -607,6 +664,64 @@ bool	MyGameControl::buildGame()
 
 	//erde = NULL;
 
+	MyMesh*		item2		= new MyMesh();
+	
+	if (item2 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		item2->m_bDestroyable = false;
+		if (item2->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere0.x",
+							//"resources/x_files/Planet0.bmp",
+							NULL,
+							200.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							false, false))
+		{
+			item2->m_isItem = true;
+			item2->activateScaling();
+			item2->m_colRadius = 10;
+			item2->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			if(SUCCEEDED(item2->load()))
+			{
+				
+				item2->m_itemPoints = 1000;
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(item2);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(item2);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(item2);
+					item2->setMaster(erde);
+					//_DirectPlay->m_pMasterMeshes.push_back(item1);
+					_DirectPlay->m_pMeshSounds.push_back(NULL);
+				
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
+
+
 	MyMesh*		erdkern			= new MyMesh();
 	MySound*	erdkernSound	= new MySound();
 	if (erdkern == NULL)
@@ -653,6 +768,59 @@ bool	MyGameControl::buildGame()
 					LeaveCriticalSection(&_DirectPlay->m_csDP);
 					return false;
 				}
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
+	MyMesh*		erdkern2		= new MyMesh();
+	
+	if (item1 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		erdkern2->m_bDestroyable = false;
+		if (erdkern2->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere0.x",
+							//"resources/x_files/Planet0.bmp",
+							NULL,
+							15000.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, -0.0001f, 0.0f,
+							false, false))
+		{
+			//erdkern2->m_isItem = true;
+			if(SUCCEEDED(erdkern2->load()))
+			{
+				
+				//erdkern2->m_itemPoints = 10;
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(erdkern2);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(erdkern2);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(erdkern2);
+					erdkern2->setMaster(sonne);
+					//_DirectPlay->m_pMasterMeshes.push_back(erdkern2);
+					_DirectPlay->m_pMeshSounds.push_back(NULL);
+				
 			} else {
 				LeaveCriticalSection(&_DirectPlay->m_csDP);
 				return false;
@@ -740,7 +908,7 @@ bool	MyGameControl::buildGame()
 		if (mond->init(_D3DDevice,
 							_matWorld,
 							"resources/x_files/sphere0.x",
-							"resources/x_files/Planet5.dds",//NULL,
+							"resources/x_files/Planet1.bmp",//NULL,
 							500.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
@@ -792,6 +960,65 @@ bool	MyGameControl::buildGame()
 
 	//mond = NULL;
 	
+
+	MyMesh*		item3		= new MyMesh();
+	
+	if (item3 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		item3->m_bDestroyable = false;
+		if (item3->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere0.x",
+							//"resources/x_files/Planet0.bmp",
+							NULL,
+							0.0f, 100.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							false, false))
+		{
+			item3->m_isItem = true;
+			item3->activateScaling();
+			item3->m_colRadius = 10;
+			item3->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			if(SUCCEEDED(item3->load()))
+			{
+				
+				item3->m_itemPoints = 100;
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(item3);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(item3);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(item3);
+					//_DirectPlay->m_pMasterMeshes.push_back(item1);
+					item3->setMaster(mond);
+					_DirectPlay->m_pMeshSounds.push_back(NULL);
+				
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
+
+
 	MyMesh*		kreuzer1		= new MyMesh();
 	MySound*	kreuzer1Sound	= new MySound();
 	if (kreuzer1 == NULL)
@@ -807,7 +1034,7 @@ bool	MyGameControl::buildGame()
 							NULL,
 							60.0f, -100.0f, 3500.0f,
 							0.0f, 0.0f, 0.3f,
-							-1.0f,
+							0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							false, false))
@@ -829,7 +1056,8 @@ bool	MyGameControl::buildGame()
 					kreuzer1->m_bDestroyable = false;
 					kreuzer1->m_colRadius = 10.0f;
 					_DirectPlay->m_pAllMeshes.push_back(kreuzer1);
-					_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
+					kreuzer1->setMaster(erdkern2);
+					//_DirectPlay->m_pMasterMeshes.push_back(kreuzer1);
 					_DirectPlay->m_pMeshSounds.push_back(kreuzer1Sound);
 				} else {
 					LeaveCriticalSection(&_DirectPlay->m_csDP);
@@ -849,7 +1077,62 @@ bool	MyGameControl::buildGame()
 
 	//kreuzer1 = NULL;
 
+	MyMesh*		item4		= new MyMesh();
 	
+	if (item4 == NULL)
+	{
+		return false;
+	} else {
+
+		EnterCriticalSection(&_DirectPlay->m_csDP);
+
+		item4->m_bDestroyable = false;
+		if (item4->init(_D3DDevice,
+							_matWorld,
+							"resources/x_files/sphere0.x",
+							//"resources/x_files/Planet0.bmp",
+							NULL,
+							50.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							false, false))
+		{
+			item4->m_isItem = true;
+			//item4->activateScaling();
+			item4->m_colRadius = 10;
+			//item4->getScale()->setValues(10.0f, 10.0f, 10.0f);
+			if(SUCCEEDED(item4->load()))
+			{
+				
+				item4->m_itemPoints = 1000;
+					if(m_iDPchoice != 0)
+					{
+						if(*_DirectPlay->m_pbHostingApp)
+						{
+							_DirectPlay->m_pLocalMeshes.push_back(item4);
+						} else {
+							_DirectPlay->m_pNetworkMeshes.push_back(item4);
+						}
+					}
+					_DirectPlay->m_pAllMeshes.push_back(item4);
+					item4->setMaster(kreuzer1);
+					//_DirectPlay->m_pMasterMeshes.push_back(item1);
+					_DirectPlay->m_pMeshSounds.push_back(NULL);
+				
+			} else {
+				LeaveCriticalSection(&_DirectPlay->m_csDP);
+				return false;
+			}
+		} else {
+			LeaveCriticalSection(&_DirectPlay->m_csDP);
+			return false;
+		}
+
+		LeaveCriticalSection(&_DirectPlay->m_csDP);
+	}
+
 
 	MyMesh*		jaeger1			= new MyMesh();
 	MySound*	jaeger1Sound	= new MySound();
@@ -864,7 +1147,7 @@ bool	MyGameControl::buildGame()
 							_matWorld,
 							"resources/x_files/bigship1.x",
 							NULL,
-							90.0f, -50.0f, 0.0f,
+							100.0f, 0.0f, 0.0f,
 							0.0f, 0.0f, 0.0f,
 							0.0f,
 							0.0f, 0.0f, 0.0f,
@@ -1006,6 +1289,7 @@ bool	MyGameControl::sendData()
 		sendingToken.posinfo.rotdir.z		= _DirectPlay->m_pLocalMeshes[count]->m_pRotDir->getZ();
 
 		sendingToken.status					= _DirectPlay->m_pLocalMeshes[count]->m_iStatus;
+		sendingToken.item					= _DirectPlay->m_pLocalMeshes[count]->m_isItem;
 
 		_DirectPlay->sendMessage(&sendingToken, 0);
 	}

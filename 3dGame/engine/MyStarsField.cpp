@@ -58,9 +58,9 @@ bool MyStarsField::init(LPDIRECT3DDEVICE9 givenDevice,
 
 	for(int count = 0; count < m_iNumberStars; count++)
 	{
-		m_pStars[count].x	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 10000.0f;//(float)pow((double)-1.0f, (double)count) * (float)rand() / 100.0f;
-		m_pStars[count].y	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 10000.0f;
-		m_pStars[count].z	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 10000.0f;
+		m_pStars[count].x	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 80000.0f;//(float)pow((double)-1.0f, (double)count) * (float)rand() / 100.0f;
+		m_pStars[count].y	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 80000.0f;
+		m_pStars[count].z	= (float)pow((double)-1.0f,(double)count) * (-1.0f + (1.0f + 1.0f) * ((float)(rand() % 10001) / 10000.0f)) * 80000.0f;
 		/*char temp[118];
 		sprintf(temp,"%f, %f, %f",m_pStars[count].x,m_pStars[count].y,m_pStars[count].z);
 		MessageBox(NULL,temp,"Message",MB_OK);*/

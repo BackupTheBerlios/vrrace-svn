@@ -157,6 +157,7 @@ HRESULT WINAPI MyDPlay::DPMessageProc(PVOID pvUserContext,
 						m_pNetworkMeshes[recToken->vectorId]->m_pRotDir->setValues(
 							recToken->posinfo.rotdir.x, recToken->posinfo.rotdir.y, recToken->posinfo.rotdir.z);
 						m_pNetworkMeshes[recToken->vectorId]->m_iStatus = recToken->status;
+						m_pNetworkMeshes[recToken->vectorId]->m_isItem = recToken->item;
 						/*if (recToken->status == 0)
 						{
 							MessageBox(NULL, "schiff weg", "...", MB_OK);

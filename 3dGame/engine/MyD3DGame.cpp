@@ -254,7 +254,7 @@ void	MyD3DGame::showStatus()
 	sprintf(
 		temp,
 		"Speed: %2.2f",
-		*m_pGameControl->getPlayer()->getMesh()->m_pSpeed);
+		0 - *m_pGameControl->getPlayer()->getMesh()->m_pSpeed);
 
 	m_pFont->DrawText(
 		5,
@@ -336,6 +336,7 @@ bool	MyD3DGame::initGame(void)
 	m_pGameControl->initStarsField();
 	m_pDirectPlay->set3DInstance(m_pD3dDevice, &m_matWorld);
 	m_pDirectPlay->m_bInitialized = true;
+	//m_pUserInput->init(m_hInst, m_hWnd, m_pGameControl);
 	return true;
 }
 
